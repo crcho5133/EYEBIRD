@@ -14,7 +14,7 @@
 
 ### 📌기술 스택
 
-<img src="https://img.shields.io/badge/typescript-3178C6?styleflat&logo=javascript&logoColor=white">
+<img src="https://img.shields.io/badge/javascript-3178C6?styleflat&logo=javascript&logoColor=white">
 <img src="https://img.shields.io/badge/vite-646CFF?styleflat&logo=vite&logoColor=white">
 <img src="https://img.shields.io/badge/react-61DAFB?styleflat&logo=react&logoColor=white">
 <img src="https://img.shields.io/badge/tailwindcss-06B6D4?styleflat&logo=tailwindcss&logoColor=white">
