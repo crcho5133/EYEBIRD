@@ -22,3 +22,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# 예외 폴더
+!api/*
+!assets/*
+!components/*
+!context/*
+!hooks/*
+!layouts/*
+!pages/*
+!privateRoute/*
+!utils/*
