@@ -1,7 +1,1 @@
-modify test
-?QWEQ?EQW
-qwqk
-test
-
-리드
-쏘 푸쉬
+17:46 gerrit gitlab 연동테스트
