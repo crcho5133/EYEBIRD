@@ -1,3 +1,6 @@
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// import Lobby from "./pages/Lobby";
+import NavBar from "./components/lobby/NavBar";
 import { useState } from "react";
 
 function App() {
@@ -6,7 +9,8 @@ function App() {
   return (
     <>
       <div className="flex justify-start space-x-4 mt-4">
-        <h1 className="text-3xl font-bold underline">Hello world!</h1>
+        <NavBar></NavBar>
+        {/*{} <h1 className="text-3xl font-bold underline">Hello world!</h1>
         <button
           className="bg-gradient-to-br from-purple-600 to-blue-500 text-white px-4 py-2 rounded-xl"
           onClick={() => setCount((count) => count + 1)}
@@ -19,6 +23,11 @@ function App() {
         >
           버튼
         </button>
+        <Router>
+          <Routes>
+            <Route path="/lobby" element={<Lobby />} />
+          </Routes>
+        </Router> */}
       </div>
     </>
   );
