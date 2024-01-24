@@ -1,27 +1,33 @@
 import React, { useState } from "react";
 import Rodal from "rodal";
-import ProfileImgModal from "./ProfileImgModal";
+import ProfileImageModal from "@/components/modal/ProfileImageModal";
+import usersApiCall from "@/api/axios/usersApiCall";
 import "rodal/lib/rodal.css";
 
 const SignupFormModal = ({ visible, onClose }) => {
   const [profileImage, setProfileImage] = useState("");
-  const [isProfileImgModalVisible, setProfileImgModalVisible] = useState(false);
+  const [isProfileImageModalVisible, setProfileImageModalVisible] = useState(false);
 
   const showRodal = () => {
-    setProfileImgModalVisible(true);
+    setProfileImageModalVisible(true);
   };
 
   const hideRodal = () => {
-    setProfileImgModalVisible(false);
+    setProfileImageModalVisible(false);
   };
 
   const handleDuplicateCheck = () => {
     console.log("중복 확인 처리");
   };
 
+  const signup = (event) => {
+    event.preventDefault();
+    usersApiCall().signup();
+  };
+
   return (
     <>
-      <Rodal visible={visible} onClose={onClose} customStyles={{ width: "80%", height: "80%" }}>
+      <Rodal visible={visible} onClose={onClose} customStyles={{ width: "80%", height: "45%" }}>
         <div className="p-4">
           {profileImage ? (
             <img src={profileImage} alt="프로필 이미지" className="w-20 h-20 rounded-full mb-4" />
@@ -36,32 +42,32 @@ const SignupFormModal = ({ visible, onClose }) => {
           </button>
         </div>
 
-        <form className="space-y-4 p-4">
-          <div className="flex space-x-2">
+        <form className="space-y-2 p-2" onSubmit={signup}>
+          <div className="flex space-x-1">
             <input
               type="text"
               placeholder="아이디"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
               type="button"
               onClick={handleDuplicateCheck}
-              className="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md"
+              className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md"
             >
               중복확인
             </button>
           </div>
 
-          <div className="flex space-x-2">
+          <div className="flex space-x-1">
             <input
               type="text"
               placeholder="닉네임"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
               type="button"
               onClick={handleDuplicateCheck}
-              className="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md"
+              className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md"
             >
               중복확인
             </button>
@@ -70,24 +76,24 @@ const SignupFormModal = ({ visible, onClose }) => {
           <input
             type="password"
             placeholder="비밀번호"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="password"
             placeholder="비밀번호 확인"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md"
+            className="w-full px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md"
           >
             회원가입
           </button>
         </form>
       </Rodal>
-      <ProfileImgModal
-        visible={isProfileImgModalVisible}
+      <ProfileImageModal
+        visible={isProfileImageModalVisible}
         onClose={hideRodal}
         setProfileImage={setProfileImage}
       />

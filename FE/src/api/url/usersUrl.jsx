@@ -1,7 +1,5 @@
-import { baseUrl } from "./baseUrl";
+import { baseUrl } from "@/api/url/baseUrl";
 
 export default {
-  signUp: () => `${baseUrl}/users/join`,
-  login: () => `${baseUrl}/users/login`,
-  logout: () => `${baseUrl}/users/logout`,
+  signUp: () => `${baseUrl}/api/user`,
 };
