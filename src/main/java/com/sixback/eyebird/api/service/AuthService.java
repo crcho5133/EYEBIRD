@@ -3,7 +3,7 @@ package com.sixback.eyebird.api.service;
 import com.sixback.eyebird.api.dto.JwtTokenDto;
 import com.sixback.eyebird.api.dto.LoginReqDto;
 import com.sixback.eyebird.api.dto.LoginResDto;
-import com.sixback.eyebird.api.repository.UserRepository;
+import com.sixback.eyebird.db.repository.UserRepository;
 import com.sixback.eyebird.db.entity.User;
 import com.sixback.eyebird.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +11,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

@@ -2,7 +2,7 @@ package com.sixback.eyebird.api.service;
 
 import com.sixback.eyebird.api.dto.UpdateUserReqDto;
 import com.sixback.eyebird.api.dto.SignupReqDto;
-import com.sixback.eyebird.api.repository.UserRepository;
+import com.sixback.eyebird.db.repository.UserRepository;
 import com.sixback.eyebird.db.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
