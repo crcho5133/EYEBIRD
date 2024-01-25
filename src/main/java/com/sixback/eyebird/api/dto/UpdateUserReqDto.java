@@ -13,7 +13,7 @@ public class ModifyUserDto {
     @NotBlank
     private String newPassword;
     @NotBlank
-    private String nickname;
-    private int profileImage;
+    private String newNickname;
+    private int newProfileImage;
 
 }
