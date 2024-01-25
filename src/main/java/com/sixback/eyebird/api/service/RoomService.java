@@ -1,6 +1,6 @@
 package com.sixback.eyebird.api.service;
 
-import com.sixback.eyebird.api.dto.Room;
+import com.sixback.eyebird.api.dto.RoomDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class RoomService {
     @Autowired
-    RedisTemplate<String, Room> redisTemplate; // JSON 형태로 저장 가능
+    RedisTemplate<String, Object> redisTemplate; // JSON 형태로 저장 가능
 
     // 방 만들기
 
@@ -23,24 +23,24 @@ public class RoomService {
      * 0 : 방 최대 개수 초과
      * -1 : id or 방 이름 중복됨
      */
-    public int createRoom(Room room) {
+    public int createRoom(RoomDto room) {
         //찾아서 만들수있는지 체크해야함.
         //못민드는 경우 1 : 최대 방 수 초과
         long count = 0;
         String pattern = "room*";
 
-        List<Room> rooms = new ArrayList<>();
+        List<RoomDto> rooms = new ArrayList<>();
         Cursor<byte[]> cursor = redisTemplate.getConnectionFactory().getConnection().scan(ScanOptions.scanOptions().match(pattern).build());
         while (cursor.hasNext()) {
             String key = new String(cursor.next());
-            Room existsRoom = redisTemplate.opsForValue().get(key);
+            RoomDto existsRoom = (RoomDto)redisTemplate.opsForValue().get(key);
             rooms.add(existsRoom);
             count++;
         }
         if (count > 35) return 0;
 
         //못만드는 경우2 : 방 이름 중복
-        for (Room check : rooms) {
+        for (RoomDto check : rooms) {
             if (check.getRoomName().equals(room.getRoomName()) || check.getRoomId().equals(room.getRoomId())) {
                 return -1;
             }
@@ -53,14 +53,14 @@ public class RoomService {
     }
 
     // 룸 찾기
-    public Room findRoom(String id) {
-        return redisTemplate.opsForValue().get("room_" + id);
+    public RoomDto findRoom(String id) {
+        return (RoomDto)redisTemplate.opsForValue().get("room_" + id);
     }
 
     // Redis에서 room으로 시작하는 key값을 검색합니다.
     // RoomId 받아오기 때문에 String
-    public List<Room> roomList(boolean item) {
-        List<Room> rooms = new ArrayList<>();
+    public List<RoomDto> roomList(boolean item) {
+        List<RoomDto> rooms = new ArrayList<>();
         String pattern = "room*";
 
         // Scan 명령어 사용해서 검색 : 데이터베이스 크기에 상관없이 일정한 성능을 유지
@@ -69,7 +69,7 @@ public class RoomService {
 
         while (cursor.hasNext()) {
             String key = new String(cursor.next());
-            Room room = redisTemplate.opsForValue().get(key);
+            RoomDto room = (RoomDto)redisTemplate.opsForValue().get(key);
 
             // 아이템전 여부 확인하고 추가
             if (room.isItem() == item)
@@ -79,12 +79,12 @@ public class RoomService {
     }
 
     //방 들어가기
-    public boolean enterRoom(Room room, long userId) {
+    public boolean enterRoom(RoomDto room, long userId) {
         // 미리 pw 저장
         int pw = room.getPassword();
 
         // 룸 id로 key값을 조회해 해당 방을 가져옴
-        room = redisTemplate.opsForValue().get("room_" + room.getRoomId());
+        room = (RoomDto)redisTemplate.opsForValue().get("room_" + room.getRoomId());
 
         // 방이 없으면 false
         if(room == null) return false;
@@ -109,10 +109,9 @@ public class RoomService {
         return true;
     }
 
-
     // 방 삭제
     public boolean deleteRoom(String key) {
-        Room room = redisTemplate.opsForValue().get("room_" + key);
+        RoomDto room = (RoomDto)redisTemplate.opsForValue().get("room_" + key);
 
         if(room == null) return false;
 

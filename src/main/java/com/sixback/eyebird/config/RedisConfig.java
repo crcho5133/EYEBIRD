@@ -1,7 +1,7 @@
 package com.sixback.eyebird.config;
 
-import com.sixback.eyebird.api.dto.Room;
-import jakarta.validation.Valid;
+import com.sixback.eyebird.api.dto.BlackListDto;
+import com.sixback.eyebird.api.dto.RoomDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,16 +24,16 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Room> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Room> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
 
-        // 직렬화 방식 설정
-        Jackson2JsonRedisSerializer<Room> serializer = new Jackson2JsonRedisSerializer<>(Room.class);
+        // 범용적으로 사용할 수 있는 직렬화 방식 설정
+        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
         redisTemplate.setValueSerializer(serializer);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
 
-
         return redisTemplate;
     }
+
 }
