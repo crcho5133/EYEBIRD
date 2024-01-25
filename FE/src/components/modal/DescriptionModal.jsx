@@ -1,18 +1,14 @@
-const DescriptionModal = ({ closeModal }) => {
-    return (
-        <>
-            게임설명~~~~~~~~~~~~~~~~
+import Rodal from "rodal";
+import "rodal/lib/rodal.css";
 
-            <button 
-                onClick={closeModal} 
-                className="mt-4 py-2 px-4 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-md"
-            >
-                닫기
-            </button>
-        </>
-    
-    );
-  };
-  
-  export default DescriptionModal;
-  
+const DescriptionModal = ({ visible, onClose }) => {
+  return (
+    <>
+      <Rodal visible={visible} onClose={onClose}>
+        게임설명~~~~~~~~~~~~~~~~
+      </Rodal>
+    </>
+  );
+};
+
+export default DescriptionModal;

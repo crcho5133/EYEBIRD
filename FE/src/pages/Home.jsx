@@ -1,22 +1,22 @@
 import React, { useState } from "react";
-import LobbyBtn from "../components/lobby/LobbyBtn";
-import DescriptionModal from "../components/modal/DescriptionModal";
+import LobbyBtn from "@/components/lobby/LobbyBtn";
+import DescriptionModal from "@/components/modal/DescriptionModal";
 
 const Home = () => {
-  const [modalType, setModalType] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
 
-  const showDescriptionModal = () => setModalType("description");
-  const closeModal = () => setModalType(null);
+  const showRodal = () => {
+    setModalVisible(true);
+  };
+
+  const hideRodal = () => {
+    setModalVisible(false);
+  };
 
   return (
     <>
-      <LobbyBtn text="게임설명" onClick={showDescriptionModal} />
-
-      {modalType === "description" && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
-          <DescriptionModal closeModal={closeModal} />
-        </div>
-      )}
+      <LobbyBtn text="게임설명" onClick={showRodal} />
+      <DescriptionModal visible={isModalVisible} onClose={hideRodal} />
     </>
   );
 };
