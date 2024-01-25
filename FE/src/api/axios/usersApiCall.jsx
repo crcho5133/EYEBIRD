@@ -14,18 +14,31 @@ const usersApiCall = () => {
     }
   };
 
-  const checkEmailDuplicate = () => {
-    setIsEmailValid(true);
-    setEmailValidationMessage("사용 가능한 이메일입니다."); 
+  const checkEmailDuplicate = async (email, setIsEmailValid) => {
+    const url = usersUrl.checkDuplicate() + "?email=" + email;
+
+    try {
+      // await axios.get(url);
+      console.log("요청 성공");
+      setIsEmailValid(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const checkNicknameDuplicate = () => {
-    setIsNicknameValid(true);
-    setNicknameValidationMessage("사용 가능한 닉네임입니다.");
+  const checkNicknameDuplicate = (nickname, setIsNicknameValid) => {
+    const url = usersUrl.checkDuplicate() + "?nickname=" + nickname;
+
+    try {
+      // await axios.get(url);
+      console.log("요청 성공");
+      setIsNicknameValid(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  
-  return { signup };
+  return { signup, checkEmailDuplicate, checkNicknameDuplicate };
 };
 
 export default usersApiCall;

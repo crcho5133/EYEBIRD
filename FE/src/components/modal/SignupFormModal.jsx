@@ -8,13 +8,14 @@ import "rodal/lib/rodal.css";
 const SignupFormModal = ({ visible, onClose }) => {
   const [profileImage, setProfileImage] = useState("");
   const [ProfileImageIndex, setProfileImageIndex] = useState("");
+  const [isProfileImageModalVisible, setProfileImageModalVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
   const [nickname, setNickname] = useState("");
-  const [emailValidationMessage, setEmailValidationMessage] = useState("");
-  const [nicknameValidationMessage, setNicknameValidationMessage] = useState("");
-
-  const [isProfileImageModalVisible, setProfileImageModalVisible] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState("");
+  const [isNicknameValid, setIsNicknameValid] = useState("");
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
 
   const showRodal = () => {
     setProfileImageModalVisible(true);
@@ -35,6 +36,19 @@ const SignupFormModal = ({ visible, onClose }) => {
 
   const passwordHandleChange = (event) => {
     setPassword(event.target.value);
+    validatePasswords(event.target.value, passwordCheck);
+  };
+
+  const passwordCheckHandleChange = (event) => {
+    setPasswordCheck(event.target.value);
+    validatePasswords(password, event.target.value);
+  };
+
+  const validatePasswords = (password, passwordCheck) => {
+    if (passwordCheck === "") {
+      return setPasswordsMatch(true);
+    }
+    setPasswordsMatch(password === passwordCheck);
   };
 
   const nicknameHandleChange = (event) => {
@@ -42,13 +56,11 @@ const SignupFormModal = ({ visible, onClose }) => {
   };
 
   const checkEmailDuplicate = () => {
-    setIsEmailValid(true);
-    setEmailValidationMessage("사용 가능한 이메일입니다.");
+    usersApiCall().checkEmailDuplicate(email, setIsEmailValid);
   };
 
   const checkNicknameDuplicate = () => {
-    setIsNicknameValid(true);
-    setNicknameValidationMessage("사용 가능한 닉네임입니다.");
+    usersApiCall().checkNicknameDuplicate(nickname, setIsNicknameValid);
   };
 
   return (
@@ -76,7 +88,7 @@ const SignupFormModal = ({ visible, onClose }) => {
               className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={emailHandleChange}
             />
-            <Button text="중복확인" onClick={checkEmailDuplicate} disabled={isEmailValid} />
+            <ModalBtn text="중복확인" onClick={checkEmailDuplicate} disabled={isEmailValid} />
           </div>
 
           <div className="flex space-x-1">
@@ -86,7 +98,7 @@ const SignupFormModal = ({ visible, onClose }) => {
               className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={nicknameHandleChange}
             />
-            <Button text="중복확인" onClick={checkNicknameDuplicate} disabled={isNicknameValid} />
+            <ModalBtn text="중복확인" onClick={checkNicknameDuplicate} disabled={isNicknameValid} />
           </div>
 
           <input
@@ -98,8 +110,10 @@ const SignupFormModal = ({ visible, onClose }) => {
           <input
             type="password"
             placeholder="비밀번호 확인"
+            onChange={passwordCheckHandleChange}
             className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          {!passwordsMatch && <div className="text-red-500">비밀번호가 일치하지 않습니다</div>}
 
           <ModalBtn
             onClick={signup}

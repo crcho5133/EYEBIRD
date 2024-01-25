@@ -11,4 +11,4 @@ const ModalBtn = ({ text, onClick, disabled, type }) => {
   );
 };
 
-export default Button;
+export default ModalBtn;
