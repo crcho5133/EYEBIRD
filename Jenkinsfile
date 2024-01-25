@@ -2,6 +2,13 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+
         stage('Build') {
             steps {
                 // 빌드 관련 작업을 여기에 추가
