@@ -1,0 +1,25 @@
+### 프로젝트 세팅
+
+- **Oracle OpenJDK** version 17.0.10
+- **MySQL Shell** 8.0.35
+- **Docker** 4.26.1
+- **spring initializer**
+    - Project : Gradle - Groovy
+    - Language : Java
+    - Spring Boot : 3.2.1
+    - Project Metadata
+        - Group : com.sixback (예시)
+        - Artifact : sixback
+        - Name : sixback
+        - Description :
+        - Package name : com.sixback.eyebird (예시)
+        - Packaging : Jar
+        - Java : 17
+    - Dependencies
+        - Spring Web
+        - Spring Boot DevTools
+        - Spring Data JPA
+        - H2 Database (개발 DB)
+        - Lombok
+        - Spring Security
+        - Validation
