@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ModifyUserDto {
+public class UpdateUserReqDto {
 
     @NotBlank
     private String currentPassword;
