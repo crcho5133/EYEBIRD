@@ -12,4 +12,3 @@ public class ErrorMessage {
     private Date timestamp;
     private String errorMessage;
 }
- Erro
