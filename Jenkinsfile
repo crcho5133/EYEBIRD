@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        // 환경 변수로 워크스페이스 경로를 설정
-        WORKSPACE_PATH = '/jenkins/workspace/e206_gitlab'
-    }
-
     stages {
         stage('Build BE') {
             steps {
@@ -13,7 +8,7 @@ pipeline {
                 // 백엔드 소스코드가 있는 경로로 이동
                 dir('/jenkins/workspace/e206_gitlab/BE') {
                     // Docker 이미지 빌드 명령어
-                    sh 'sudo docker build -t spring-app:test .'
+                    sh 'docker build -t spring-app:test .'
                 }
             }
         }
@@ -24,7 +19,7 @@ pipeline {
                 // 백엔드 소스코드가 있는 경로로 이동
                 dir('/jenkins/workspace/e206_gitlab/FE') {
                     // Docker 이미지 빌드 명령어
-                    sh 'sudo docker build -t react-app:test .'
+                    sh 'docker build -t react-app:test .'
                 }
             }
         }
