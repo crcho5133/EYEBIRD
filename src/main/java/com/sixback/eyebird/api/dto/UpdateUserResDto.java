@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ModifyUserResDto {
+public class UpdateUserResDto {
 
     private String email;
     private String message;
