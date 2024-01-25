@@ -2,7 +2,12 @@ import React from "react";
 import OpenViduVideoComponent from "./OvVideo";
 
 export default function UserVideoComponent({ streamManager, streamId, clientStreamId }) {
-  const [isMuted, setIsMuted] = React.useState(false);
+  const [isActive, setIsActive] = React.useState(true);
+  // const isMutedRef = React.useRef(isMuted);
+
+  // React.useEffect(() => {
+  //   isMutedRef.current = isMuted;
+  // }, [isMuted]);
 
   // const toggleMute = () => {
   //   const newMuteState = !isMuted;
@@ -12,8 +17,9 @@ export default function UserVideoComponent({ streamManager, streamId, clientStre
 
   // 오디오 제어 함수
   const toggleAudio = () => {
-    streamManager.subscribeToAudio(!streamManager.stream.audioActive);
-    setIsMuted(!isMuted);
+    const newIsActive = !isActive;
+    streamManager.subscribeToAudio(newIsActive);
+    setIsActive(newIsActive);
   };
 
   const getNicknameTag = () => {
@@ -31,7 +37,7 @@ export default function UserVideoComponent({ streamManager, streamId, clientStre
           </div>
           <div className="text-right">
             {clientStreamId !== streamId ? (
-              <button onClick={toggleAudio}>{isMuted ? "음소거 해제" : "음소거"}</button>
+              <button onClick={toggleAudio}>{isActive ? "들려요" : "안들려요"}</button>
             ) : null}
           </div>
         </div>
