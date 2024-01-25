@@ -16,6 +16,7 @@ public class RoomService {
     RedisTemplate<String, Room> redisTemplate; // JSON 형태로 저장 가능
 
     // 방 만들기
+
     /**
      * Create Map
      * 1 : 정상적으로 방이 생성됨
@@ -44,29 +45,21 @@ public class RoomService {
                 return -1;
             }
         }
-
+        
         // 방 생성 가능 : 방 저장하고 true 리턴
         redisTemplate.opsForValue().set("room_" + room.getRoomId(), room);
-        System.out.println("list : " + roomList());
+        System.out.println("list : " + roomList(room.isItem()));
         return 1;
     }
 
     // 룸 찾기
     public Room findRoom(String id) {
-        return redisTemplate.opsForValue().get(id);
+        return redisTemplate.opsForValue().get("room_" + id);
     }
 
     // Redis에서 room으로 시작하는 key값을 검색합니다.
     // RoomId 받아오기 때문에 String
-    public List<Room> roomList() {
-        /* // -> 이 방법은 redis에 저장된 모든 객체에서 room을 검색하기 때문에 데이터가 많을수록 부하가 걸릴 수 있다.
-        // Redis에서 room으로 시작하는 key값을 검색.
-        Set<String> keys = redisRoomTemplate.keys("room*");
-        // 검색된 key값을 리스트로 변환.
-        List<String> keyList = new ArrayList<>(keys);
-        return keyList;
-        */
-
+    public List<Room> roomList(boolean item) {
         List<Room> rooms = new ArrayList<>();
         String pattern = "room*";
 
@@ -77,16 +70,61 @@ public class RoomService {
         while (cursor.hasNext()) {
             String key = new String(cursor.next());
             Room room = redisTemplate.opsForValue().get(key);
-            rooms.add(room);
+
+            // 아이템전 여부 확인하고 추가
+            if (room.isItem() == item)
+                rooms.add(room);
         }
         return rooms;
     }
 
+    //방 들어가기
+    public boolean enterRoom(Room room, long userId) {
+        // 미리 pw 저장
+        int pw = room.getPassword();
 
-    //방 삭제
+        // 룸 id로 key값을 조회해 해당 방을 가져옴
+        room = redisTemplate.opsForValue().get("room_" + room.getRoomId());
+
+        // 방이 없으면 false
+        if(room == null) return false;
+
+        // 현재 인원이 max값보다 많은
+        if (room.getMaxCapacity() <= room.getCurrentCapacity()) {
+            return false;
+        }
+
+        //password 확인
+        if (room.getPassword() != pw) {
+            return false;
+        }
+
+        // 블랙리스트 가능 추가 예정
+
+        //방 인원 하나 늘리고
+        room.addCapacity();
+        // 다시 저장
+        redisTemplate.opsForValue().set("room_" + room.getRoomId(), room);
+
+        return true;
+    }
+
+
+    // 방 삭제
     public boolean deleteRoom(String key) {
-        redisTemplate.delete("room_" + key);
-        System.out.println("list : " + roomList());
+        Room room = redisTemplate.opsForValue().get("room_" + key);
+
+        if(room == null) return false;
+
+        // 1. 유저 수 줄이기.
+        room.reduceCapacity();
+
+        // 다시 저장
+        redisTemplate.opsForValue().set("room_" + room.getRoomId(), room);
+
+        // 2. 유저가 없으면 방 삭제
+        if(room.getCurrentCapacity() <1)
+            redisTemplate.delete("room_" + key);
 
         return true;
     }
