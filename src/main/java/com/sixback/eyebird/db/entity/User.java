@@ -16,7 +16,7 @@ public class User extends BaseTime { // 생성시간과 수정시간을 다루�
     @GeneratedValue // TODO strategy는 어떻게?
     private Long id;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50, nullable = false, unique = true)
     private String email;
 
     // 해싱된 비밀번호
@@ -31,8 +31,8 @@ public class User extends BaseTime { // 생성시간과 수정시간을 다루�
     private int profileImage;
 
     // PointEntity와 one to one mapping
-    @OneToOne(fetch = FetchType.EAGER) // TODO Eager or Lazy?
-    @JoinColumn(name="point_id")
+    @OneToOne(mappedBy = "user")
+
     private Point point;
 
     @Column(columnDefinition = "boolean default false")
@@ -44,6 +44,16 @@ public class User extends BaseTime { // 생성시간과 수정시간을 다루�
         this.password = password;
         this.nickname = nickname;
         this.profileImage = profileImage;
+    }
+
+    public void updateUser(String newHashedPassword, String newNickname, int newProfileImage) {
+        this.password = newHashedPassword;
+        this.nickname = newNickname;
+        this.profileImage = newProfileImage;
+    }
+
+    public void deleteUser() {
+        this.isDeleted = true;
     }
 
 }
