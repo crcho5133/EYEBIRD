@@ -25,7 +25,8 @@ public class AuthController {
     // auth 테스트
     @GetMapping("/auth-test")
     public ResponseEntity<String> authTest() {
-        return ResponseEntity.ok("test");
+
+        return ResponseEntity.ok("auth-test success");
     }
 
     // exception 테스트
