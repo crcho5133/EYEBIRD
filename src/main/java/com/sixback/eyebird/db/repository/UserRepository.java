@@ -1,4 +1,4 @@
-package com.sixback.eyebird.api.repository;
+package com.sixback.eyebird.db.repository;
 
 import com.sixback.eyebird.db.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
