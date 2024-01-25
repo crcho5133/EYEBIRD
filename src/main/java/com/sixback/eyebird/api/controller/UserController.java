@@ -51,6 +51,7 @@ public class UserController {
         return ResponseEntity.status(200).body(checkDuplicateResDto);
     }
 
+    // 이메일 중복확인
     @GetMapping("/check/email")
     public ResponseEntity<CheckDuplicateResDto> checkDuplicateEmail(@RequestParam("email") String email) {
         boolean existsDuplicateEmail = userService.existsEmail(email);
@@ -61,6 +62,7 @@ public class UserController {
         return ResponseEntity.status(200).body(checkDuplicateResDto);
     }
 
+    // 비밀번호가 일치하는지 확인
     @PostMapping("/check/password")
     public ResponseEntity<Void> checkPassword(@RequestBody CheckPasswordReqDto checkPasswordReqDto, Authentication authentication) {
         String password = checkPasswordReqDto.getPassword();
@@ -79,6 +81,7 @@ public class UserController {
 
     }
 
+    // 유저 삭제
     @DeleteMapping("")
     public ResponseEntity<Void> delete(Authentication authentication) {
         String email = authentication.getName();
