@@ -14,6 +14,17 @@ const usersApiCall = () => {
     }
   };
 
+  const checkEmailDuplicate = () => {
+    setIsEmailValid(true);
+    setEmailValidationMessage("사용 가능한 이메일입니다."); 
+  };
+
+  const checkNicknameDuplicate = () => {
+    setIsNicknameValid(true);
+    setNicknameValidationMessage("사용 가능한 닉네임입니다.");
+  };
+
+  
   return { signup };
 };
 
