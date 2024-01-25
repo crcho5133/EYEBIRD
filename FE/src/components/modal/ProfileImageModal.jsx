@@ -1,7 +1,7 @@
 import Rodal from "rodal";
 import "rodal/lib/rodal.css";
 
-const ProfileImageModal = ({ visible, onClose, setProfileImage }) => {
+const ProfileImageModal = ({ visible, onClose, setProfileImage, setProfileImageIndex }) => {
   const profileImages = [
     "src/assets/img/케이셉.PNG",
     "src/assets/img/포이즌.PNG",
@@ -13,8 +13,9 @@ const ProfileImageModal = ({ visible, onClose, setProfileImage }) => {
     "src/assets/img/포이즌.PNG",
   ];
 
-  const ImageSelect = (imageUrl) => {
+  const ImageSelect = (imageUrl, index) => {
     setProfileImage(imageUrl);
+    setProfileImageIndex(index);
     onClose();
   };
 
@@ -30,7 +31,7 @@ const ProfileImageModal = ({ visible, onClose, setProfileImage }) => {
               className="w-full h-32 object-cover cursor-pointer"
             />
             <button
-              onClick={() => ImageSelect(imageUrl)}
+              onClick={() => ImageSelect(imageUrl, index + 1)}
               className="absolute bottom-0 left-0 w-full bg-gray-800 text-white py-1 px-2 opacity-75 hover:opacity-100"
             >
               선택

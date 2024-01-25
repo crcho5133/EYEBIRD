@@ -6,6 +6,11 @@ import "rodal/lib/rodal.css";
 
 const SignupFormModal = ({ visible, onClose }) => {
   const [profileImage, setProfileImage] = useState("");
+  const [ProfileImageIndex, setProfileImageIndex] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [nickname, setNickname] = useState("");
+
   const [isProfileImageModalVisible, setProfileImageModalVisible] = useState(false);
 
   const showRodal = () => {
@@ -16,13 +21,21 @@ const SignupFormModal = ({ visible, onClose }) => {
     setProfileImageModalVisible(false);
   };
 
-  const handleDuplicateCheck = () => {
-    console.log("중복 확인 처리");
-  };
-
   const signup = (event) => {
     event.preventDefault();
-    usersApiCall().signup();
+    usersApiCall().signup(ProfileImageIndex, email, password, nickname);
+  };
+
+  const emailHandleChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const passwordHandleChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const nicknameHandleChange = (event) => {
+    setNickname(event.target.value);
   };
 
   return (
@@ -48,10 +61,10 @@ const SignupFormModal = ({ visible, onClose }) => {
               type="text"
               placeholder="아이디"
               className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={emailHandleChange}
             />
             <button
               type="button"
-              onClick={handleDuplicateCheck}
               className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md"
             >
               중복확인
@@ -63,10 +76,10 @@ const SignupFormModal = ({ visible, onClose }) => {
               type="text"
               placeholder="닉네임"
               className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={nicknameHandleChange}
             />
             <button
               type="button"
-              onClick={handleDuplicateCheck}
               className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md"
             >
               중복확인
@@ -76,6 +89,7 @@ const SignupFormModal = ({ visible, onClose }) => {
           <input
             type="password"
             placeholder="비밀번호"
+            onChange={passwordHandleChange}
             className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
@@ -96,6 +110,7 @@ const SignupFormModal = ({ visible, onClose }) => {
         visible={isProfileImageModalVisible}
         onClose={hideRodal}
         setProfileImage={setProfileImage}
+        setProfileImageIndex={setProfileImageIndex}
       />
     </>
   );

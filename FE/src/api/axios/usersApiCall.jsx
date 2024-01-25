@@ -2,16 +2,13 @@ import axios from "axios";
 import usersUrl from "@/api/url/usersUrl";
 
 const usersApiCall = () => {
-  const signup = async (email, password, nickname) => {
+  const signup = async (profileImageIndex, email, password, nickname) => {
     const url = usersUrl.signUp();
-    const body = { email, password, nickname };
+    const body = { profileImageIndex, email, password, nickname };
 
     try {
-      console.log("회원가입 성공");
-      await toast.promise(axios.post(url, body), {
-        pending: "회원가입 중입니다.",
-        success: "회원가입 되었습니다.",
-      });
+      await axios.post(url, body);
+      console.log("성공");
     } catch (error) {
       console.log(error);
     }
