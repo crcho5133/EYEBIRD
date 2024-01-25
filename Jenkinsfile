@@ -13,7 +13,7 @@ pipeline {
                 // 백엔드 소스코드가 있는 경로로 이동
                 dir('/jenkins/workspace/e206_gitlab/BE') {
                     // Docker 이미지 빌드 명령어
-                    sh 'docker build -t spring-app:test .'
+                    sh 'sudo docker build -t spring-app:test .'
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
                 // 백엔드 소스코드가 있는 경로로 이동
                 dir('/jenkins/workspace/e206_gitlab/FE') {
                     // Docker 이미지 빌드 명령어
-                    sh 'docker build -t react-app:test .'
+                    sh 'sudo docker build -t react-app:test .'
                 }
             }
         }
