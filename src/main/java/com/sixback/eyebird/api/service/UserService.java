@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -95,7 +97,12 @@ public class UserService {
         user.deleteUser();
 
         log.info("유저 삭제 성공");
+    }
 
+    public List<User> searchUsers(String searchWord) {
+        List<User> users = userRepository.findByNicknameContaining(searchWord);
+
+        return users;
     }
 
 
