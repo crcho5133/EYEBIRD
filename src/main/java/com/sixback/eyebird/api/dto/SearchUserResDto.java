@@ -3,7 +3,7 @@ package com.sixback.eyebird.api.dto;
 import lombok.Builder;
 
 @Builder
-public class SearchUsersResDto {
+public class SearchUserResDto {
     private String email;
     private String nickname;
     private int profileImage;
