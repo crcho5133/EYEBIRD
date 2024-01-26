@@ -102,6 +102,7 @@ public class UserService {
     public List<User> searchUsers(String searchWord) {
         List<User> users = userRepository.findByNicknameContaining(searchWord);
 
+        // TODO 각 user의 승 / 패 개수를 센다
         return users;
     }
 
