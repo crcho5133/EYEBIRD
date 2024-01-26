@@ -1,4 +1,4 @@
-package com.sixback.eyebird;
+package com.sixback.eyebird.uncategorized;
 
 import java.util.Map;
 
