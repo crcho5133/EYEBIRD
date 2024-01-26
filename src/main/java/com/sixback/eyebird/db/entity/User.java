@@ -1,5 +1,6 @@
 package com.sixback.eyebird.db.entity;
 
+import com.sixback.eyebird.api.dto.SearchUserResDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Builder;
@@ -32,7 +33,6 @@ public class User extends BaseTime { // 생성시간과 수정시간을 다루�
 
     // PointEntity와 one to one mapping
     @OneToOne(mappedBy = "user")
-
     private Point point;
 
     @Column(columnDefinition = "boolean default false")
@@ -55,5 +55,13 @@ public class User extends BaseTime { // 생성시간과 수정시간을 다루�
     public void deleteUser() {
         this.isDeleted = true;
     }
+
+//    public SearchUserResDto() {
+//        SearchUserResDto searchUserResDto = SearchUserResDto.builder()
+//                .email(this.getEmail())
+//                .itemPt(this.getPoint().getItemPt())
+//                .classicPt(this.getPoint().getClassicPt())
+//                .
+//    }
 
 }
