@@ -1,8 +1,10 @@
 package com.sixback.eyebird.api.service;
 
 import com.sixback.eyebird.api.dto.BlackListDto;
+import com.sixback.eyebird.api.dto.RoomDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +18,8 @@ public class BlackListService {
 
     public boolean addBlackList(BlackListDto blacklist) {
         ArrayList<String> curRoomList = new ArrayList<>();
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ArrayList.class));
+
 
         //pattern
         String key = "blacklist_" + blacklist.getRoomId();
@@ -34,7 +38,9 @@ public class BlackListService {
     }
 
     // 해당 방의 블랙리스트 받아오기
-    public List<String> blacklist(String roomId){
+    public ArrayList<String> blacklist(String roomId){
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ArrayList.class));
+
         ArrayList<String> curRoomList = new ArrayList<>();
 
         //pattern
@@ -49,7 +55,13 @@ public class BlackListService {
 
     // 블랙리스트 삭제 - 룸 컨트롤러가 방을 삭제할 때 같이 삭제할것
     public boolean deleteBlackList(String roomId){
-        return redisTemplate.delete("blacklist_" + roomId);
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ArrayList.class));
+
+        if(redisTemplate.opsForValue().get("blacklist_" + roomId) !=null){
+           redisTemplate.delete("blacklist_" + roomId);
+            return true;
+        }
+        return false;
     }
 
 }
