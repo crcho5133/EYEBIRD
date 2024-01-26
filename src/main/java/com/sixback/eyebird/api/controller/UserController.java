@@ -2,12 +2,15 @@ package com.sixback.eyebird.api.controller;
 
 import com.sixback.eyebird.api.dto.*;
 import com.sixback.eyebird.api.service.UserService;
+import com.sixback.eyebird.db.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor // 의존성 주입
@@ -88,5 +91,14 @@ public class UserController {
         userService.deleteUser(email);
         return ResponseEntity.status(200).build();
     }
+
+    // 유저들을 searchWord로 검색
+//    @GetMapping("/search")
+//    public ResponseEntity<List<SearchUserResDto>> searchUsers(@RequestParam("searchWord") String searchWord) {
+//        List<User> users = userService.searchUsers(searchWord);
+//
+//        // users의 각 user에대해, searchUserResDt로 변형
+//
+//    }
 
 }
