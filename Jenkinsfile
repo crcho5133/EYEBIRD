@@ -36,7 +36,7 @@ pipeline {
                 // 배포 관련 작업을 여기에 추가
                 echo 'Deploying...'
                 // 백엔드 이미지 실행
-                sh 'docker run -p 8080:8080 spring-app:test --name spring-app'
+                sh 'docker run -p 8000:8000 spring-app:test --name spring-app'
                 // 프론트엔드 이미지 실행
                 sh 'docker run -p 3000:80 react-app:test --name react-app'
             }
