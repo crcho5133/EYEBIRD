@@ -38,7 +38,7 @@ pipeline {
                 // 백엔드 이미지 실행
                 sh 'docker run -p 8000:8000 spring-app:test --name spring-app'
             }
-
+        }
         stage('Deploy FE') {
             steps {
                 // 배포 관련 작업을 여기에 추가
