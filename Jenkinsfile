@@ -6,7 +6,7 @@ pipeline {
             steps {
                 echo 'Building Back-End...'
                 // 백엔드 소스코드가 있는 경로로 이동
-                dir('/jenkins/workspace/e206_gitlab/BE') {
+                dir('BE') {
                     // Docker 이미지 빌드 명령어
                     sh 'docker build -t spring-app:test .'
                 }
