@@ -11,7 +11,7 @@ FROM node:20.11.0
 # `serve` 패키지를 전역으로 설치
 RUN npm install -g serve
 # 빌드 디렉토리에서 파일 복사
-COPY --from=build /app/build /app
+COPY --from=build /app/dist /app
 WORKDIR /app
 # 3000번 포트에서 실행
 EXPOSE 3000
