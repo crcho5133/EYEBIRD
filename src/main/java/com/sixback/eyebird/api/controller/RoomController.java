@@ -4,6 +4,8 @@ import com.sixback.eyebird.api.dto.RequestRoomDto;
 import com.sixback.eyebird.api.dto.RoomDto;
 import com.sixback.eyebird.api.service.RoomService;
 import com.sixback.eyebird.util.Sha256Convert;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 
+@Api(value = "room", tags = {"room"})
 @RestController
 @NoArgsConstructor
 @RequestMapping("/api/room")
@@ -21,6 +24,7 @@ public class RoomController {
 
     // 방 리스트
     // item이랑 classic이랑 구분되어야 함
+    @ApiOperation(value = "방장이 게임 시작할 때 사용", notes = "<strong>게임시작</strong>을 통해 방 status를 GAME으로 업데이트하고, 시작된 게임의 game_id를 반환한다.")
     @GetMapping("/item")
     public List<RoomDto> itemRoomList(){
         return roomService.roomList(true);
