@@ -14,16 +14,21 @@ export const OpenViduProvider = ({ children }) => {
     const initSession = () => {
       const newSession = OV.current.initSession();
 
-      // 세션 이벤트 리스너 설정
       newSession.on("streamCreated", (event) => {
-        const subscriber = mySession.subscribe(event.stream, undefined);
-        setSubscribers((subscribers) => [...subscribers, subscriber]);
+        const subscriber = newSession.subscribe(event.stream, undefined);
+        setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
+      });
+
+      newSession.on("streamDestroyed", (event) => {
+        const streamIdToRemove = event.stream.streamId;
+        setSubscribers((prevSubscribers) =>
+          prevSubscribers.filter((subscriber) => subscriber.stream.streamId !== streamIdToRemove)
+        );
       });
 
       newSession.on("exception", (exception) => {
         console.warn(exception);
       });
-      // 기타 필요한 이벤트 리스너 추가
 
       setSession(newSession);
     };
@@ -31,13 +36,11 @@ export const OpenViduProvider = ({ children }) => {
     initSession();
 
     return () => {
-      session && session.disconnect();
+      if (session) {
+        session.disconnect();
+      }
     };
   }, []);
-
-  const getToken = async (mySessionId) => {
-    return createSession(mySessionId).then((sessionId) => createToken(sessionId));
-  };
 
   const createSession = async (sessionId) => {
     const response = await axios.post(
@@ -61,9 +64,19 @@ export const OpenViduProvider = ({ children }) => {
     return response.data; // The token
   };
 
+  const getToken = async (sessionId) => {
+    try {
+      const newSessionId = await createSession(sessionId);
+      const token = await createToken(newSessionId);
+      return token;
+    } catch (error) {
+      console.error("Error creating token:", error);
+    }
+  };
+
   return (
     <OpenViduContext.Provider
-      value={{ session, subscribers, getToken, createSession, createToken }}
+      value={{ session, subscribers, setSubscribers, createSession, createToken, getToken, OV }}
     >
       {children}
     </OpenViduContext.Provider>
