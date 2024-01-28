@@ -15,22 +15,21 @@ const usersApiCall = () => {
   };
 
   const checkEmailDuplicate = async (email, setIsEmailValid) => {
-    const url = usersUrl.checkDuplicate() + "?email=" + email;
+    const url = usersUrl.checkEmailDuplicate() + "?email=" + email;
 
     try {
-      // await axios.get(url);
-      console.log("요청 성공");
+      console.log(url);
+      await axios.get(url);
       setIsEmailValid(true);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const checkNicknameDuplicate = (nickname, setIsNicknameValid) => {
-    const url = usersUrl.checkDuplicate() + "?nickname=" + nickname;
-
+  const checkNicknameDuplicate = async (nickname, setIsNicknameValid) => {
+    const url = usersUrl.checkNicknameDuplicate() + "?nickname=" + nickname;
     try {
-      // await axios.get(url);
+      await axios.get(url);
       console.log("요청 성공");
       setIsNicknameValid(true);
     } catch (error) {

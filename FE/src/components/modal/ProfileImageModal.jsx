@@ -5,12 +5,8 @@ const ProfileImageModal = ({ visible, onClose, setProfileImage, setProfileImageI
   const profileImages = [
     "src/assets/img/케이셉.PNG",
     "src/assets/img/포이즌.PNG",
-    "src/assets/img/케이셉.PNG",
-    "src/assets/img/포이즌.PNG",
-    "src/assets/img/케이셉.PNG",
-    "src/assets/img/포이즌.PNG",
-    "src/assets/img/케이셉.PNG",
-    "src/assets/img/포이즌.PNG",
+    "src/assets/img/쌍익.PNG",
+    "src/assets/img/종길.PNG",
   ];
 
   const ImageSelect = (imageUrl, index) => {

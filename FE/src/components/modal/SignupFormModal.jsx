@@ -9,6 +9,8 @@ const SignupFormModal = ({ visible, onClose }) => {
   const [profileImage, setProfileImage] = useState("");
   const [ProfileImageIndex, setProfileImageIndex] = useState("");
   const [isProfileImageModalVisible, setProfileImageModalVisible] = useState(false);
+  const [hasEmailChecked, setEmailHasChecked] = useState(false);
+  const [hasNicknameChecked, setNicknameHasChecked] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
@@ -32,6 +34,14 @@ const SignupFormModal = ({ visible, onClose }) => {
 
   const emailHandleChange = (event) => {
     setEmail(event.target.value);
+    setIsEmailValid(false);
+    setEmailHasChecked(false);
+  };
+
+  const nicknameHandleChange = (event) => {
+    setNickname(event.target.value);
+    setIsNicknameValid(false);
+    setNicknameHasChecked(false);
   };
 
   const passwordHandleChange = (event) => {
@@ -51,16 +61,16 @@ const SignupFormModal = ({ visible, onClose }) => {
     setPasswordsMatch(password === passwordCheck);
   };
 
-  const nicknameHandleChange = (event) => {
-    setNickname(event.target.value);
-  };
-
-  const checkEmailDuplicate = () => {
+  const checkEmailDuplicate = (event) => {
+    event.preventDefault();
     usersApiCall().checkEmailDuplicate(email, setIsEmailValid);
+    setEmailHasChecked(true);
   };
 
-  const checkNicknameDuplicate = () => {
+  const checkNicknameDuplicate = (event) => {
+    event.preventDefault();
     usersApiCall().checkNicknameDuplicate(nickname, setIsNicknameValid);
+    setNicknameHasChecked(true);
   };
 
   return (
@@ -89,6 +99,10 @@ const SignupFormModal = ({ visible, onClose }) => {
               onChange={emailHandleChange}
             />
             <ModalBtn text="중복확인" onClick={checkEmailDuplicate} disabled={isEmailValid} />
+            {isEmailValid && <div style={{ color: "green" }}>중복확인이 완료 되었습니다.</div>}
+            {!isEmailValid && hasEmailChecked && (
+              <div style={{ color: "red" }}>중복된 아이디가 있습니다.</div>
+            )}
           </div>
 
           <div className="flex space-x-1">
@@ -99,6 +113,10 @@ const SignupFormModal = ({ visible, onClose }) => {
               onChange={nicknameHandleChange}
             />
             <ModalBtn text="중복확인" onClick={checkNicknameDuplicate} disabled={isNicknameValid} />
+            {isNicknameValid && <div style={{ color: "green" }}>중복확인이 완료 되었습니다.</div>}
+            {!isNicknameValid && hasNicknameChecked && (
+              <div style={{ color: "red" }}>중복된 아이디가 있습니다.</div>
+            )}
           </div>
 
           <input
