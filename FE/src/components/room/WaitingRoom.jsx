@@ -25,7 +25,16 @@ const WaitingRoom = ({
   MicOFF,
   CameraON,
   CameraOFF,
+  chatMessages,
+  currentMessage,
+  setCurrentMessage,
+  sendChatMessage,
+  setChatMode,
 }) => {
+  const [isChatModalVisible, setIsChatModalVisible] = useState(false);
+  const showChatModal = () => setIsChatModalVisible(true);
+  const hideChatModal = () => setIsChatModalVisible(false);
+
   const [isVisible, setIsVisible] = useState(false);
   const [selectedAudioOption, setSelectedAudioOption] = useState("all");
   const showRodal = () => {
@@ -224,6 +233,32 @@ const WaitingRoom = ({
               >
                 끄기
               </button>
+            </Rodal>
+
+            {/* 채팅 모달 버튼 */}
+            <button onClick={showChatModal}>채팅</button>
+
+            {/* 채팅 모달 */}
+            <Rodal visible={isChatModalVisible} onClose={hideChatModal}>
+              <div>
+                <h2>채팅</h2>
+                <div>
+                  {/* 채팅 메시지 리스트 */}
+                  {chatMessages.map((msg, index) => (
+                    <div key={index}>
+                      <strong>{msg.user}:</strong> {msg.text}
+                    </div>
+                  ))}
+                </div>
+                <input
+                  type="text"
+                  value={currentMessage}
+                  onChange={(e) => setCurrentMessage(e.target.value)}
+                />
+                <button onClick={sendChatMessage}>보내기</button>
+                <button onClick={() => setChatMode("all")}>전체</button>
+                <button onClick={() => setChatMode("team")}>팀</button>
+              </div>
             </Rodal>
           </div>
         </div>

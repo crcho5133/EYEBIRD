@@ -53,6 +53,10 @@ const Room = () => {
   // 클라이언트 영상, 마이크 제어
   const [cameraOn, setCameraOn] = useState(true);
   const [micOn, setMicOn] = useState(true);
+  // 채팅
+  const [chatMessages, setChatMessages] = useState([]);
+  const [currentMessage, setCurrentMessage] = useState("");
+  const [chatMode, setChatMode] = useState("all");
   // 상태 최신화 참조
   const myTeamRef = useRef(myTeam);
   const myStreamIdRef = useRef(myStreamId);
@@ -179,6 +183,50 @@ const Room = () => {
     }
     setMicOn(newMicOn);
   }, [micOn, mainStreamManager]);
+
+  // 채팅 메시지 전송 함수
+  const sendChatMessage = () => {
+    const messageData = {
+      text: currentMessage,
+      user: myUserName,
+      timestamp: new Date().toISOString(),
+      mode: chatMode,
+    };
+
+    session.signal({
+      data: JSON.stringify(messageData),
+      type: `chat-${chatMode}`,
+    });
+
+    setCurrentMessage("");
+  };
+
+  // 채팅 메시지 수신 이벤트 리스너
+  useEffect(() => {
+    const handleChatMessageReceived = (event) => {
+      const messageData = JSON.parse(event.data);
+      // 'all' 모드이거나, 'team' 모드이면서 같은 팀인 경우에만 메시지 추가
+      if (chatMode === "all" || (chatMode === "team" && messageData.mode === myTeam)) {
+        setChatMessages((prevMessages) => [...prevMessages, messageData]);
+      }
+    };
+
+    session.on("signal:chat-all", handleChatMessageReceived);
+    session.on("signal:chat-team", handleChatMessageReceived);
+
+    return () => {
+      session.off("signal:chat-all", handleChatMessageReceived);
+      session.off("signal:chat-team", handleChatMessageReceived);
+    };
+  }, [session, chatMode, myTeam]);
+
+  const chatProps = {
+    chatMessages,
+    currentMessage,
+    setCurrentMessage,
+    sendChatMessage,
+    setChatMode,
+  };
 
   // 팀 선택 핸들러
   const handleSelectTeam = (streamId, team) => {
@@ -507,6 +555,7 @@ const Room = () => {
           MicOFF={MicOFF}
           CameraON={CameraON}
           CameraOFF={CameraOFF}
+          {...chatProps}
         />
       )}
       {!isLoading && gameState === "gamePlay" && <GamePlay /* 필요한 props */ />}
