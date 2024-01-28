@@ -26,7 +26,9 @@ const WaitingRoom = ({
   CameraON,
   CameraOFF,
   chatMessages,
+  teamChatMessages,
   currentMessage,
+  chatMode,
   setCurrentMessage,
   sendChatMessage,
   setChatMode,
@@ -239,25 +241,51 @@ const WaitingRoom = ({
             <button onClick={showChatModal}>채팅</button>
 
             {/* 채팅 모달 */}
-            <Rodal visible={isChatModalVisible} onClose={hideChatModal}>
+            <Rodal visible={isChatModalVisible} onClose={hideChatModal} height={400}>
               <div>
-                <h2>채팅</h2>
-                <div>
-                  {/* 채팅 메시지 리스트 */}
-                  {chatMessages.map((msg, index) => (
-                    <div key={index}>
-                      <strong>{msg.user}:</strong> {msg.text}
-                    </div>
-                  ))}
+                <h2>
+                  {chatMode === "all"
+                    ? "전체 채팅"
+                    : `팀 채팅(${myTeam !== "W" ? myTeam + "팀" : "대기열"})`}
+                </h2>
+                <div className="flex">
+                  <button onClick={() => setChatMode("all")} className="mr-4">
+                    전체
+                  </button>
+                  <button onClick={() => setChatMode(myTeam)}>팀</button>
                 </div>
-                <input
-                  type="text"
-                  value={currentMessage}
-                  onChange={(e) => setCurrentMessage(e.target.value)}
-                />
-                <button onClick={sendChatMessage}>보내기</button>
-                <button onClick={() => setChatMode("all")}>전체</button>
-                <button onClick={() => setChatMode("team")}>팀</button>
+                <div className="h-72 overflow-y-auto">
+                  {/* 채팅 메시지 리스트 */}
+                  {chatMode === "all" &&
+                    chatMessages.map((msg, index) => (
+                      <div key={index}>
+                        <strong>{msg.sender}:</strong> {msg.content}
+                      </div>
+                    ))}
+                  {chatMode === myTeam &&
+                    teamChatMessages.map((msg, index) => (
+                      <div key={index}>
+                        <strong>{msg.sender}:</strong> {msg.content}
+                      </div>
+                    ))}
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    value={currentMessage}
+                    onChange={(e) => setCurrentMessage(e.target.value)}
+                  />
+                  <button
+                    onClick={() => {
+                      if (currentMessage.length > 0) {
+                        sendChatMessage();
+                      }
+                    }}
+                    disabled={currentMessage.length === 0}
+                  >
+                    보내기
+                  </button>
+                </div>
               </div>
             </Rodal>
           </div>

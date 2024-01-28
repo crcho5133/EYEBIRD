@@ -55,6 +55,7 @@ const Room = () => {
   const [micOn, setMicOn] = useState(true);
   // 채팅
   const [chatMessages, setChatMessages] = useState([]);
+  const [teamChatMessages, setTeamChatMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
   const [chatMode, setChatMode] = useState("all");
   // 상태 최신화 참조
@@ -186,43 +187,26 @@ const Room = () => {
 
   // 채팅 메시지 전송 함수
   const sendChatMessage = () => {
-    const messageData = {
-      text: currentMessage,
-      user: myUserName,
+    const message = {
+      content: currentMessage,
+      sender: myUserName,
+      mode: chatMode, // 'all', 'A', 'B'
       timestamp: new Date().toISOString(),
-      mode: chatMode,
     };
 
     session.signal({
-      data: JSON.stringify(messageData),
-      type: `chat-${chatMode}`,
+      data: JSON.stringify(message),
+      type: "chat",
     });
 
     setCurrentMessage("");
   };
 
-  // 채팅 메시지 수신 이벤트 리스너
-  useEffect(() => {
-    const handleChatMessageReceived = (event) => {
-      const messageData = JSON.parse(event.data);
-      // 'all' 모드이거나, 'team' 모드이면서 같은 팀인 경우에만 메시지 추가
-      if (chatMode === "all" || (chatMode === "team" && messageData.mode === myTeam)) {
-        setChatMessages((prevMessages) => [...prevMessages, messageData]);
-      }
-    };
-
-    session.on("signal:chat-all", handleChatMessageReceived);
-    session.on("signal:chat-team", handleChatMessageReceived);
-
-    return () => {
-      session.off("signal:chat-all", handleChatMessageReceived);
-      session.off("signal:chat-team", handleChatMessageReceived);
-    };
-  }, [session, chatMode, myTeam]);
-
   const chatProps = {
     chatMessages,
+    teamChatMessages,
     currentMessage,
+    chatMode,
     setCurrentMessage,
     sendChatMessage,
     setChatMode,
@@ -233,6 +217,7 @@ const Room = () => {
     setMyTeam(team);
     setMyStreamId(streamId);
     updateTeamChoice(streamId, team);
+    setTeamChatMessages([]);
     sendTeamChoice(streamId, team);
   };
 
@@ -316,6 +301,17 @@ const Room = () => {
 
     mySession.on("exception", (exception) => {
       console.warn(exception);
+    });
+
+    // 채팅 이벤트 리스너 설정
+    mySession.on("signal:chat", (event) => {
+      const receivedMessage = JSON.parse(event.data);
+      // 전체 채팅 추가
+      if (receivedMessage.mode === "all") {
+        setChatMessages((prevMessages) => [...prevMessages, receivedMessage]);
+      } else if (receivedMessage.mode === myTeamRef.current) {
+        setTeamChatMessages((prevMessages) => [...prevMessages, receivedMessage]);
+      }
     });
 
     // 팀 선택 수신
