@@ -7,6 +7,7 @@ const APPLICATION_SERVER_URL = "http://localhost:5000/";
 
 export const OpenViduProvider = ({ children }) => {
   const [session, setSession] = useState(null);
+  const [subscribers, setSubscribers] = useState([]);
   const OV = useRef(new OpenVidu());
 
   useEffect(() => {
@@ -61,7 +62,9 @@ export const OpenViduProvider = ({ children }) => {
   };
 
   return (
-    <OpenViduContext.Provider value={{ session, getToken, createSession, createToken }}>
+    <OpenViduContext.Provider
+      value={{ session, subscribers, getToken, createSession, createToken }}
+    >
       {children}
     </OpenViduContext.Provider>
   );
