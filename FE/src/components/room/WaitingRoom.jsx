@@ -1,6 +1,7 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import Rodal from "rodal";
-import AudioControlModal from "../modal/AudioControlModal";
+import "rodal/lib/rodal.css";
+// import AudioControlModal from "../modal/AudioControlModal";
 import UserVideoComponent from "./UserVideoComponent";
 
 const WaitingRoom = ({
@@ -26,6 +27,7 @@ const WaitingRoom = ({
   CameraOFF,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [selectedAudioOption, setSelectedAudioOption] = useState("all");
   const showRodal = () => {
     setIsVisible(true);
   };
@@ -35,13 +37,34 @@ const WaitingRoom = ({
 
   const toggleAudio = (Team, turn) => {
     Team.map((streamId) => {
-      const streamManager =
-        streamId === publisher?.stream.streamId
-          ? publisher
-          : subscribers.find((sub) => sub.stream.streamId === streamId);
-      streamManager.subscribeToAudio(turn);
+      const streamManager = subscribers.find((sub) => sub.stream.streamId === streamId);
+      if (streamManager) {
+        streamManager.subscribeToAudio(turn);
+      }
     });
   };
+
+  useEffect(() => {
+    // 현재 사용자가 선택한 음성 옵션에 따라 다른 팀의 오디오를 업데이트
+    const updateAudioBasedOnTeamChange = () => {
+      if (selectedAudioOption === "team") {
+        // 현재 사용자의 팀만 오디오 켜기
+        toggleAudio(myTeam === "A" ? teamA : teamB, true);
+        // 다른 팀 오디오 끄기
+        toggleAudio(myTeam === "A" ? teamB : teamA, false);
+      } else if (selectedAudioOption === "all") {
+        // 모든 팀의 오디오 켜기
+        toggleAudio(teamA, true);
+        toggleAudio(teamB, true);
+      } else if (selectedAudioOption === "off") {
+        // 모든 팀의 오디오 끄기
+        toggleAudio(teamA, false);
+        toggleAudio(teamB, false);
+      }
+    };
+
+    updateAudioBasedOnTeamChange();
+  }, [teamA, teamB, myTeam, selectedAudioOption]);
 
   return (
     <div className="waiting-room">
@@ -176,22 +199,27 @@ const WaitingRoom = ({
               <h2>음성 제어</h2>
               <button
                 onClick={() => {
-                  toggleAudio(subscribers, true);
+                  toggleAudio(teamA, true);
+                  toggleAudio(teamB, true);
+                  setSelectedAudioOption("all");
                 }}
               >
                 전체
               </button>
               <button
                 onClick={() => {
-                  toggleAudio(myTeam === "A" ? TeamB : TeamA, false);
-                  toggleAudio(myTeam === "A" ? TeamA : TeamB, true);
+                  toggleAudio(myTeam === "A" ? teamB : teamA, false);
+                  toggleAudio(myTeam === "A" ? teamA : teamB, true);
+                  setSelectedAudioOption("team");
                 }}
               >
                 팀
               </button>
               <button
                 onClick={() => {
-                  toggleAudio(subscribers, false);
+                  toggleAudio(teamA, false);
+                  toggleAudio(teamB, false);
+                  setSelectedAudioOption("off");
                 }}
               >
                 끄기
