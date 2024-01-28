@@ -27,7 +27,7 @@ public class SecurityConfig {
     private final RedisTemplate<String, Object> redisTemplate;
     private final AuthEntryPointJwt unauthorizedHandler;
     private static final String[] AUTH_WHITELIST = {
-            "/api/auth/login", "/api/auth/logout", "/api/auth/reissue", "/api/user/signup"
+            "/api/auth/login", "/api/auth/logout", "/api/auth/reissue", "/api/user/signup", "/api/user/check/nickname", "/api/user/check/email"
     };
 
     @Bean
@@ -41,9 +41,9 @@ public class SecurityConfig {
                 .formLogin((form) -> form.disable())
                 .headers(header -> header.frameOptions(options -> options.sameOrigin()))
                 .addFilterBefore(new JwtAuthFilter(jwtTokenUtil, userDetailsServiceImpl, redisTemplate), UsernamePasswordAuthenticationFilter.class) // jwtAuthFilter를 UsernamePasswordAuthenticationFilter 이전에 실행
-                .authorizeHttpRequests(auth -> auth.requestMatchers(AUTH_WHITELIST).permitAll()
+                .authorizeHttpRequests(auth -> auth.requestMatchers(AUTH_WHITELIST).permitAll() // 접근 허용
                         .requestMatchers(toH2Console()).permitAll() // h2 database 사용을 위해
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated() // 이외의 endpoint 들은 인증 요구
                 );
 
 
