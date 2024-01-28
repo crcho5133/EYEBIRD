@@ -2,13 +2,11 @@ import axios from "axios";
 import usersUrl from "@/api/url/usersUrl";
 
 const usersApiCall = () => {
-  const signup = async (profileImageIndex, email, password, nickname) => {
-    const url = usersUrl.signUp();
-    const body = { profileImageIndex, email, password, nickname };
-
+  const signup = async (profileImage, email, password, nickname) => {
+    const body = { profileImage, email, password, nickname };
     try {
-      await axios.post(url, body);
-      console.log("성공");
+      await axios.post(usersUrl.signUp(), body);
+      const token = await axios.post(usersUrl.login(), { email, password });
     } catch (error) {
       console.log(error);
     }
@@ -16,11 +14,14 @@ const usersApiCall = () => {
 
   const checkEmailDuplicate = async (email, setIsEmailValid) => {
     const url = usersUrl.checkEmailDuplicate() + "?email=" + email;
-
     try {
-      console.log(url);
-      await axios.get(url);
-      setIsEmailValid(true);
+      const response = await axios.get(url);
+      console.log(response.data);
+      if (response.data.check === false) {
+        setIsEmailValid(false);
+      } else if (response.data.check === true) {
+        setIsEmailValid(true);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -29,9 +30,13 @@ const usersApiCall = () => {
   const checkNicknameDuplicate = async (nickname, setIsNicknameValid) => {
     const url = usersUrl.checkNicknameDuplicate() + "?nickname=" + nickname;
     try {
-      await axios.get(url);
-      console.log("요청 성공");
-      setIsNicknameValid(true);
+      const response = await axios.get(url);
+      console.log(response.data);
+      if (response.data.check === false) {
+        setIsNicknameValid(false);
+      } else if (response.data.check === true) {
+        setIsNicknameValid(true);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -40,11 +45,9 @@ const usersApiCall = () => {
   const login = async (email, password) => {
     const url = usersUrl.login();
     const body = { email, password };
-
     try {
-      // const res = await axios.post(url, body);
+      const response = await axios.post(url, body);
       // toast.success("로그인 되었습니다.");
-      console.log("로그인 성공");
       // const { accessToken, userSeq, nickname } = res.data;
       // return { accessToken, userSeq, nickname };
     } catch (error) {

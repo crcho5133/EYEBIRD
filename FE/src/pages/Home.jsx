@@ -3,40 +3,27 @@ import LobbyBtn from "@/components/lobby/LobbyBtn";
 import SignupFormModal from "@/components/modal/SignupFormModal";
 import LoginFormModal from "@/components/modal/LoginFormModal";
 import DescriptionModal from "@/components/modal/DescriptionModal";
+import useRodal from "@/hooks/useRodal";
 
 const Home = () => {
-  const [isSignupModalVisible, setsignupModalVisible] = useState(false);
-  const [isLoginModalVisible, setLoginModalVisible] = useState(false);
-  const [isDescriptionModalVisible, setDescriptionModalVisible] = useState(false);
-
-  const showSignupRodal = () => {
-    setsignupModalVisible(true);
-  };
-  const showLoginRodal = () => {
-    setLoginModalVisible(true);
-  };
-  const showDescriptionRodal = () => {
-    setDescriptionModalVisible(true);
-  };
-
-  const hideSignUpRodal = () => {
-    setsignupModalVisible(false);
-  };
-  const hideLoginRodal = () => {
-    setLoginModalVisible(false);
-  };
-  const hideDescriptionRodal = () => {
-    setDescriptionModalVisible(false);
-  };
+  const isSignupModalVisible = useRodal();
+  const isLoginModalVisible = useRodal();
+  const isDescriptionModalVisible = useRodal();
 
   return (
     <>
-      <LobbyBtn text="회원가입" onClick={showSignupRodal} className="mr-4" />
-      <LobbyBtn text="로그인" onClick={showLoginRodal} className="mr-4" />
-      <LobbyBtn text="게임설명" onClick={showDescriptionRodal} />
-      <SignupFormModal visible={isSignupModalVisible} onClose={hideSignUpRodal} />
-      <LoginFormModal visible={isLoginModalVisible} onClose={hideLoginRodal} />
-      <DescriptionModal visible={isDescriptionModalVisible} onClose={hideDescriptionRodal} />
+      <LobbyBtn text="회원가입" onClick={isSignupModalVisible.showRodal} className="mr-4" />
+      <LobbyBtn text="로그인" onClick={isLoginModalVisible.showRodal} className="mr-4" />
+      <LobbyBtn text="게임설명" onClick={isDescriptionModalVisible.showRodal} />
+      <SignupFormModal
+        visible={isSignupModalVisible.value}
+        onClose={isSignupModalVisible.hideRodal}
+      />
+      <LoginFormModal visible={isLoginModalVisible.value} onClose={isLoginModalVisible.hideRodal} />
+      <DescriptionModal
+        visible={isDescriptionModalVisible.value}
+        onClose={isDescriptionModalVisible.hideRodal}
+      />
     </>
   );
 };
