@@ -1,6 +1,6 @@
 import React from "react";
 
-const LobbyBtn = ({ onClick, text, className }) => {
+const LobbyBtn = ({ text, onClick, className }) => {
   return (
     <button
       onClick={onClick}

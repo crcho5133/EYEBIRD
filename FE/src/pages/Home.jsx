@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import LobbyBtn from "@/components/lobby/LobbyBtn";
 import SignupFormModal from "@/components/modal/SignupFormModal";
+import LoginFormModal from "@/components/modal/LoginFormModal";
 
 const Home = () => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -16,7 +17,9 @@ const Home = () => {
   return (
     <>
       <LobbyBtn onClick={showRodal} text="회원가입" className="mr-4" />
+      <LobbyBtn text="로그인" onClick={showRodal} className="mr-4" />
       <SignupFormModal visible={isModalVisible} onClose={hideRodal} />
+      <LoginFormModal visible={isModalVisible} onClose={hideRodal} />
     </>
   );
 };
