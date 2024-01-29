@@ -1,5 +1,4 @@
 // NotificationModal.jsx
-
 import { useState } from "react";
 import Rodal from "rodal"; // Rodal import
 import "rodal/lib/rodal.css"; // Rodal CSS
@@ -22,16 +21,14 @@ const NotificationModal = ({ visible, onClose }) => {
         <h1>알림</h1>
         <div>
           <button
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={() => setActiveTab("invitation")}
-            className={`tabButton ${activeTab === "invitation" ? "active" : ""}`}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
           >
             초대함
           </button>
           <button
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={() => setActiveTab("message")}
-            className={`tabButton ${activeTab === "message" ? "active" : ""}`}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
           >
             쪽지함
           </button>
