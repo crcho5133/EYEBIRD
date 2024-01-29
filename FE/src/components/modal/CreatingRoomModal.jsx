@@ -1,13 +1,13 @@
-// NotificationModal.jsx
+// CreatingRoomModal.jsx
 
 import { useState } from "react";
 import Rodal from "rodal"; // Rodal import
-import "rodal/lib/rodal.css"; // Rodal CSS
 import axios from "axios";
+import "rodal/lib/rodal.css"; // Rodal CSS
 
 const CreatingRoomModal = ({ visible, onClose }) => {
   const [roomName, setRoomName] = useState("");
-  const [mode, setMode] = useState("classic");
+  const [isItem, setIsItem] = useState(false);
   const [players, setPlayers] = useState("1vs1");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -25,7 +25,7 @@ const CreatingRoomModal = ({ visible, onClose }) => {
           roomName: roomName,
           password: password,
           maxCapacity: players.replace("vs", ""),
-          isItem: mode === "item" ? "true" : "false",
+          isItem: isItem,
         },
         {
           headers: { "Content-Type": "application/json" },
@@ -50,20 +50,20 @@ const CreatingRoomModal = ({ visible, onClose }) => {
         value={roomName}
         onChange={(e) => setRoomName(e.target.value)}
         placeholder="방 제목"
-        className="border p-2 rounded"
+        className="border-2 p-2 rounded w-full"
       />
       <select
-        value={mode}
-        onChange={(e) => setMode(e.target.value)}
-        className="border p-2 rounded mt-2"
+        value={isItem}
+        onChange={(e) => setIsItem(e.target.value === "true")}
+        className="border-2 p-2 rounded mt-2"
       >
-        <option value="classic">클래식전</option>
-        <option value="item">아이템전</option>
+        <option value={false}>클래식전</option>
+        <option value={true}>아이템전</option>
       </select>
       <select
         value={players}
         onChange={(e) => setPlayers(e.target.value)}
-        className="border p-2 rounded mt-2"
+        className="border-2 p-2 rounded mt-2"
       >
         <option value="1vs1">1vs1</option>
         <option value="2vs2">2vs2</option>
@@ -75,9 +75,12 @@ const CreatingRoomModal = ({ visible, onClose }) => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="방 비밀번호"
-        className="border p-2 rounded mt-2"
+        className="border-2 p-2 rounded mt-2 w-full"
       />
-      <button onClick={handleCreate} className="bg-blue-500 text-white p-2 w-full rounded mt-2">
+      <button
+        onClick={handleCreate}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-2 w-full"
+      >
         생성
       </button>
       {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
