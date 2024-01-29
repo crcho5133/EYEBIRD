@@ -1,5 +1,6 @@
 package com.sixback.eyebird.db.entity;
 
+import com.sixback.eyebird.api.dto.PointReqDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,4 +23,8 @@ public class Point extends BaseTime{
     @JoinColumn(name = "user_id")
     private User user;
 
+    public void update(PointReqDto pointReqDto) {
+        this.classicPt += pointReqDto.getClassicPt();
+        this.itemPt += pointReqDto.getItemPt();
+    }
 }
