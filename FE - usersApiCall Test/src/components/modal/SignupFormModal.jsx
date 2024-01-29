@@ -6,7 +6,6 @@ import useFormField from "@/hooks/useFormField";
 import Rodal from "rodal";
 import useRodal from "@/hooks/useRodal";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
-import { useNavigate } from "react-router-dom";
 import "rodal/lib/rodal.css";
 
 const SignupFormModal = ({ visible, onClose }) => {
@@ -19,18 +18,11 @@ const SignupFormModal = ({ visible, onClose }) => {
   const ProfileImageIndex = useFormField("");
   const [passwordsMatch, setPasswordsMatch] = useState(false);
   const accessToken = useAccessTokenState();
-  const navigate = useNavigate();
+  const test = usersApiCall();
 
   const signup = (event) => {
     event.preventDefault();
-    usersApiCall().signup(
-      ProfileImageIndex.value,
-      email.value,
-      password.value,
-      nickname.value,
-      accessToken,
-      navigate
-    );
+    test.signup(ProfileImageIndex.value, email.value, password.value, nickname.value, accessToken);
   };
 
   const passwordHandleChange = (event) => {
@@ -52,14 +44,14 @@ const SignupFormModal = ({ visible, onClose }) => {
 
   const checkEmailDuplicate = (event) => {
     event.preventDefault();
-    usersApiCall().checkEmailDuplicate(email.value, email.setIsValid);
+    test.checkEmailDuplicate(email.value, email.setIsValid);
     console.log(email.isValid);
     email.setHasChecked(true);
   };
 
   const checkNicknameDuplicate = (event) => {
     event.preventDefault();
-    usersApiCall().checkNicknameDuplicate(nickname.value, nickname.setIsValid);
+    test.checkNicknameDuplicate(nickname.value, nickname.setIsValid);
     nickname.setHasChecked(true);
   };
 

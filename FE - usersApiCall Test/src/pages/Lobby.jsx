@@ -1,15 +1,14 @@
 import usersApiCall from "@/api/axios/usersApiCall";
 import LobbyBtn from "@/components/lobby/LobbyBtn";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
-import { useNavigate } from "react-router-dom";
 
 const Lobby = () => {
   const accessToken = useAccessTokenState();
-  const navigate = useNavigate();
+  const test = usersApiCall();
 
   const logout = (event) => {
     event.preventDefault();
-    usersApiCall().logout(accessToken, navigate);
+    test.logout(accessToken);
   };
 
   return (
