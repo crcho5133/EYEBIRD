@@ -1,65 +1,88 @@
 import profile from "../assets/img/bird_weard_pirate-hat.png"; // 프로필 사진 파일 경로
+import cup_gold from "../assets/img/cup_gold.png";
+import my_info from "../assets/img/my_info.png";
+import { useNavigate } from "react-router-dom";
+import NavBarNoBack from "../components/lobby/NavBarNoBack";
 
 const Lobby = () => {
-  const handleNotificationClick = () => {
-    // 알림 기능을 수행하는 함수를 여기에 작성하세요.
-  };
-
-  const handleSettingsClick = () => {
-    // 설정 기능을 수행하는 함수를 여기에 작성하세요.
-  };
+  // useFetchAccessToken();
+  const navigate = useNavigate(); // 추가된 코드
 
   const handleRankingClick = () => {
-    // 랭킹 보기 기능을 수행하는 함수를 여기에 작성하세요.
+    navigate("/ranking");
   };
 
   const handleMyInfoClick = () => {
-    // 내정보 보기 기능을 수행하는 함수를 여기에 작성하세요.
+    navigate("/myInfo");
   };
 
-  const handleRankingMatchClick = () => {
-    // 랭킹전 시작 기능을 수행하는 함수를 여기에 작성하세요.
+  const handleRankingGameChoiceClick = () => {
+    navigate("/rankingGame"); // 랭킹전 화면으로 이동
   };
 
-  const handleNormalMatchClick = () => {
-    // 일반전 시작 기능을 수행하는 함수를 여기에 작성하세요.
+  const handleNormalMatchChoiceClick = () => {
+    navigate("/normalGame"); // 랭킹전 화면으로 이동
   };
 
   return (
-    <div className="h-screen flex flex-col">
-      {/* 알림, 설정 버튼 */}
-      <div className="flex justify-end gap-4 p-4">
-        <button onClick={handleNotificationClick} className="notificationButton">
-          알림
-        </button>
-        <button onClick={handleSettingsClick} className="settingsButton">
-          설정
-        </button>
-      </div>
-      {/* 프로필 사진, 랭킹, 내정보 버튼 */}
-      <div className="flex items-center gap-4">
-        {/* 프로필 사진 */}
-        <img src={profile} alt="Profile" className="object-contain h-full ml-4" />
-        {/* 랭킹, 내정보 버튼 */}
-        <div className="flex flex-col items-end mr-4">
-          <button onClick={handleRankingClick} className="rankingButton mb-4">
-            랭킹
-          </button>
-          <button onClick={handleMyInfoClick} className="myInfoButton">
-            내정보
-          </button>
+    <>
+      <NavBarNoBack />
+      <div className="h-screen flex flex-col items-center">
+        {/* 프로필 사진, 랭킹, 내정보 버튼 */}
+        <div className="flex items-center ">
+          {/* 프로필 사진 */}
+          <div className="item">
+            <img
+              src={profile}
+              alt="Profile"
+              className="object-contain h-full ml-4"
+              style={{
+                width: "70%",
+              }}
+            />
+          </div>
+          {/* 랭킹, 내정보 버튼 */}
+          <div className="flex flex-col items-end mr-4 gap-1">
+            <button
+              onClick={handleRankingClick}
+              className="mb-4"
+              style={{
+                width: "130%",
+              }}
+            >
+              <img src={cup_gold} alt="CupGold" />
+            </button>
+            <button
+              onClick={handleMyInfoClick}
+              style={{
+                width: "130%",
+              }}
+            >
+              <img src={my_info} alt="MyInfo" />
+            </button>
+          </div>
+        </div>
+        {/* 랭킹전, 일반전 버튼 */}
+        <div className="flex justify-center items-center mt-40">
+          <div className="flex">
+            <button
+              onClick={handleRankingGameChoiceClick}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mb-4"
+            >
+              랭킹전
+            </button>
+          </div>
+          <div className="flex">
+            <button
+              onClick={handleNormalMatchChoiceClick}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+            >
+              일반전
+            </button>
+          </div>
         </div>
       </div>
-      {/* 랭킹전, 일반전 버튼 */}
-      <div className="flex-grow flex flex-col justify-center items-center">
-        <button onClick={handleRankingMatchClick} className="rankingMatchButton mb-4">
-          랭킹전
-        </button>
-        <button onClick={handleNormalMatchClick} className="normalMatchButton">
-          일반전
-        </button>
-      </div>
-    </div>
+    </>
   );
 };
 
