@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { OpenViduProvider } from "./context/OpenViduContext";
+// import { OpenViduProvider } from "./context/OpenViduContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MainLayout from "./layouts/MainLayout";
@@ -13,16 +13,16 @@ function App() {
     <>
       <BrowserRouter>
         <ToastContainer stacked pauseOnFocusLoss={false} />
-        <OpenViduProvider>
-          <MainLayout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/lobby" element={<Lobby />} />
-              <Route path="/room/:sessionId" element={<Room />} />
-              <Route path="/game" element={<Game />} />
-            </Routes>
-          </MainLayout>
-        </OpenViduProvider>
+        {/* <OpenViduProvider> */}
+        <MainLayout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/lobby" element={<Lobby />} />
+            <Route path="/room/:sessionId" element={<Room />} />
+            <Route path="/game" element={<Game />} />
+          </Routes>
+        </MainLayout>
+        {/* </OpenViduProvider> */}
       </BrowserRouter>
     </>
   );

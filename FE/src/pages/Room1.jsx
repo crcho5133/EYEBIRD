@@ -67,10 +67,8 @@ const Room = () => {
   const teamWRef = useRef(teamW);
   // OpenVidu 라이브러리 사용
   const OV = useRef(new OpenVidu());
-
-  // 콘솔 로그 제어하는거 찾아햐 함.
-  // OV.current.setAdvancedConfiguration({ logLevel: "DISABLE" });
-  // OpenVidu.enableProdMode;
+  // 로그 에러만 출력
+  // OV.current.enableProdMode();
 
   // useEffect 훅
   useEffect(() => {

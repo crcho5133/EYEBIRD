@@ -35,11 +35,11 @@ export default function UserVideoComponent({ streamManager, streamId, clientStre
           <div className="text-center">
             <p className="m-0 inline-block">{getNicknameTag()}</p>
           </div>
-          <div className="text-right">
+          {/* <div className="text-right">
             {clientStreamId !== streamId ? (
               <button onClick={toggleAudio}>{isActive ? "들려요" : "안들려요"}</button>
             ) : null}
-          </div>
+          </div> */}
         </div>
       ) : null}
     </div>

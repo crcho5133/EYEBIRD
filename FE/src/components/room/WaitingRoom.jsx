@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Rodal from "rodal";
 import "rodal/lib/rodal.css";
 // import AudioControlModal from "../modal/AudioControlModal";
@@ -36,6 +36,15 @@ const WaitingRoom = ({
   const [isChatModalVisible, setIsChatModalVisible] = useState(false);
   const showChatModal = () => setIsChatModalVisible(true);
   const hideChatModal = () => setIsChatModalVisible(false);
+
+  const chatListRef = useRef(null);
+
+  useEffect(() => {
+    if (isChatModalVisible && chatListRef.current) {
+      // 채팅 목록의 스크롤을 맨 아래로 이동
+      chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
+    }
+  }, [chatMessages, teamChatMessages, isChatModalVisible]);
 
   const [isVisible, setIsVisible] = useState(false);
   const [selectedAudioOption, setSelectedAudioOption] = useState("all");
@@ -241,38 +250,55 @@ const WaitingRoom = ({
             <button onClick={showChatModal}>채팅</button>
 
             {/* 채팅 모달 */}
-            <Rodal visible={isChatModalVisible} onClose={hideChatModal} height={400}>
+            <Rodal
+              visible={isChatModalVisible}
+              onClose={hideChatModal}
+              height={400}
+              animation="slideUp"
+            >
               <div>
-                <h2>
+                <div className="flex my-2">
+                  <button
+                    onClick={() => setChatMode("all")}
+                    className={`border-2 rounded border-solid border-sky-500 mr-4 h-8 w-12 ${chatMode === "all" ? "bg-sky-500" : ""}`}
+                  >
+                    전체
+                  </button>
+                  <button
+                    onClick={() => setChatMode(myTeam)}
+                    className={`border-2 rounded border-solid border-sky-500 mr-4 h-8 w-12 ${chatMode === myTeam ? "bg-sky-500" : ""}`}
+                  >
+                    팀
+                  </button>
+                </div>
+                <h2 className="border-2 rounded border-solid border-sky-500 px-1">
                   {chatMode === "all"
                     ? "전체 채팅"
                     : `팀 채팅(${myTeam !== "W" ? myTeam + "팀" : "대기열"})`}
                 </h2>
-                <div className="flex">
-                  <button onClick={() => setChatMode("all")} className="mr-4">
-                    전체
-                  </button>
-                  <button onClick={() => setChatMode(myTeam)}>팀</button>
-                </div>
-                <div className="h-72 overflow-y-auto">
+                <div
+                  className="h-64 overflow-y-auto border-2 rounded border-solid border-sky-500 my-1"
+                  ref={chatListRef}
+                >
                   {/* 채팅 메시지 리스트 */}
                   {chatMode === "all" &&
                     chatMessages.map((msg, index) => (
-                      <div key={index}>
+                      <div key={index} className="px-1 border-2 rounded border-blue-300 m-1 p-1">
                         <strong>{msg.sender}:</strong> {msg.content}
                       </div>
                     ))}
                   {chatMode === myTeam &&
                     teamChatMessages.map((msg, index) => (
-                      <div key={index}>
+                      <div key={index} className="px-1 border-2 rounded border-blue-300 m-1 p-1">
                         <strong>{msg.sender}:</strong> {msg.content}
                       </div>
                     ))}
                 </div>
-                <div>
+                <div className="grid grid-flow-col justify-stretch h-8">
                   <input
                     type="text"
                     value={currentMessage}
+                    className="border-2 rounded border-solid border-sky-500 mr-2 p-1"
                     onChange={(e) => setCurrentMessage(e.target.value)}
                   />
                   <button
@@ -282,6 +308,7 @@ const WaitingRoom = ({
                       }
                     }}
                     disabled={currentMessage.length === 0}
+                    className="border-2 rounded border-solid border-sky-500 bg-sky-300 hover:bg-sky-500"
                   >
                     보내기
                   </button>
