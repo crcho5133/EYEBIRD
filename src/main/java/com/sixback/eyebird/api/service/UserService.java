@@ -60,7 +60,7 @@ public class UserService {
     public void update(UpdateUserReqDto modifyUserDto, String email) {
         // 현재 로그인된 유저를 DB에서 찾는다
         User user = userRepository.findUserByEmail(email).orElseThrow(() -> new IllegalArgumentException("회원수정: 유저가 인증되지 않았습니다"));
-
+        
         String currentPassword = modifyUserDto.getCurrentPassword();
         String newPassword = modifyUserDto.getNewPassword();
         String newNickname = modifyUserDto.getNewNickname();
