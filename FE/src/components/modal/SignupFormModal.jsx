@@ -5,6 +5,8 @@ import usersApiCall from "@/api/axios/usersApiCall";
 import useFormField from "@/hooks/useFormField";
 import Rodal from "rodal";
 import useRodal from "@/hooks/useRodal";
+import { useAccessTokenState } from "@/context/AccessTokenContext";
+import { useNavigate } from "react-router-dom";
 import "rodal/lib/rodal.css";
 
 const SignupFormModal = ({ visible, onClose }) => {
@@ -15,11 +17,19 @@ const SignupFormModal = ({ visible, onClose }) => {
   const passwordCheck = useFormField("");
   const profileImage = useFormField("");
   const ProfileImageIndex = useFormField("");
-  const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [passwordsMatch, setPasswordsMatch] = useState(false);
+  const accessToken = useAccessTokenState();
+  const navigate = useNavigate();
 
   const signup = (event) => {
     event.preventDefault();
-    usersApiCall().signup(ProfileImageIndex.value, email.value, password.value, nickname.value);
+    usersApiCall().signup(
+      ProfileImageIndex.value,
+      email.value,
+      password.value,
+      nickname.value,
+      accessToken
+    );
   };
 
   const passwordHandleChange = (event) => {
@@ -34,14 +44,14 @@ const SignupFormModal = ({ visible, onClose }) => {
 
   const validatePasswords = (password, passwordCheck) => {
     if (passwordCheck === "") {
-      return setPasswordsMatch(true);
+      return setPasswordsMatch(false);
     }
     setPasswordsMatch(password === passwordCheck);
   };
 
-  const checkEmailDuplicate = async (event) => {
+  const checkEmailDuplicate = (event) => {
     event.preventDefault();
-    await usersApiCall().checkEmailDuplicate(email.value, email.setIsValid);
+    usersApiCall().checkEmailDuplicate(email.value, email.setIsValid);
     console.log(email.isValid);
     email.setHasChecked(true);
   };
@@ -90,7 +100,7 @@ const SignupFormModal = ({ visible, onClose }) => {
           </button>
         </div>
 
-        <form className="space-y-2 p-2" onSubmit={signup}>
+        <div className="space-y-2 p-2">
           <div className="flex space-x-1">
             <input
               type="text"
@@ -139,15 +149,17 @@ const SignupFormModal = ({ visible, onClose }) => {
             onChange={passwordCheckHandleChange}
             className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          {!passwordsMatch && <div className="text-red-500">비밀번호가 일치하지 않습니다</div>}
+          {!passwordsMatch && passwordCheck.value && (
+            <div className="text-red-500">비밀번호가 일치하지 않습니다</div>
+          )}
 
           <ModalBtn
             onClick={signup}
             type="submit"
             text="회원가입"
-            disabled={!email.isValid || !nickname.isValid}
+            disabled={!email.isValid || !nickname.isValid || !passwordsMatch}
           />
-        </form>
+        </div>
       </Rodal>
 
       <ProfileImageModal

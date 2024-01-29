@@ -2,11 +2,14 @@ import axios from "axios";
 import usersUrl from "@/api/url/usersUrl";
 
 const usersApiCall = () => {
-  const signup = async (profileImage, email, password, nickname) => {
+  const signup = async (profileImage, email, password, nickname, accessToken) => {
     const body = { profileImage, email, password, nickname };
     try {
-      await axios.post(usersUrl.signUp(), body);
-      const token = await axios.post(usersUrl.login(), { email, password });
+      const response = await axios.post(usersUrl.signUp(), body);
+      if (response.status != 201) {
+        throw new Error("회원가입 실패: " + response.status);
+      }
+      await axios.post(usersUrl.login(), { email, password, accessToken });
     } catch (error) {
       console.log(error);
     }
@@ -16,7 +19,7 @@ const usersApiCall = () => {
     const url = usersUrl.checkEmailDuplicate() + "?email=" + email;
     try {
       const response = await axios.get(url);
-      console.log(response.data);
+      console.log(response);
       if (response.data.check === false) {
         setIsEmailValid(false);
       } else if (response.data.check === true) {
@@ -31,7 +34,7 @@ const usersApiCall = () => {
     const url = usersUrl.checkNicknameDuplicate() + "?nickname=" + nickname;
     try {
       const response = await axios.get(url);
-      console.log(response.data);
+      console.log(response);
       if (response.data.check === false) {
         setIsNicknameValid(false);
       } else if (response.data.check === true) {
@@ -42,14 +45,20 @@ const usersApiCall = () => {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (email, password, accessToken, navigate) => {
     const url = usersUrl.login();
     const body = { email, password };
     try {
       const response = await axios.post(url, body);
-      // toast.success("로그인 되었습니다.");
-      // const { accessToken, userSeq, nickname } = res.data;
-      // return { accessToken, userSeq, nickname };
+      if (response.status != 200) {
+        throw new Error("로그인 실패: " + response.status);
+      }
+      accessToken.setAccessToken(response.data.accessToken);
+      accessToken.setRefreshToken(response.data.refreshToken);
+      accessToken.setEmail(response.data.email);
+      accessToken.setNickname(response.data.nickname);
+      accessToken.setProfileImageIndex(response.data.profileImage);
+      navigate("/lobby");
     } catch (error) {
       console.log(error);
       // if (axios.isAxiosError(error) && error.response) {
@@ -79,13 +88,17 @@ const usersApiCall = () => {
     }
   };
 
-  const logout = async (email, password) => {
+  const logout = async (accessToken) => {
     const url = usersUrl.logout();
-    const body = { email, password };
+    const body = {
+      grantType: "Bearer",
+      accessToken: accessToken.accessToken,
+      refreshToken: accessToken.refreshToken,
+    };
 
     try {
-      console.log("로그아웃 성공");
-
+      const response = await axios.post(url, body);
+      console.log(response);
       // 로컬 스토리지에서 JWT 토큰을 가져옵니다.
       // const token = localStorage.getItem('jwtToken');
 
