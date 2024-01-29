@@ -11,6 +11,8 @@ import MicON from "../assets/img/room/MicOn.png";
 import MicOFF from "../assets/img/room/MicOff.png";
 import CameraON from "../assets/img/room/CameraOn.png";
 import CameraOFF from "../assets/img/room/CameraOff.png";
+import Chat from "../assets/img/room/Chat.png";
+import Sound from "../assets/img/room/Sound.png";
 import LoadingSpinner from "../assets/img/loading/loading.gif";
 
 const APPLICATION_SERVER_URL = "http://localhost:5000/";
@@ -205,6 +207,8 @@ const Room = () => {
     teamChatMessages,
     currentMessage,
     chatMode,
+    setChatMessages,
+    setTeamChatMessages,
     setCurrentMessage,
     sendChatMessage,
     setChatMode,
@@ -215,6 +219,7 @@ const Room = () => {
     setMyTeam(team);
     setMyStreamId(streamId);
     updateTeamChoice(streamId, team);
+    setChatMode("all");
     setTeamChatMessages([]);
     sendTeamChoice(streamId, team);
   };
@@ -533,6 +538,7 @@ const Room = () => {
           subscribers={subscribers}
           mySessionId={mySessionId}
           myStreamId={myStreamId}
+          myUserName={myUserName}
           myTeam={myTeam}
           teamA={teamA}
           teamB={teamB}
@@ -549,6 +555,8 @@ const Room = () => {
           MicOFF={MicOFF}
           CameraON={CameraON}
           CameraOFF={CameraOFF}
+          Chat={Chat}
+          Sound={Sound}
           {...chatProps}
         />
       )}

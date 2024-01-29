@@ -1,7 +1,7 @@
 import React from "react";
 import OpenViduVideoComponent from "./OvVideo";
 
-export default function UserVideoComponent({ streamManager, streamId, clientStreamId }) {
+export default function UserVideoComponent({ streamManager, streamId, clientStreamId, color }) {
   const [isActive, setIsActive] = React.useState(true);
   // const isMutedRef = React.useRef(isMuted);
 
@@ -28,9 +28,9 @@ export default function UserVideoComponent({ streamManager, streamId, clientStre
   };
 
   return (
-    <div>
+    <div className={`h-32 border-t-4 ${color}`}>
       {streamManager !== undefined ? (
-        <div className="relative bg-gray-200 m-2 text-gray-700 font-bold border-4 border-green-500">
+        <div className="relative bg-gray-200 text-gray-700 font-bold">
           <OpenViduVideoComponent streamManager={streamManager} />
           <div className="text-center">
             <p className="m-0 inline-block">{getNicknameTag()}</p>
