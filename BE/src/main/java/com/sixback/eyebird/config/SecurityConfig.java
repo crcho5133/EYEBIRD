@@ -21,15 +21,15 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 @EnableWebSecurity
 @RequiredArgsConstructor // 의존성 주입을 위해 필요
 public class SecurityConfig {
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
-    private final JwtTokenUtil jwtTokenUtil;
-    private final AuthEntryPointJwt unauthorizedHandler;
-    private static final String[] AUTH_WHITELIST = {
-            "/api/auth/login", "/api/user/signup"
-    };
+        private final UserDetailsServiceImpl userDetailsServiceImpl;
+        private final JwtTokenUtil jwtTokenUtil;
+        private final AuthEntryPointJwt unauthorizedHandler;
+        private static final String[] AUTH_WHITELIST = {
+                "/api/auth/login", "/api/user/signup", "/api/auth/qqq" 
+        };
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.httpBasic(HttpBasicConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
