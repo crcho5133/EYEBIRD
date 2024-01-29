@@ -242,7 +242,8 @@ const WaitingRoom = ({
           <Rodal
             visible={isVisible}
             onClose={hideRodal}
-            customStyles={{ width: "80%", height: "25%" }}
+            height={300}
+            width={300}
             animation="slideUp"
           >
             <h2>음성 제어</h2>
