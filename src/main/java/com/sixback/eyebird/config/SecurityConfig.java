@@ -27,7 +27,8 @@ public class SecurityConfig {
     private final RedisTemplate<String, Object> redisTemplate;
     private final AuthEntryPointJwt unauthorizedHandler;
     private static final String[] AUTH_WHITELIST = {
-            "/api/auth/login", "/api/auth/logout", "/api/auth/reissue", "/api/user/signup", "/api/user/check/nickname", "/api/user/check/email"
+            "/api/auth/login", "/api/auth/logout", "/api/auth/reissue", "/api/user/signup", "/api/user/check/nickname", "/api/user/check/email",
+            "/api/sessions", "/api/sessions/{sessionId}/connections"
     };
 
     @Bean
