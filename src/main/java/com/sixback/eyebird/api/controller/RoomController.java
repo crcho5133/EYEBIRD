@@ -4,8 +4,9 @@ import com.sixback.eyebird.api.dto.RequestRoomDto;
 import com.sixback.eyebird.api.dto.RoomDto;
 import com.sixback.eyebird.api.service.RoomService;
 import com.sixback.eyebird.util.Sha256Convert;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 
-@Api(value = "room", tags = {"room"})
 @RestController
 @NoArgsConstructor
 @RequestMapping("/api/room")
+@Tag(name = "room")
 public class RoomController {
     @Autowired
     RoomService roomService;
@@ -24,17 +25,20 @@ public class RoomController {
 
     // 방 리스트
     // item이랑 classic이랑 구분되어야 함
-    @ApiOperation(value = "방장이 게임 시작할 때 사용", notes = "<strong>게임시작</strong>을 통해 방 status를 GAME으로 업데이트하고, 시작된 게임의 game_id를 반환한다.")
+    @Operation(summary = "아이템방 리스트 조회", description = "아이템방 리스트 조회")
     @GetMapping("/item")
     public List<RoomDto> itemRoomList(){
         return roomService.roomList(true);
     }
+
+    @Operation(summary = "클래식방 리스트 조회", description = "클래식방 리스트 조회")
     @GetMapping("/classic")
     public List<RoomDto> classicRoomList(){
         return roomService.roomList(false);
     }
 
     // 방 생성
+    @Operation(summary = "방 생성", description = "현재 방 생성 갯수(35개) 초과 불가, 방 이름 중복 불가")
     @PostMapping()
     //public Map<Integer, String> createRoom(@RequestBody Room room){
     public String createRoom(@RequestBody RequestRoomDto reqRoom){
@@ -62,14 +66,16 @@ public class RoomController {
     }
 
     // 방 삭제
+    @Operation(summary = "방 삭제", description = "방 나갈 때 현재 방에 사람 없으면 방 삭제")
     @DeleteMapping("/{id}")
-    public boolean deleteRoom(@PathVariable String id){
+    public boolean deleteRoom(@Parameter(description = "방 id = session id") @PathVariable String id){
         return roomService.deleteRoom(id);
     }
 
     // 방 들어가기
     // 1, 들어가고자 하는 방 번호를 받으면
     // 2. 입장 가능 여부 체크 후 리턴
+    @Operation(summary = "방 들어가기", description = "블랙리스트/방 인원수 초과 시 입장 불가")
     @PostMapping("/enter")
     public String enterRoom(@RequestBody RoomDto room){
         // Issue : TEST용 UserId

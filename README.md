@@ -1,14 +1,67 @@
-24-01-23
-1. Gerrit 설정
-2. Room branch 생성
-3. Room 패키지 생성
+*담당자(기능별)*
+이재진 장수영 조창래
 
-24-01-24
-1. Docker(Redis) - 스프링 부트 통신
+1. Entity
+	- UserEntity[조창래]
+	- PointEntity[조창래]
+	- GameResultEntity [조창래]
+	- PointEntity [조창래]
+	- MessageEntity [조창래]
+	- UserFriendEntity [이재진]
 
-24-01-25
-1. API 명세서 보고 파라미터 수정
-2. 방 나가기 시 현재 방 인원수를 줄이고 0이 되면 redis에서 삭제
-3. RoomId를 RoomName Hash화 해서 생성
-4. 방 조회 아이템/클래식으로 분리
-5. 방 입장 시 Current Capacity 추가로 관리
+2. Repository
+	- UserFriendRepository[이재진]
+	- UserRepository[조창래]
+	- PointRepository[조창래]
+	- MessageRepository[조창래]
+
+3. Dto
+	- RoomListDto [장수영]
+	- CreateRoomDto [장수영]
+	- RankResDto [장수영]
+	- RankReqDto [장수영]
+	- UserFriendDto[이재진]
+	- SignupReqDto [조창래]
+	- SignupResDto[조창래]
+	- LoginReqDto [조창래]
+	- LoginResDto [조창래]
+	- JWTDto [조창래]
+	- GameResultDto [조창래]
+	- PointDto [조창래]
+	- MessageDto [조창래]
+
+4. Controller
+	- RoomController [장수영]
+	- StompRoomController [장수영]
+	- RankController [장수영]
+	- StompRankController [장수영]
+	- UserFriendController[이재진]
+	- UserController [조창래]
+	- RankController [조창래]
+
+5. Service
+	- RoomService [장수영]
+	- RankService [장수영]
+	- UserFriendService[이재진]
+	- UserService [조창래]
+	- RankService [조창래]
+	- PointService [조창래]
+	- MessageService [조창래]
+
+6. Exception
+	
+7. Config
+	- RedisConfig [장수영]
+	- STOMPConfig [조창래]
+	- SecurityConfig [조창래]
+	- SwaggerConfig [장수영]
+
+8. Filter
+	- JWTAuthFilter [조창래]
+
+9. Infra
+	- SpringBoot Docker Image [이재진]
+	- React Docker Image [이재진]
+	- MySQL Redis [이재진]
+	- Jenkins [이재진] 
+	- AWS EC2 [이재진]

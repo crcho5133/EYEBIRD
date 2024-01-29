@@ -25,7 +25,7 @@ public class SecurityConfig {
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthEntryPointJwt unauthorizedHandler;
     private static final String[] AUTH_WHITELIST = {
-            "/api/auth/login", "/api/user/signup"
+            "/api/auth/login", "/api/user/signup", "/swagger-ui/**", "/v3/api-docs/**"
     };
 
     @Bean
@@ -39,7 +39,8 @@ public class SecurityConfig {
                 .formLogin((form) -> form.disable())
                 .headers(header -> header.frameOptions(options -> options.sameOrigin()))
                 .addFilterBefore(new JwtAuthFilter(jwtTokenUtil, userDetailsServiceImpl), UsernamePasswordAuthenticationFilter.class) // jwtAuthFilter를 UsernamePasswordAuthenticationFilter 이전에 실행
-                .authorizeHttpRequests(auth -> auth.requestMatchers(AUTH_WHITELIST).permitAll()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(AUTH_WHITELIST).permitAll()
                         .requestMatchers(toH2Console()).permitAll() // h2 database 사용을 위해
                         .anyRequest().authenticated()
                 );
