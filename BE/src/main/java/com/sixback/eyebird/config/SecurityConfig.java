@@ -25,7 +25,7 @@ public class SecurityConfig {
         private final JwtTokenUtil jwtTokenUtil;
         private final AuthEntryPointJwt unauthorizedHandler;
         private static final String[] AUTH_WHITELIST = {
-                "/api/auth/login", "/api/user/signup", "/api/auth/qqq" 
+                "/api/auth/login", "/api/user/signup", "/api/auth/qqq", "/api/auth/www" 
         };
 
         @Bean
