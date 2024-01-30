@@ -1,7 +1,8 @@
 import Rodal from "rodal";
 import "rodal/lib/rodal.css";
+import { useAccessTokenState } from "@/context/AccessTokenContext";
 
-const ProfileImageModal = ({ visible, onClose, setProfileImage, setProfileImageIndex }) => {
+const ProfileImageModal = ({ visible, onClose, setProfileImage, setProfileImageIndex, myInfo }) => {
   const profileImages = [
     "src/assets/img/1.PNG",
     "src/assets/img/2.PNG",
@@ -10,9 +11,14 @@ const ProfileImageModal = ({ visible, onClose, setProfileImage, setProfileImageI
   ];
 
   const ImageSelect = (imageUrl, index) => {
-    setProfileImage(imageUrl);
-    setProfileImageIndex(index);
-    onClose();
+    if (myInfo) {
+      myInfo.setProfileImageIndex(index);
+      onClose();
+    } else {
+      setProfileImage(imageUrl);
+      setProfileImageIndex(index);
+      onClose();
+    }
   };
 
   return (
@@ -35,7 +41,7 @@ const ProfileImageModal = ({ visible, onClose, setProfileImage, setProfileImageI
           </div>
         ))}
       </div>
-      <button onClose={onClose}>닫기</button>
+      <button onClick={onClose}> 닫기 </button>
     </Rodal>
   );
 };

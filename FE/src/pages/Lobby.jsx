@@ -2,9 +2,8 @@ import usersApiCall from "@/api/axios/usersApiCall";
 import LobbyBtn from "@/components/lobby/LobbyBtn";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
 import MyInfo from "@/components/lobby/MyInfo";
-import { useState } from "react";
 import LobbyIconBtn from "@/components/lobby/LobbyIconBtn";
-import useShowComponent from "./../hooks/useShowComponent";
+import useShowComponent from "@/hooks/useShowComponent";
 
 const Lobby = () => {
   const accessToken = useAccessTokenState();

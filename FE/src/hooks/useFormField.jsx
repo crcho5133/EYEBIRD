@@ -1,13 +1,15 @@
 import { useState } from "react";
 
-function useFormField(initialValue) {
+function useFormField(initialValue, validator) {
   const [value, setValue] = useState(initialValue);
   const [isValid, setIsValid] = useState(false);
   const [hasChecked, setHasChecked] = useState(false);
 
   const onChange = (newValue) => {
     setValue(newValue);
-    setIsValid(true);
+    if (validator) {
+      setIsValid(validator(newValue));
+    }
     setHasChecked(false);
   };
 

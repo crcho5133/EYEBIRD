@@ -5,6 +5,7 @@ export const AccessTokenContext = createContext({
   refreshToken: "",
   email: "",
   nickname: "",
+  profile: "",
   profileImageIndex: 0,
   classicPt: 0,
   itemPt: 0,

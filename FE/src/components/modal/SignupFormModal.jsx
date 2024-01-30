@@ -8,12 +8,13 @@ import useShowRodal from "@/hooks/useShowRodal";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
 import "rodal/lib/rodal.css";
 import LobbyBtn from "@/components/lobby/LobbyBtn";
+import { validateEmail, validateNickname, validatePassword } from "@/utils/validateForm";
 
 const SignupFormModal = ({ visible, onClose }) => {
   const isProfileImageModalVisible = useShowRodal();
-  const email = useFormField("");
-  const nickname = useFormField("");
-  const password = useFormField("");
+  const email = useFormField("", validateEmail);
+  const nickname = useFormField("", validateNickname);
+  const password = useFormField("", validatePassword);
   const passwordCheck = useFormField("");
   const profileImage = useFormField("");
   const ProfileImageIndex = useFormField("");
@@ -33,12 +34,12 @@ const SignupFormModal = ({ visible, onClose }) => {
   };
 
   const passwordHandleChange = (event) => {
-    password.setValue(event.target.value);
+    password.onChange(event.target.value);
     validatePasswords(event.target.value, passwordCheck.value);
   };
 
   const passwordCheckHandleChange = (event) => {
-    passwordCheck.setValue(event.target.value);
+    passwordCheck.onChange(event.target.value);
     validatePasswords(password.value, event.target.value);
   };
 
@@ -80,16 +81,17 @@ const SignupFormModal = ({ visible, onClose }) => {
           onClose();
         }}
         customStyles={{ width: "80%", height: "45%" }}
+        className="sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 2xl:w-1/4"
       >
         <div className="p-4">
           {profileImage.value ? (
             <img
               src={profileImage.value}
               alt="프로필 이미지"
-              className="w-20 h-20 rounded-full mb-4"
+              className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full mb-4"
             />
           ) : (
-            <div className="w-20 h-20 rounded-full bg-gray-200 mb-4"></div>
+            <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full bg-gray-200 mb-4"></div>
           )}
           <LobbyBtn
             onClick={isProfileImageModalVisible.showRodal}
@@ -99,19 +101,21 @@ const SignupFormModal = ({ visible, onClose }) => {
         </div>
 
         <div className="space-y-2 p-2">
-          <div className="flex space-x-1">
-            <input
-              type="text"
-              placeholder="이메일"
-              value={email.value}
-              className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              onChange={(e) => email.onChange(e.target.value)}
-            />
-            <ModalBtn
-              text="중복확인"
-              onClick={checkEmailDuplicate}
-              disabled={!email.isValid || !email.value}
-            />
+          <div className="space-y-2">
+            <div className="flex space-x-1">
+              <input
+                type="text"
+                placeholder="이메일"
+                value={email.value}
+                className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => email.onChange(e.target.value)}
+              />
+              <ModalBtn
+                text="중복확인"
+                onClick={checkEmailDuplicate}
+                disabled={!email.isValid || !email.value}
+              />
+            </div>
             {!email.isValid && email.hasChecked && (
               <div style={{ color: "green" }}>중복확인이 완료 되었습니다.</div>
             )}
@@ -120,25 +124,30 @@ const SignupFormModal = ({ visible, onClose }) => {
             )}
           </div>
 
-          <div className="flex space-x-1">
-            <input
-              type="text"
-              placeholder="닉네임"
-              value={nickname.value}
-              className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              onChange={(e) => nickname.onChange(e.target.value)}
-            />
-            <ModalBtn
-              text="중복확인"
-              onClick={checkNicknameDuplicate}
-              disabled={!nickname.isValid || !nickname.value}
-            />
+          <div className="space-y-2">
+            <div className="flex space-x-1">
+              <input
+                type="text"
+                placeholder="닉네임"
+                value={nickname.value}
+                className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => nickname.onChange(e.target.value)}
+              />
+              <ModalBtn
+                text="중복확인"
+                onClick={checkNicknameDuplicate}
+                disabled={!nickname.isValid || !nickname.value}
+              />
+            </div>
             {!nickname.isValid && nickname.hasChecked && (
               <div style={{ color: "green" }}>중복확인이 완료 되었습니다.</div>
             )}
             {nickname.isValid && nickname.hasChecked && (
               <div style={{ color: "red" }}>중복된 닉네임이 있습니다.</div>
             )}
+          </div>
+          <div className="text-xs text-gray-600">
+            ※ 닉네임은 영문자, 숫자, 한글로 이루어진 1~8자 까지 가능합니다
           </div>
 
           <input
@@ -148,6 +157,9 @@ const SignupFormModal = ({ visible, onClose }) => {
             onChange={passwordHandleChange}
             className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <div className="text-xs text-gray-600">
+            ※ 비밀번호는 적어도 하나의 영문자,숫자를 포함하여 6자리 이상이 되어야 합니다
+          </div>
           <input
             type="password"
             placeholder="비밀번호 확인"
@@ -163,7 +175,7 @@ const SignupFormModal = ({ visible, onClose }) => {
             onClick={signup}
             type="submit"
             text="회원가입"
-            disabled={email.isValid || nickname.isValid || !passwordsMatch}
+            disabled={email.isValid || nickname.isValid || !passwordsMatch || !password.isValid}
           />
         </div>
       </Rodal>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Profile from "@/components/lobby/Profile";
-import Friends from "@/components/lobby/Friends";
+import FriendManagement from "@/components/lobby/FriendManagement";
 import ChangeInfo from "@/components/lobby/ChangeInfo";
 import DeleteUser from "@/components/lobby/DeleteUser";
 
@@ -12,7 +12,7 @@ const MyInfo = ({ visible, onClose }) => {
       case "profile":
         return <Profile />;
       case "friends":
-        return <Friends />;
+        return <FriendManagement />;
       case "changeInfo":
         return <ChangeInfo />;
       case "deleteUser":
@@ -35,7 +35,7 @@ const MyInfo = ({ visible, onClose }) => {
           className="border border-gray-300 px-4 py-2 rounded hover:bg-gray-100"
           onClick={() => setActiveTab("friends")}
         >
-          친구들
+          친구 관리
         </button>
         <button
           className="border border-gray-300 px-4 py-2 rounded hover:bg-gray-100"

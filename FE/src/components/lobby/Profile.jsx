@@ -2,10 +2,13 @@ import { useAccessTokenState } from "@/context/AccessTokenContext";
 import LobbyBtn from "@/components/lobby/LobbyBtn";
 import useShowRodal from "@/hooks/useShowRodal";
 import ProfileImageModal from "@/components/modal/ProfileImageModal";
+import useFormField from "@/hooks/useFormField";
 
 const Profile = () => {
   const myInfo = useAccessTokenState();
   const isProfileImageModalVisible = useShowRodal();
+  const profileImage = useFormField("");
+  const profileImageIndex = useFormField("");
 
   return (
     <div className="p-4">
@@ -34,7 +37,8 @@ const Profile = () => {
         visible={isProfileImageModalVisible.value}
         onClose={isProfileImageModalVisible.hideRodal}
         setProfileImage={profileImage.setValue}
-        setProfileImageIndex={ProfileImageIndex.setValue}
+        setProfileImageIndex={profileImageIndex.setValue}
+        myInfo={myInfo}
       />
     </div>
   );
