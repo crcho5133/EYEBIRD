@@ -405,8 +405,6 @@ const Room = () => {
       session.disconnect();
     }
 
-    navigate("/lobby");
-
     // Reset all states and OpenVidu object
     OV.current = new OpenVidu();
     setSession(undefined);
@@ -419,6 +417,8 @@ const Room = () => {
     setTeamB(Array(4).fill(null));
     setTeamW(Array(8).fill(null));
     setGameState("");
+
+    // navigate("/lobby");
   }, [session]);
 
   useEffect(() => {

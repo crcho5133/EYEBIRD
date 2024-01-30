@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 // import Rodal from "rodal";
 // import "rodal/lib/rodal.css";
 import UserVideoComponent from "./UserVideoComponent";
@@ -43,6 +44,8 @@ const WaitingRoom = ({
   const [isAudioModalVisible, setIsAudioModalVisible] = useState(false);
   const [selectedAudioOption, setSelectedAudioOption] = useState("off");
 
+  const navigate = useNavigate();
+
   const toggleAudio = (Team, turn) => {
     Team.map((streamId) => {
       const streamManager = subscribers.find((sub) => sub.stream.streamId === streamId);
@@ -80,7 +83,10 @@ const WaitingRoom = ({
         <button
           className="btn btn-large btn-danger bg-red-600"
           id="buttonLeaveSession"
-          onClick={leaveSession}
+          onClick={() => {
+            leaveSession();
+            navigate("/lobby");
+          }}
         >
           방 나가기
         </button>
@@ -93,7 +99,7 @@ const WaitingRoom = ({
           <div className="border-2 border-sky-500 m-1 text-center">
             A 팀 : {teamA.filter((id) => id !== null).length} / 4 명
           </div>
-          {teamA.map((streamId) => {
+          {teamA.map((streamId, idx) => {
             const streamManager =
               streamId === publisher?.stream.streamId
                 ? publisher
@@ -107,7 +113,7 @@ const WaitingRoom = ({
                 color={"border-sky-500"}
               />
             ) : (
-              <div className="border-t-4 border-sky-500 h-32"></div>
+              <div key={idx} className="border-t-4 border-sky-500 h-32"></div>
             );
           })}
           <div id="team-selection-buttons" className="text-center h-32 border-t-4 border-sky-500">
@@ -144,7 +150,7 @@ const WaitingRoom = ({
           <div className="border-2 border-red-500 m-1 text-center">
             B 팀 : {teamB.filter((id) => id !== null).length} / 4 명
           </div>
-          {teamB.map((streamId) => {
+          {teamB.map((streamId, idx) => {
             const streamManager =
               streamId === publisher?.stream.streamId
                 ? publisher
@@ -158,7 +164,7 @@ const WaitingRoom = ({
                 color={"border-red-500"}
               />
             ) : (
-              <div className="border-t-4 border-red-500 h-32"></div>
+              <div key={idx} className="border-t-4 border-red-500 h-32"></div>
             );
           })}
           <div id="team-selection-buttons" className="text-center h-32 border-t-4 border-red-500">

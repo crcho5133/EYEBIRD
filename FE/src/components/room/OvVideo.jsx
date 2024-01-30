@@ -9,5 +9,5 @@ export default function OpenViduVideoComponent({ streamManager }) {
     }
   }, [streamManager]);
 
-  return <video className="w-auto h-auto" autoPlay={true} ref={videoRef} />;
+  return <video className="w-full h-24" autoPlay={true} ref={videoRef} />;
 }
