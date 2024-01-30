@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { OpenVidu } from "openvidu-browser";
 import { toast, Slide, Bounce } from "react-toastify";
 import axios from "axios";
 // 게임 매칭 화면(일반 / 랭크 case로 구분)
-// import GamePlay from "./GamePlay";
+import GamePlay from "../components/game/GamePlay";
 // import GameResult from "./GameResult";
 import LoadingSpinner from "../assets/img/loading/loading.gif";
 
@@ -34,25 +34,20 @@ const Game = () => {
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
-  const [subscribers, setSubscribers] = useState([]);
+  const [subscriber, setSubscriber] = useState(undefined);
+
+  const [ready, setReady] = useState(false);
+  const [opponentReady, setOpponentReady] = useState(false);
 
   // 이 변수 switch camera 전용 변수? 확인하기
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
-  // 사용안할듯?
-  const [myStreamId, setMyStreamId] = useState("");
 
   // 상태 최신화 참조
-  const myStreamIdRef = useRef(myStreamId);
   const sessionRef = useRef(session);
+  const mySessionIdRef = useRef(mySessionId);
 
   // OpenVidu 라이브러리 사용
   const OV = useRef(new OpenVidu());
-
-  // useEffect 훅
-  useEffect(() => {
-    myStreamIdRef.current = myStreamId;
-    sessionRef.current = session;
-  }, [myStreamId, session]);
 
   useEffect(() => {
     if (mySessionId && myUserName) {
@@ -60,10 +55,16 @@ const Game = () => {
       joinSession();
       setTimeout(() => {
         setIsLoading(false);
-        setGameState("gameLoading");
+        setGameState("gamePlay");
       }, 1000);
     }
   }, [mySessionId, myUserName]);
+
+  // useEffect 훅
+  useEffect(() => {
+    sessionRef.current = session;
+    mySessionIdRef.current = mySessionId;
+  }, [session, mySessionId]);
 
   useEffect(() => {
     if (session) {
@@ -105,58 +106,65 @@ const Game = () => {
     }
   }, [session, myUserName]);
 
-  // 마이크 토글
-  const toggleMic = useCallback(() => {
-    const newMicOn = !micOn;
+  // // 마이크 토글
+  // const toggleMic = useCallback(() => {
+  //   const newMicOn = !micOn;
 
-    if (mainStreamManager) {
-      mainStreamManager.publishAudio(newMicOn);
-      toast.dismiss();
-      toast.success(`${newMicOn ? "마이크 ON" : "마이크 OFF"}`, {
-        position: "top-center",
-        autoClose: 500,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Slide,
-      });
-    }
-    setMicOn(newMicOn);
-  }, [micOn, mainStreamManager]);
+  //   if (mainStreamManager) {
+  //     mainStreamManager.publishAudio(newMicOn);
+  //     toast.dismiss();
+  //     toast.success(`${newMicOn ? "마이크 ON" : "마이크 OFF"}`, {
+  //       position: "top-center",
+  //       autoClose: 500,
+  //       hideProgressBar: true,
+  //       closeOnClick: true,
+  //       pauseOnHover: false,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "colored",
+  //       transition: Slide,
+  //     });
+  //   }
+  //   setMicOn(newMicOn);
+  // }, [micOn, mainStreamManager]);
 
-  // 팀 선택 신호 보내기
-  const sendTeamChoice = (streamId, team) => {
+  // 게임 준비 완료 신호 보내기
+  const sendReady = () => {
     session.signal({
-      data: JSON.stringify({ streamId, team }),
-      type: "team-choice",
+      data: myUserName,
+      type: "ready",
     });
   };
 
-  // 새 사용자가 세션에 접속할 때 팀 정보 요청 신호 보내기
-  const requestTeamInfo = () => {
-    session.signal({
-      data: "", // 필요한 경우 추가 데이터 전송
-      type: "team-info-request",
-    });
-  };
+  // // 새 사용자가 세션에 접속할 때 팀 정보 요청 신호 보내기
+  // const requestTeamInfo = () => {
+  //   session.signal({
+  //     data: "", // 필요한 경우 추가 데이터 전송
+  //     type: "team-info-request",
+  //   });
+  // };
 
   const joinSession = useCallback(() => {
     const mySession = OV.current.initSession();
 
     mySession.on("streamCreated", (event) => {
       const subscriber = mySession.subscribe(event.stream, undefined);
-      setSubscribers((subscribers) => [...subscribers, subscriber]);
+      setSubscriber(subscriber);
     });
 
-    mySession.on("streamDestroyed", (event) => {
-      deleteSubscriber(event.stream.streamManager);
-    });
+    // mySession.on("streamDestroyed", (event) => {
+    //   deleteSubscriber(event.stream.streamManager);
+    // });
 
     mySession.on("exception", (exception) => {
       console.warn(exception);
+    });
+
+    mySession.on("signal:ready", (event) => {
+      const username = event.data;
+      if (username !== myUserName) {
+        setOpponentReady(true);
+      }
     });
 
     setSession(mySession);
@@ -171,25 +179,25 @@ const Game = () => {
     // Reset all states and OpenVidu object
     OV.current = new OpenVidu();
     setSession(undefined);
-    setSubscribers([]);
+    setSubscriber(undefined);
     setMySessionId("");
     setMyUserName("");
     setMainStreamManager(undefined);
     setPublisher(undefined);
   }, [session]);
 
-  const deleteSubscriber = useCallback((streamManager) => {
-    setSubscribers((prevSubscribers) => {
-      const index = prevSubscribers.indexOf(streamManager);
-      if (index > -1) {
-        const newSubscribers = [...prevSubscribers];
-        newSubscribers.splice(index, 1);
-        return newSubscribers;
-      } else {
-        return prevSubscribers;
-      }
-    });
-  }, []);
+  // const deleteSubscriber = useCallback((streamManager) => {
+  //   setSubscribers((prevSubscribers) => {
+  //     const index = prevSubscribers.indexOf(streamManager);
+  //     if (index > -1) {
+  //       const newSubscribers = [...prevSubscribers];
+  //       newSubscribers.splice(index, 1);
+  //       return newSubscribers;
+  //     } else {
+  //       return prevSubscribers;
+  //     }
+  //   });
+  // }, []);
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -228,6 +236,14 @@ const Game = () => {
     return response.data; // The token
   };
 
+  const readyProps = {
+    ready,
+    setReady,
+    opponentReady,
+    setOpponentReady,
+    sendReady,
+  };
+
   // 라우팅 구성
   return (
     <>
@@ -238,30 +254,16 @@ const Game = () => {
           </div>
         </div>
       )}
-      {!isLoading && gameState === "gameLoading" && (
-        <WaitingRoom
-          publisher={publisher}
-          subscribers={subscribers}
-          mySessionId={mySessionId}
-          myStreamId={myStreamId}
-          teamA={teamA}
-          teamB={teamB}
-          teamW={teamW}
-          cameraOn={cameraOn}
-          micOn={micOn}
+      {/* {!isLoading && gameState === "gameLoading" && (
+        <GameLoading
           toggleCamera={toggleCamera}
           toggleMic={toggleMic}
           leaveSession={leaveSession}
-          handleSelectTeam={handleSelectTeam}
-          isTeamFull={isTeamFull}
-          isTeamFull2={isTeamFull2}
-          MicON={MicON}
-          MicOFF={MicOFF}
-          CameraON={CameraON}
-          CameraOFF={CameraOFF}
         />
+      )} */}
+      {!isLoading && gameState === "gamePlay" && (
+        <GamePlay publisher={publisher} subscriber={subscriber} {...readyProps} />
       )}
-      {!isLoading && gameState === "gamePlay" && <GamePlay /* 필요한 props */ />}
       {!isLoading && gameState === "gameResult" && <GameResult /* 필요한 props */ />}
     </>
   );

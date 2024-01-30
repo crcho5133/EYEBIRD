@@ -71,7 +71,7 @@ const Room = () => {
   // OpenVidu 라이브러리 사용
   const OV = useRef(new OpenVidu());
   // 로그 에러만 출력
-  // OV.current.enableProdMode();
+  OV.current.enableProdMode();
 
   // useEffect 훅
   useEffect(() => {
