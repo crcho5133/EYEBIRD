@@ -41,7 +41,7 @@ public class AuthController {
     }
 
     @GetMapping("/www")
-    public String qqq() {
+    public String www() {
         return "WWWW!!!!~~~";
     }
 }
