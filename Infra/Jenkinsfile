@@ -65,7 +65,7 @@ pipeline {
         }
         stage('Deploy FE') {
             when {
-                expression { env.BUILD_ㄹE == "true" }
+                expression { env.BUILD_FE == "true" }
             }
             steps {
                 // 배포 관련 작업을 여기에 추가
