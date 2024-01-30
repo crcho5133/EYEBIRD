@@ -1,5 +1,6 @@
 package com.sixback.eyebird.api.service;
 
+import com.sixback.eyebird.api.dto.SearchUserResDto;
 import com.sixback.eyebird.api.dto.UpdateUserReqDto;
 import com.sixback.eyebird.api.dto.SignupReqDto;
 import com.sixback.eyebird.db.repository.UserRepository;
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -105,11 +107,20 @@ public class UserService {
         log.info("유저 삭제 성공");
     }
 
-    public List<User> searchUsers(String searchWord) {
+    public List<SearchUserResDto> searchUsers(String searchWord) {
         List<User> users = userRepository.findByNicknameContaining(searchWord);
 
-        // TODO 각 user의 승 / 패 개수를 센다
-        return users;
+        List<SearchUserResDto> searchUserResDtoList = new ArrayList<>();
+
+        for (User u: users) {
+            SearchUserResDto searchUserResDto = SearchUserResDto.builder().
+                    user(u).
+                    build();
+
+            searchUserResDtoList.add(searchUserResDto);
+        }
+
+        return searchUserResDtoList;
     }
 
 

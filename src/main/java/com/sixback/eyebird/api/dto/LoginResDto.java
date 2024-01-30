@@ -21,8 +21,10 @@ public class LoginResDto {
     private int profileImage;
     private int classicPt;
     private int itemPt;
-    private int winNum;
-    private int loseNum;
+    private int winNumItem;
+    private int loseNumItem;
+    private int winNumClassic;
+    private int loseNumClassic;
 
     @NotBlank
     private String accessToken;
@@ -42,8 +44,24 @@ public class LoginResDto {
         List<GameResult> winGameResults = user.getWinGameResults();
         List<GameResult> loseGameResults = user.getLoseGameResults();
 
-        this.winNum = winGameResults.size();
-        this.loseNum = loseGameResults.size();
+        int winNum = winGameResults.size();
+        int loseNum = loseGameResults.size();
+
+        int winNumItem = 0;
+        int loseNumItem = 0;
+
+        for (GameResult g: winGameResults) {
+            if (g.isItem()) winNumItem++;
+        }
+
+        for (GameResult g: loseGameResults) {
+            if (g.isItem()) loseNumItem++;
+        }
+
+        this.winNumItem = winNumItem;
+        this.loseNumItem = loseNumItem;
+        this.winNumClassic = winNum - winNumItem;
+        this.loseNumClassic = loseNum - loseNumItem;
 
         this.accessToken = jwtTokenDto.getAccessToken();
         this.refreshToken = jwtTokenDto.getRefreshToken();
