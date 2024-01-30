@@ -40,4 +40,8 @@ public class AuthController {
         return "TEST!!!!~~~";
     }
 
+    @GetMapping("api/www")
+    public String qqq() {
+        return "WWWW!!!!~~~";
+    }
 }
