@@ -3,10 +3,10 @@ import "rodal/lib/rodal.css";
 
 const ProfileImageModal = ({ visible, onClose, setProfileImage, setProfileImageIndex }) => {
   const profileImages = [
-    "src/assets/img/케이셉.PNG",
-    "src/assets/img/포이즌.PNG",
-    "src/assets/img/쌍익.PNG",
-    "src/assets/img/종길.PNG",
+    "src/assets/img/1.PNG",
+    "src/assets/img/2.PNG",
+    "src/assets/img/3.PNG",
+    "src/assets/img/4.PNG",
   ];
 
   const ImageSelect = (imageUrl, index) => {
@@ -35,6 +35,7 @@ const ProfileImageModal = ({ visible, onClose, setProfileImage, setProfileImageI
           </div>
         ))}
       </div>
+      <button onClose={onClose}>닫기</button>
     </Rodal>
   );
 };

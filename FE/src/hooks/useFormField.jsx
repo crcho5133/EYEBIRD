@@ -7,7 +7,7 @@ function useFormField(initialValue) {
 
   const onChange = (newValue) => {
     setValue(newValue);
-    setIsValid(false);
+    setIsValid(true);
     setHasChecked(false);
   };
 

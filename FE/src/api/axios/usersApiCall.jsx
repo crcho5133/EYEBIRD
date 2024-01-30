@@ -10,6 +10,7 @@ const usersApiCall = () => {
       const response = await axios.post(usersUrl.signUp(), body);
       await login(email, password, accessToken);
     } catch (error) {
+      console.log(error);
       alert(error.response.data.errorMessage);
     }
   };
@@ -20,9 +21,9 @@ const usersApiCall = () => {
       const response = await axios.get(url);
       console.log(response);
       if (response.data.check === false) {
-        setIsEmailValid(false);
-      } else if (response.data.check === true) {
         setIsEmailValid(true);
+      } else if (response.data.check === true) {
+        setIsEmailValid(false);
       }
     } catch (error) {
       console.log(error);
@@ -35,9 +36,9 @@ const usersApiCall = () => {
       const response = await axios.get(url);
       console.log(response);
       if (response.data.check === false) {
-        setIsNicknameValid(false);
-      } else if (response.data.check === true) {
         setIsNicknameValid(true);
+      } else if (response.data.check === true) {
+        setIsNicknameValid(false);
       }
     } catch (error) {
       console.log(error);

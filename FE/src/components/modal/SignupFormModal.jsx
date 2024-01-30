@@ -4,12 +4,13 @@ import ModalBtn from "@/components/modal/ModalBtn";
 import usersApiCall from "@/api/axios/usersApiCall";
 import useFormField from "@/hooks/useFormField";
 import Rodal from "rodal";
-import useRodal from "@/hooks/useRodal";
+import useShowRodal from "@/hooks/useShowRodal";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
 import "rodal/lib/rodal.css";
+import LobbyBtn from "@/components/lobby/LobbyBtn";
 
 const SignupFormModal = ({ visible, onClose }) => {
-  const isProfileImageModalVisible = useRodal();
+  const isProfileImageModalVisible = useShowRodal();
   const email = useFormField("");
   const nickname = useFormField("");
   const password = useFormField("");
@@ -51,7 +52,6 @@ const SignupFormModal = ({ visible, onClose }) => {
   const checkEmailDuplicate = (event) => {
     event.preventDefault();
     useUsersApiCall.checkEmailDuplicate(email.value, email.setIsValid);
-    console.log(email.isValid);
     email.setHasChecked(true);
   };
 
@@ -91,12 +91,11 @@ const SignupFormModal = ({ visible, onClose }) => {
           ) : (
             <div className="w-20 h-20 rounded-full bg-gray-200 mb-4"></div>
           )}
-          <button
+          <LobbyBtn
             onClick={isProfileImageModalVisible.showRodal}
             className="mt-2 py-1 px-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md"
-          >
-            선택
-          </button>
+            text="선택"
+          />
         </div>
 
         <div className="space-y-2 p-2">
@@ -108,9 +107,15 @@ const SignupFormModal = ({ visible, onClose }) => {
               className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={(e) => email.onChange(e.target.value)}
             />
-            <ModalBtn text="중복확인" onClick={checkEmailDuplicate} disabled={email.isValid} />
-            {email.isValid && <div style={{ color: "green" }}>중복확인이 완료 되었습니다.</div>}
+            <ModalBtn
+              text="중복확인"
+              onClick={checkEmailDuplicate}
+              disabled={!email.isValid || !email.value}
+            />
             {!email.isValid && email.hasChecked && (
+              <div style={{ color: "green" }}>중복확인이 완료 되었습니다.</div>
+            )}
+            {email.isValid && email.hasChecked && (
               <div style={{ color: "red" }}>중복된 아이디가 있습니다.</div>
             )}
           </div>
@@ -126,10 +131,12 @@ const SignupFormModal = ({ visible, onClose }) => {
             <ModalBtn
               text="중복확인"
               onClick={checkNicknameDuplicate}
-              disabled={nickname.isValid}
+              disabled={!nickname.isValid || !nickname.value}
             />
-            {nickname.isValid && <div style={{ color: "green" }}>중복확인이 완료 되었습니다.</div>}
             {!nickname.isValid && nickname.hasChecked && (
+              <div style={{ color: "green" }}>중복확인이 완료 되었습니다.</div>
+            )}
+            {nickname.isValid && nickname.hasChecked && (
               <div style={{ color: "red" }}>중복된 닉네임이 있습니다.</div>
             )}
           </div>
@@ -156,7 +163,7 @@ const SignupFormModal = ({ visible, onClose }) => {
             onClick={signup}
             type="submit"
             text="회원가입"
-            disabled={!email.isValid || !nickname.isValid || !passwordsMatch}
+            disabled={email.isValid || nickname.isValid || !passwordsMatch}
           />
         </div>
       </Rodal>

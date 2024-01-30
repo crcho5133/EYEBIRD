@@ -23,6 +23,14 @@ export function AccessTokenProvider({ children }) {
   const [winNum, setWinNum] = useState("");
   const [loseNum, setLoseNum] = useState("");
 
+  const profileImagePath = (index) => {
+    return `/src/assets/img/${index}.png`;
+  };
+
+  const profile = useMemo(() => {
+    return profileImagePath(profileImageIndex);
+  }, [profileImageIndex]);
+
   const value = useMemo(
     () => ({
       accessToken,
@@ -43,26 +51,19 @@ export function AccessTokenProvider({ children }) {
       setWinNum,
       loseNum,
       setLoseNum,
+      profile,
     }),
     [
       accessToken,
-      setAccessToken,
       refreshToken,
-      setRefreshToken,
       email,
-      setEmail,
       nickname,
-      setNickname,
       profileImageIndex,
-      setProfileImageIndex,
       classicPt,
-      setClassicPt,
       itemPt,
-      setItemPt,
       winNum,
-      setWinNum,
       loseNum,
-      setLoseNum,
+      profile,
     ]
   );
 

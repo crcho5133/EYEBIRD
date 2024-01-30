@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function useRodal() {
+function useShowRodal() {
   const [value, setValue] = useState(false);
 
   const showRodal = () => {
@@ -18,4 +18,4 @@ function useRodal() {
   };
 }
 
-export default useRodal;
+export default useShowRodal;

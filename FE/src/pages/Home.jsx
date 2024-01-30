@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import LobbyBtn from "@/components/lobby/LobbyBtn";
 import SignupFormModal from "@/components/modal/SignupFormModal";
 import LoginFormModal from "@/components/modal/LoginFormModal";
 import DescriptionModal from "@/components/modal/DescriptionModal";
-import useRodal from "@/hooks/useRodal";
+import useShowRodal from "@/hooks/useShowRodal";
 
 const Home = () => {
-  const isSignupModalVisible = useRodal();
-  const isLoginModalVisible = useRodal();
-  const isDescriptionModalVisible = useRodal();
+  const isSignupModalVisible = useShowRodal();
+  const isLoginModalVisible = useShowRodal();
+  const isDescriptionModalVisible = useShowRodal();
 
   return (
     <>
