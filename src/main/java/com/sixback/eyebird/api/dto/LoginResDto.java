@@ -1,5 +1,6 @@
 package com.sixback.eyebird.api.dto;
 
+import com.sixback.eyebird.db.entity.GameResult;
 import com.sixback.eyebird.db.entity.Point;
 import com.sixback.eyebird.db.entity.User;
 import jakarta.validation.constraints.Email;
@@ -22,7 +23,7 @@ public class LoginResDto {
     private int itemPt;
     private int winNum;
     private int loseNum;
-    private List<MessageResDto> messages;
+
     @NotBlank
     private String accessToken;
     @NotBlank
@@ -34,14 +35,15 @@ public class LoginResDto {
         this.nickname = user.getNickname();
         this.profileImage = user.getProfileImage();
 
-//         TODO pointEntity도 정의해야
-//        Point point = user.getPoint();
-//        this.classicPt = point.getClassicPt();
-//        this.itemPt = point.getItemPt();
+        Point point = user.getPoint();
+        this.classicPt = point.getClassicPt();
+        this.itemPt = point.getItemPt();
 
-        // TODO winNum, loseNum은?
+        List<GameResult> winGameResults = user.getWinGameResults();
+        List<GameResult> loseGameResults = user.getLoseGameResults();
 
-        // TODO messages는?
+        this.winNum = winGameResults.size();
+        this.loseNum = loseGameResults.size();
 
         this.accessToken = jwtTokenDto.getAccessToken();
         this.refreshToken = jwtTokenDto.getRefreshToken();
