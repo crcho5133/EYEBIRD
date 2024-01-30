@@ -3,13 +3,13 @@ import SettingIcon from "../../assets/img/SettingIcon.png";
 import NotificationModal from "../modal/NotificationModal.jsx";
 import SettingModal from "../modal/SettingModal"; // SettingRodal import
 // import BackMark from "../../assets/img/back_mark.png";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const NavBar = () => {
   const [settingsVisible, setSettingsVisible] = useState(false); // 설정 모달 가시성 state
   const [notificationVisible, setNotificationVisible] = useState(false); // 알림 모달 가시성 state
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleNotificationOpen = () => {
     setNotificationVisible(true); // 알림 모달 열기
