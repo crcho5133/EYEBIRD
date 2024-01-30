@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PointController {
     private final PointService pointService;
-    @PatchMapping("/")
+    @PatchMapping("")
     public ResponseEntity<Void> update(@RequestBody PointReqDto pointReqDto, Authentication authentication) {
         String curUserEmail = authentication.getName();
         pointService.update(pointReqDto, curUserEmail);
