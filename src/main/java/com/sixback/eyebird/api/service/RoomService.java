@@ -108,7 +108,7 @@ public class RoomService {
         if (room == null) return false;
 
         // 현재 인원이 max값보다 많은
-        if (room.getMaxCapacity() <= room.getCurrentCapacity()) {
+        if (room.getMaxCapacity()*2 <= room.getCurrentCapacity()) {
             return false;
         }
 

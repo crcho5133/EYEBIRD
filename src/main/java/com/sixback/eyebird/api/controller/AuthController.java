@@ -3,6 +3,7 @@ package com.sixback.eyebird.api.controller;
 import com.sixback.eyebird.api.dto.LoginReqDto;
 import com.sixback.eyebird.api.dto.LoginResDto;
 import com.sixback.eyebird.api.service.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor // 의존성 주입
 @RequestMapping("/api/auth")
+@Tag(name = "Auth")
 public class AuthController {
 
     private final AuthService authService;

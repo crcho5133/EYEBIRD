@@ -3,6 +3,7 @@ package com.sixback.eyebird.api.controller;
 import com.sixback.eyebird.api.dto.*;
 import com.sixback.eyebird.api.service.UserService;
 import com.sixback.eyebird.db.entity.User;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor // 의존성 주입
 @RequestMapping("/api/user")
+@Tag(name = "User")
 @Slf4j
 public class UserController {
 
