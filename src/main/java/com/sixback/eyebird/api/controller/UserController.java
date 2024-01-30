@@ -95,12 +95,12 @@ public class UserController {
     }
 
     // 유저들을 searchWord로 검색
-//    @GetMapping("/search")
-//    public ResponseEntity<List<SearchUserResDto>> searchUsers(@RequestParam("searchWord") String searchWord) {
-//        List<User> users = userService.searchUsers(searchWord);
-//
-//        // users의 각 user에대해, searchUserResDt로 변형
-//
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<List<SearchUserResDto>> searchUsers(@RequestParam("searchWord") String searchWord) {
+        List<SearchUserResDto> searchUserResDtoList = userService.searchUsers(searchWord);
+
+        return ResponseEntity.ok(searchUserResDtoList);
+
+    }
 
 }
