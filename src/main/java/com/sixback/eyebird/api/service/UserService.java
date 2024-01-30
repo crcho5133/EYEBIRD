@@ -19,6 +19,8 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
+    private final PointService pointService;
+
     // 유저 회원가입
     public String signup(SignupReqDto signupReqDto) {
         String email = signupReqDto.getEmail();
@@ -52,7 +54,11 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
         log.info("회원생성: 회원 id가" + " " + savedUser.getId() + "인 유저가 생성");
-        // 새 유저의 id를 return
+
+        // 새 유저의 디폴트 점수를 DB에 저장
+        pointService.add(user);
+
+        // 새 유저의 이메일을 return
         return savedUser.getEmail();
     }
 
@@ -60,7 +66,7 @@ public class UserService {
     public void update(UpdateUserReqDto modifyUserDto, String email) {
         // 현재 로그인된 유저를 DB에서 찾는다
         User user = userRepository.findUserByEmail(email).orElseThrow(() -> new IllegalArgumentException("회원수정: 유저가 인증되지 않았습니다"));
-        
+
         String currentPassword = modifyUserDto.getCurrentPassword();
         String newPassword = modifyUserDto.getNewPassword();
         String newNickname = modifyUserDto.getNewNickname();
