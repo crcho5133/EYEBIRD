@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @Table(name="users") // H2 데이터베이스에서는 User라는 테이블을 사용할 수 없으므로, 테이블의 이름을 Users로 변경한다.
@@ -32,11 +34,19 @@ public class User extends BaseTime { // 생성시간과 수정시간을 다루�
     private int profileImage;
 
     // PointEntity와 one to one mapping
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Point point;
 
     @Column(columnDefinition = "boolean default false")
-    private Boolean isDeleted;
+    private boolean isDeleted;
+
+    // 승리한 게임 결과들의 리스트
+    @OneToMany(mappedBy = "userWinner", fetch = FetchType.LAZY)
+    private List<GameResult> winGameResults;
+
+    // 패배한 게임 결과들의 리스트
+    @OneToMany(mappedBy = "userLoser", fetch = FetchType.LAZY)
+    private List<GameResult> loseGameResults;
 
     @Builder
     public User(String email, String password, String nickname, int profileImage) {
