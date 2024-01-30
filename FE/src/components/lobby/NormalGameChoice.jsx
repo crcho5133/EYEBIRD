@@ -68,9 +68,9 @@ const NormalGameChoice = () => {
     <>
       <NavBar />
       {/* // 아이템 버튼 클릭 시 수행하는 함수를 여기에 작성하세요. */}
-      <div className="h-screen flex flex-col items-center justify-center">
+      <div className="h-screen flex flex-col items-center mt-40">
         {/* 랭킹전 푯말 */}
-        <div className="mt-20 w-full flex justify-center">
+        <div className="w-full flex justify-center">
           <h1 className="text-center z-10">일반전</h1>
         </div>
         {/* 클래식 버튼, 아이템 버튼 */}
@@ -85,7 +85,7 @@ const NormalGameChoice = () => {
               width: "80%",
               left: "50%",
               transform: "translateX(-50%)",
-              top: "42%",
+              top: "32%",
             }}
           />
           <img
@@ -97,7 +97,7 @@ const NormalGameChoice = () => {
               width: "80%",
               left: "50%",
               transform: "translateX(-50%)",
-              top: "38%",
+              top: "28%",
             }}
           />
           <button
