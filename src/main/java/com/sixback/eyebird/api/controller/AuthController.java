@@ -1,5 +1,6 @@
 package com.sixback.eyebird.api.controller;
 
+import com.sixback.eyebird.api.dto.JwtTokenDto;
 import com.sixback.eyebird.api.dto.LoginReqDto;
 import com.sixback.eyebird.api.dto.LoginResDto;
 import com.sixback.eyebird.api.service.AuthService;
@@ -24,6 +25,20 @@ public class AuthController {
         return ResponseEntity.ok(loginResDto);
     }
 
+    // refresh token 재발급
+    @PostMapping("/reissue")
+    public ResponseEntity<JwtTokenDto> reissue(@RequestBody @Valid JwtTokenDto jwtTokenDto) {
+        JwtTokenDto newJwtTokenDto = authService.reissue(jwtTokenDto);
+        return ResponseEntity.ok(newJwtTokenDto);
+    }
+
+    // logout
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody @Valid JwtTokenDto jwtTokenDto) {
+        authService.logout(jwtTokenDto);
+        return ResponseEntity.ok().build();
+    }
+
     // auth 테스트
     @GetMapping("/auth-test")
     public ResponseEntity<String> authTest() {
@@ -38,5 +53,7 @@ public class AuthController {
 
 
     }
+
+
 
 }

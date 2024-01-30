@@ -19,6 +19,8 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
+    private final PointService pointService;
+
     // 유저 회원가입
     public String signup(SignupReqDto signupReqDto) {
         String email = signupReqDto.getEmail();
@@ -52,7 +54,11 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
         log.info("회원생성: 회원 id가" + " " + savedUser.getId() + "인 유저가 생성");
-        // 새 유저의 id를 return
+
+        // 새 유저의 디폴트 점수를 DB에 저장
+        pointService.add(user);
+
+        // 새 유저의 이메일을 return
         return savedUser.getEmail();
     }
 
@@ -102,6 +108,7 @@ public class UserService {
     public List<User> searchUsers(String searchWord) {
         List<User> users = userRepository.findByNicknameContaining(searchWord);
 
+        // TODO 각 user의 승 / 패 개수를 센다
         return users;
     }
 

@@ -48,7 +48,7 @@ public class RoomService {
                 count++;
             }
         }
-        if (count > 5) return 0;
+        if (count > 30) return 0;
 
         //못만드는 경우2 : 방 이름 중복
         if(rooms!=null)

@@ -7,6 +7,7 @@ import com.sixback.eyebird.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -23,9 +24,11 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final JwtTokenUtil jwtTokenUtil;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final AuthEntryPointJwt unauthorizedHandler;
     private static final String[] AUTH_WHITELIST = {
-            "/api/auth/login", "/api/user/signup", "/swagger-ui/**", "/v3/api-docs/**"
+        "/swagger-ui/**", "/v3/api-docs/**", "/api/auth/login", "/api/auth/logout", "/api/auth/reissue", "/api/user/signup", "/api/user/check/nickname", "/api/user/check/email",
+            "/api/sessions", "/api/sessions/{sessionId}/connections"
     };
 
     @Bean
@@ -38,11 +41,10 @@ public class SecurityConfig {
                 )
                 .formLogin((form) -> form.disable())
                 .headers(header -> header.frameOptions(options -> options.sameOrigin()))
-                .addFilterBefore(new JwtAuthFilter(jwtTokenUtil, userDetailsServiceImpl), UsernamePasswordAuthenticationFilter.class) // jwtAuthFilter를 UsernamePasswordAuthenticationFilter 이전에 실행
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(AUTH_WHITELIST).permitAll()
+                .addFilterBefore(new JwtAuthFilter(jwtTokenUtil, userDetailsServiceImpl, redisTemplate), UsernamePasswordAuthenticationFilter.class) // jwtAuthFilter를 UsernamePasswordAuthenticationFilter 이전에 실행
+                .authorizeHttpRequests(auth -> auth.requestMatchers(AUTH_WHITELIST).permitAll() // 접근 허용
                         .requestMatchers(toH2Console()).permitAll() // h2 database 사용을 위해
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated() // 이외의 endpoint 들은 인증 요구
                 );
 
 
