@@ -34,7 +34,7 @@ public class AuthService {
         User user = userRepository.findUserByEmail(email).orElseThrow(() ->new IllegalArgumentException("로그인: 해당 이메일을 지닌 유저가 존재하지 않습니다"));
 
         // 만약 유저가 삭제되었으면, 로그인 불가능
-        if (user.getIsDeleted()) {
+        if (user.isDeleted()) {
             throw new IllegalArgumentException("로그인: 해당 유저는 삭제된 유저입니다");
         }
 
