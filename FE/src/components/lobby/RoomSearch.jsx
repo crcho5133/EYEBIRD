@@ -8,7 +8,7 @@ const RoomSearch = () => {
   const [roomsItem, setRoomsItem] = useState([]);
 
   const [showMenu, setShowMenu] = useState(false);
-  const [tabName, setTapName] = useState("아이템");
+  const [tabName, setTapName] = useState("클래식");
   const [currentPage, setCurrentPage] = useState(1);
   const roomsPerPage = 5;
 
@@ -36,10 +36,13 @@ const RoomSearch = () => {
     refreshroom();
     // 서버에 GET 요청을 보내 방 목록을 가져옴
     async function refreshroom() {
-      await axios.get("http://localhost:8000/api/rooms/").then((response) => {
+      await axios.get("http://localhost:8080/api/room/classic").then((response) => {
         console.log(response);
-        setRoomsClassic(response.data.filter((id) => id.item === "classic"));
-        setRoomsItem(response.data.filter((id) => id.item === "item"));
+        setRoomsClassic(response.data);
+      });
+      await axios.get("http://localhost:8080/api/room/item").then((response) => {
+        console.log(response);
+        setRoomsItem(response.data);
       });
     }
     setRefresh(false);
@@ -64,18 +67,18 @@ const RoomSearch = () => {
                   aria-labelledby="options-menu"
                 >
                   <button
-                    onClick={() => handleItemClick("아이템")}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    role="menuitem"
-                  >
-                    아이템전
-                  </button>
-                  <button
                     onClick={() => handleItemClick("클래식")}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     role="menuitem"
                   >
                     클래식전
+                  </button>
+                  <button
+                    onClick={() => handleItemClick("아이템")}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    아이템전
                   </button>
                 </div>
               </div>
@@ -83,20 +86,27 @@ const RoomSearch = () => {
           </div>
         </header>
         <main className="p-4">
-          <h2 className="text-2xl mb-4">게임 방 리스트</h2>
+          {/* <h2 className="text-2xl mb-4">게임 방 리스트</h2>
           <div className="flex justify-between">
             <p className="flex-1 text-center">공개 여부</p>
             <p className="flex-1 text-center">방제목</p>
             <p className="flex-1 text-center">인원</p>
             <p className="flex-1 text-center">방장</p>
-          </div>
+          </div> */}
 
           {currentRooms.map((room) => (
-            <div key={room.roomName} className="border p-2 mb-2 flex gap-40">
-              {/* <p>{room.public}</p> */}
-              <p>{room.roomName}</p>
-              {/* <p>{room.members}</p> */}
-              {/* <p>{room.leader}</p> */}
+            <div key={room.roomName} className="border p-2 mb-2">
+              <div className="flex justify-between">
+                <p>{room.password ? "🔒" : ""}</p>
+                <p>{room.roomName}</p>
+                <p>
+                  {room.maxCapacity} vs {room.maxCapacity}
+                </p>
+              </div>
+              <div className="flex justify-between">
+                <p>{room.leader}</p>
+                <p>{`${room.currentCapacity} / ${room.maxCapacity}`}</p>
+              </div>
             </div>
           ))}
         </main>
