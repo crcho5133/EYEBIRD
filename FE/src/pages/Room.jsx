@@ -1,26 +1,54 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useOpenVidu } from "../context/OpenViduContext";
-import UserVideoComponent from "./UserVideoComponent";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { OpenVidu } from "openvidu-browser";
 import { toast, Slide, Bounce } from "react-toastify";
-import EntranceComponent from "../components/game/EntranceComponent";
-
+import axios from "axios";
+import WaitingRoom from "../components/room/WaitingRoom";
+// 게임 매칭 화면(일반 / 랭크 case로 구분)
+// import GamePlay from "./GamePlay";
+// import GameResult from "./GameResult";
 import MicON from "../assets/img/room/MicOn.png";
 import MicOFF from "../assets/img/room/MicOff.png";
 import CameraON from "../assets/img/room/CameraOn.png";
 import CameraOFF from "../assets/img/room/CameraOff.png";
+import Chat from "../assets/img/room/Chat.png";
+import Sound from "../assets/img/room/Sound.png";
 import LoadingSpinner from "../assets/img/loading/loading.gif";
 
+const APPLICATION_SERVER_URL = "http://localhost:5000/";
+
 const Room = () => {
-  const { session, getToken, subscribers } = useOpenVidu();
-  const [mySessionId, setMySessionId] = useState("");
-  const [myUserName, setMyUserName] = useState("");
+  // 사용자 닉네임, 방 세션 할당은 백엔드랑 통신할 때 수정하기
+  // let { sessionId } = useParams();
+  const { sessionId: roomId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [gameState, setGameState] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // 상태 전환 함수
+  const changeGameState = (newState) => {
+    setIsLoading(true); // 로딩 시작
+    // 여기서 필요한 데이터 로딩 또는 처리
+    // ...
+    setGameState(newState); // 새 게임 상태 설정
+    setIsLoading(false); // 로딩 완료
+  };
+
+  // 상태 및 참조 변수
+  const [mySessionId, setMySessionId] = useState(roomId);
+  const [myUserName, setMyUserName] = useState(location.state.userName);
+  const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
-  const [gameState, setGameState] = useState("entrance");
-  const [isLoading, setIsLoading] = useState(false);
-  // 팀 정보
+  const [subscribers, setSubscribers] = useState([]);
+  // 이 변수 switch camera 전용 변수? 확인하기
+  const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
+  // 팀 A, B
   const [teamA, setTeamA] = useState(Array(4).fill(null));
   const [teamB, setTeamB] = useState(Array(4).fill(null));
+  // 대기열
   const [teamW, setTeamW] = useState(Array(8).fill(null));
   // 클라이언트 정보
   const [myTeam, setMyTeam] = useState("");
@@ -28,6 +56,11 @@ const Room = () => {
   // 클라이언트 영상, 마이크 제어
   const [cameraOn, setCameraOn] = useState(true);
   const [micOn, setMicOn] = useState(true);
+  // 채팅
+  const [chatMessages, setChatMessages] = useState([]);
+  const [teamChatMessages, setTeamChatMessages] = useState([]);
+  const [currentMessage, setCurrentMessage] = useState("");
+  const [chatMode, setChatMode] = useState("all");
   // 상태 최신화 참조
   const myTeamRef = useRef(myTeam);
   const myStreamIdRef = useRef(myStreamId);
@@ -35,21 +68,12 @@ const Room = () => {
   const teamARef = useRef(teamA);
   const teamBRef = useRef(teamB);
   const teamWRef = useRef(teamW);
+  // OpenVidu 라이브러리 사용
+  const OV = useRef(new OpenVidu());
+  // 로그 에러만 출력
+  // OV.current.enableProdMode();
 
-  // 방 입장 핸들러(임시)
-  const handleEnter = (sessionId, userName) => {
-    setMySessionId(sessionId);
-    setMyUserName(userName);
-    setIsLoading(true);
-    joinSession();
-    // setGameState("waitingRoom"); // 대기방으로 상태 변경
-    // 1초 후에 로딩 상태를 false로 변경하고 대기방으로 이동
-    setTimeout(() => {
-      setIsLoading(false);
-      setGameState("waitingRoom");
-    }, 1000); // 1초 대기
-  };
-
+  // useEffect 훅
   useEffect(() => {
     myTeamRef.current = myTeam;
     myStreamIdRef.current = myStreamId;
@@ -60,9 +84,20 @@ const Room = () => {
   }, [myTeam, myStreamId, session, teamA, teamB, teamW]);
 
   useEffect(() => {
+    if (mySessionId && myUserName) {
+      setIsLoading(true);
+      joinSession();
+      setTimeout(() => {
+        setIsLoading(false);
+        setGameState("waitingRoom");
+      }, 1000);
+    }
+  }, [mySessionId, myUserName]);
+
+  useEffect(() => {
     if (session) {
       // Get a token from the OpenVidu deployment
-      getToken(mySessionId).then(async (token) => {
+      getToken().then(async (token) => {
         try {
           await session.connect(token, { clientData: myUserName }).then(() => {
             requestTeamInfo();
@@ -98,96 +133,13 @@ const Room = () => {
           setCurrentVideoDevice(currentVideoDevice);
           // 방 입장 시 대기열에 배치
           handleSelectTeam(publisher.stream.streamId, "W");
-
-          session.on("streamDestroyed", (event) => {
-            deleteSubscriber(event.stream.streamManager);
-          });
-
-          // 팀 선택 수신
-          session.on("signal:team-choice", (event) => {
-            const { streamId, team } = JSON.parse(event.data);
-            updateTeamChoice(streamId, team);
-          });
-
-          // 기존 사용자가 팀 정보 요청 신호 수신 시 응답2
-          session.on("signal:team-info-request", (event) => {
-            const currentUser = JSON.parse(session.connection.data).clientData;
-            const newUser = JSON.parse(event.from.data).clientData;
-
-            if (currentUser !== newUser) {
-              toast.info(newUser + "님이 입장하셨습니다.", {
-                position: "top-center",
-                autoClose: 1000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-              });
-
-              if (myTeamRef.current === "A" || myTeamRef.current === "B") {
-                const index =
-                  myTeamRef.current === "A"
-                    ? teamARef.current.indexOf(myStreamIdRef.current)
-                    : teamBRef.current.indexOf(myStreamIdRef.current);
-                sessionRef.current.signal({
-                  data: JSON.stringify({
-                    streamId: myStreamIdRef.current,
-                    team: myTeamRef.current,
-                    index,
-                  }),
-                  type: "team-info-response",
-                  to: [event.from],
-                });
-              } else if (myTeamRef.current === "W") {
-                const index = teamWRef.current.indexOf(myStreamIdRef.current);
-                sessionRef.current.signal({
-                  data: JSON.stringify({ streamId: myStreamIdRef.current, team: "W", index }),
-                  type: "team-info-response",
-                  to: [event.from],
-                });
-              }
-            }
-          });
-
-          // 새 사용자가 팀 정보 응답 신호 수신
-          session.on("signal:team-info-response", (event) => {
-            const { streamId, team, index } = JSON.parse(event.data);
-
-            if (team === "A") {
-              setTeamA((prev) => {
-                const newTeamA = [...prev];
-                newTeamA[index] = streamId;
-                return newTeamA;
-              });
-            } else if (team === "B") {
-              setTeamB((prev) => {
-                const newTeamB = [...prev];
-                newTeamB[index] = streamId;
-                return newTeamB;
-              });
-            } else if (team === "W") {
-              setTeamW((prev) => {
-                const newTeamW = [...prev];
-                if (newTeamW[index] === null) {
-                  newTeamW[index] = streamId;
-                } else {
-                  newTeamW[index + 1] = streamId;
-                }
-                return newTeamW;
-              });
-            }
-          });
         } catch (error) {
           console.log("There was an error connecting to the session:", error.code, error.message);
         }
       });
     }
-  }, [session, myUserName]);
+  }, [session, mySessionId, myUserName]);
 
-  // 팀 선택 및 업데이트 로직
   // 이벤트 핸들러
   // 카메라 토글
   const toggleCamera = useCallback(() => {
@@ -234,11 +186,42 @@ const Room = () => {
     setMicOn(newMicOn);
   }, [micOn, mainStreamManager]);
 
+  // 채팅 메시지 전송 함수
+  const sendChatMessage = () => {
+    const message = {
+      content: currentMessage,
+      sender: myUserName,
+      mode: chatMode, // 'all', 'A', 'B'
+      timestamp: new Date().toISOString(),
+    };
+
+    session.signal({
+      data: JSON.stringify(message),
+      type: "chat",
+    });
+
+    setCurrentMessage("");
+  };
+
+  const chatProps = {
+    chatMessages,
+    teamChatMessages,
+    currentMessage,
+    chatMode,
+    setChatMessages,
+    setTeamChatMessages,
+    setCurrentMessage,
+    sendChatMessage,
+    setChatMode,
+  };
+
   // 팀 선택 핸들러
   const handleSelectTeam = (streamId, team) => {
     setMyTeam(team);
     setMyStreamId(streamId);
     updateTeamChoice(streamId, team);
+    setChatMode("all");
+    setTeamChatMessages([]);
     sendTeamChoice(streamId, team);
   };
 
@@ -308,11 +291,121 @@ const Room = () => {
     });
   };
 
+  const joinSession = useCallback(() => {
+    const mySession = OV.current.initSession();
+
+    mySession.on("streamCreated", (event) => {
+      const subscriber = mySession.subscribe(event.stream, undefined);
+      setSubscribers((subscribers) => [...subscribers, subscriber]);
+    });
+
+    mySession.on("streamDestroyed", (event) => {
+      deleteSubscriber(event.stream.streamManager);
+    });
+
+    mySession.on("exception", (exception) => {
+      console.warn(exception);
+    });
+
+    // 채팅 이벤트 리스너 설정
+    mySession.on("signal:chat", (event) => {
+      const receivedMessage = JSON.parse(event.data);
+      // 전체 채팅 추가
+      if (receivedMessage.mode === "all") {
+        setChatMessages((prevMessages) => [...prevMessages, receivedMessage]);
+      } else if (receivedMessage.mode === myTeamRef.current) {
+        setTeamChatMessages((prevMessages) => [...prevMessages, receivedMessage]);
+      }
+    });
+
+    // 팀 선택 수신
+    mySession.on("signal:team-choice", (event) => {
+      const { streamId, team } = JSON.parse(event.data);
+      updateTeamChoice(streamId, team);
+    });
+
+    // 기존 사용자가 팀 정보 요청 신호 수신 시 응답2
+    mySession.on("signal:team-info-request", (event) => {
+      const currentUser = JSON.parse(mySession.connection.data).clientData;
+      const newUser = JSON.parse(event.from.data).clientData;
+
+      if (currentUser !== newUser) {
+        toast.info(newUser + "님이 입장하셨습니다.", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+
+        if (myTeamRef.current === "A" || myTeamRef.current === "B") {
+          const index =
+            myTeamRef.current === "A"
+              ? teamARef.current.indexOf(myStreamIdRef.current)
+              : teamBRef.current.indexOf(myStreamIdRef.current);
+          sessionRef.current.signal({
+            data: JSON.stringify({
+              streamId: myStreamIdRef.current,
+              team: myTeamRef.current,
+              index,
+            }),
+            type: "team-info-response",
+            to: [event.from],
+          });
+        } else if (myTeamRef.current === "W") {
+          const index = teamWRef.current.indexOf(myStreamIdRef.current);
+          sessionRef.current.signal({
+            data: JSON.stringify({ streamId: myStreamIdRef.current, team: "W", index }),
+            type: "team-info-response",
+            to: [event.from],
+          });
+        }
+      }
+    });
+
+    // 새 사용자가 팀 정보 응답 신호 수신
+    mySession.on("signal:team-info-response", (event) => {
+      const { streamId, team, index } = JSON.parse(event.data);
+
+      if (team === "A") {
+        setTeamA((prev) => {
+          const newTeamA = [...prev];
+          newTeamA[index] = streamId;
+          return newTeamA;
+        });
+      } else if (team === "B") {
+        setTeamB((prev) => {
+          const newTeamB = [...prev];
+          newTeamB[index] = streamId;
+          return newTeamB;
+        });
+      } else if (team === "W") {
+        setTeamW((prev) => {
+          const newTeamW = [...prev];
+          if (newTeamW[index] === null) {
+            newTeamW[index] = streamId;
+          } else {
+            newTeamW[index + 1] = streamId;
+          }
+          return newTeamW;
+        });
+      }
+    });
+
+    setSession(mySession);
+  }, []);
+
   const leaveSession = useCallback(() => {
     // Leave the session
     if (session) {
       session.disconnect();
     }
+
+    navigate("/lobby");
 
     // Reset all states and OpenVidu object
     OV.current = new OpenVidu();
@@ -325,7 +418,7 @@ const Room = () => {
     setTeamA(Array(4).fill(null));
     setTeamB(Array(4).fill(null));
     setTeamW(Array(8).fill(null));
-    setGameState("entrance");
+    setGameState("");
   }, [session]);
 
   useEffect(() => {
@@ -402,6 +495,37 @@ const Room = () => {
     });
   }, []);
 
+  const getToken = useCallback(async () => {
+    return createSession(mySessionId).then((sessionId) => createToken(sessionId));
+  }, [mySessionId]);
+
+  const createSession = async (sessionId) => {
+    const response = await axios.post(
+      APPLICATION_SERVER_URL + "api/sessions",
+      { customSessionId: sessionId },
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    return response.data; // The sessionId
+  };
+
+  const createToken = async (sessionId) => {
+    const response = await axios.post(
+      APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
+      {},
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    return response.data; // The token
+  };
+
+  // 유틸리티 함수
+  const isTeamFull = (team) => team.filter((id) => id !== null).length >= 4;
+  const isTeamFull2 = (team) => team.filter((id) => id !== null).length >= 8;
+
+  // 라우팅 구성
   return (
     <>
       {isLoading && (
@@ -411,136 +535,36 @@ const Room = () => {
           </div>
         </div>
       )}
-      {!isLoading && gameState === "entrance" && <EntranceComponent onEnter={handleEnter} />}
       {!isLoading && gameState === "waitingRoom" && (
-        <div className="waiting-room">
-          <h2>대기방: {mySessionId}</h2>
-
-          <div id="session">
-            <div id="session-header" className="mb-5">
-              <input
-                className="btn btn-large btn-danger float-right mt-5 bg-red-600"
-                type="button"
-                id="buttonLeaveSession"
-                onClick={leaveSession}
-                value="방 나가기"
-              />
-            </div>
-            <div className="flex">
-              <div id="team-selection-buttons" className="border-4 border-green-500 m-4">
-                <div className="border-2 border-green-500 m-1 text-center">
-                  {/* 대기열 */}
-                  <button onClick={() => handleSelectTeam(publisher.stream.streamId, "W")}>
-                    대기열 {teamW.filter((id) => id !== null).length} / 8 명
-                  </button>
-                </div>
-                {teamW.map((streamId) => {
-                  const streamManager =
-                    streamId === publisher?.stream.streamId
-                      ? publisher
-                      : subscribers.find((sub) => sub.stream.streamId === streamId);
-                  return streamManager ? (
-                    <div key={streamId} className="border-2 border-green-500 m-1 text-center">
-                      {JSON.parse(streamManager.stream.connection.data).clientData}
-                    </div>
-                  ) : null;
-                })}
-              </div>
-            </div>
-            <div className="flex">
-              <div id="teamA-container" className="border-4 border-sky-500 m-4">
-                <div className="border-2 border-sky-500 m-1 text-center">
-                  A 팀 : {teamA.filter((id) => id !== null).length} / 4 명
-                </div>
-                {teamA.map((streamId) => {
-                  const streamManager =
-                    streamId === publisher?.stream.streamId
-                      ? publisher
-                      : subscribers.find((sub) => sub.stream.streamId === streamId);
-                  return streamManager ? (
-                    <UserVideoComponent
-                      key={streamId}
-                      streamManager={streamManager}
-                      streamId={streamId}
-                      clientStreamId={myStreamId}
-                    />
-                  ) : null;
-                })}
-                <div id="team-selection-buttons" className="text-center border-t-4 border-sky-500">
-                  <button
-                    onClick={() => handleSelectTeam(publisher.stream.streamId, "A")}
-                    className={`rounded-md w-20 m-1 ${isTeamFull(teamA) ? "bg-gray-400 hover:bg-gray-400" : "bg-sky-300 hover:bg-sky-700"}`}
-                    disabled={isTeamFull(teamA)}
-                  >
-                    A팀 선택
-                  </button>
-                </div>
-              </div>
-
-              <div id="teamB-container" className="border-4 border-red-500 m-4">
-                <div className="border-2 border-red-500 m-1 text-center">
-                  B 팀 : {teamB.filter((id) => id !== null).length} / 4 명
-                </div>
-                {teamB.map((streamId) => {
-                  const streamManager =
-                    streamId === publisher?.stream.streamId
-                      ? publisher
-                      : subscribers.find((sub) => sub.stream.streamId === streamId);
-                  return streamManager ? (
-                    <UserVideoComponent
-                      key={streamId}
-                      streamManager={streamManager}
-                      streamId={streamId}
-                      clientStreamId={myStreamId}
-                    />
-                  ) : null;
-                })}
-                <div id="team-selection-buttons" className="text-center border-t-4 border-red-500">
-                  <button
-                    onClick={() => handleSelectTeam(publisher.stream.streamId, "B")}
-                    className={`rounded-md w-20 m-1 ${isTeamFull(teamB) ? "bg-gray-400 hover:bg-gray-400" : "bg-red-300 hover:bg-red-700"}`}
-                    disabled={isTeamFull(teamB)}
-                  >
-                    B팀 선택
-                  </button>
-                </div>
-              </div>
-            </div>
-            {/* <input
-            className="btn btn-large btn-danger float-right mt-5 bg-blue-600"
-            type="button"
-            value="테스트"
-            onClick={() => {
-              console.log(myTeam);
-              console.log(teamA);
-              console.log(teamB);
-              console.log(teamW);
-              console.log(myStreamId);
-              console.log(myUserName);
-              console.log(mySessionId);
-              console.log(subscribers);
-            }}
-          /> */}
-            <div>
-              {/* ... 나머지 컴포넌트 JSX ... */}
-              <button onClick={toggleCamera}>{cameraOn ? "카메라 끄기" : "카메라 켜기"}</button>
-              <button onClick={toggleMic}>{micOn ? "마이크 끄기" : "마이크 켜기"}</button>
-              <div className="flex">
-                <img
-                  className="w-[45px] h-[45px] mx-5"
-                  src={cameraOn ? CameraON : CameraOFF}
-                  onClick={toggleCamera}
-                />
-                <img
-                  className="w-[45px] h-[45px] mx-5"
-                  src={micOn ? MicON : MicOFF}
-                  onClick={toggleMic}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        <WaitingRoom
+          publisher={publisher}
+          subscribers={subscribers}
+          mySessionId={mySessionId}
+          myStreamId={myStreamId}
+          myUserName={myUserName}
+          myTeam={myTeam}
+          teamA={teamA}
+          teamB={teamB}
+          teamW={teamW}
+          cameraOn={cameraOn}
+          micOn={micOn}
+          toggleCamera={toggleCamera}
+          toggleMic={toggleMic}
+          leaveSession={leaveSession}
+          handleSelectTeam={handleSelectTeam}
+          isTeamFull={isTeamFull}
+          isTeamFull2={isTeamFull2}
+          MicON={MicON}
+          MicOFF={MicOFF}
+          CameraON={CameraON}
+          CameraOFF={CameraOFF}
+          Chat={Chat}
+          Sound={Sound}
+          {...chatProps}
+        />
       )}
+      {!isLoading && gameState === "gamePlay" && <GamePlay /* 필요한 props */ />}
+      {!isLoading && gameState === "gameResult" && <GameResult /* 필요한 props */ />}
     </>
   );
 };

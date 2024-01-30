@@ -1,14 +1,16 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const EntranceComponent = ({ onEnter }) => {
+const EntranceComponent = () => {
   const [sessionId, setSessionId] = useState("");
   const [userName, setUserName] = useState("");
+  const navigate = useNavigate();
 
   // 버튼 활성화 여부를 결정하는 함수
   const isButtonEnabled = sessionId.trim() !== "" && userName.trim() !== "";
 
   const handleEnter = () => {
-    onEnter(sessionId, userName); // 대기방으로 넘어가는 함수 호출
+    navigate(`/game/${sessionId}`, { state: { userName } });
   };
 
   return (

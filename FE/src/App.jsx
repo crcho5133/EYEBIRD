@@ -6,7 +6,7 @@ import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import Lobby from "./pages/Lobby";
 import Game from "./pages/Game";
-import Room from "./pages/Room1";
+import Room from "./pages/Room";
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/lobby" element={<Lobby />} />
             <Route path="/room/:sessionId" element={<Room />} />
-            <Route path="/game" element={<Game />} />
+            <Route path="/game/:sessionId" element={<Game />} />
           </Routes>
         </MainLayout>
         {/* </OpenViduProvider> */}

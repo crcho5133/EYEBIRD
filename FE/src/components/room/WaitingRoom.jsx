@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import Rodal from "rodal";
-import "rodal/lib/rodal.css";
-// import AudioControlModal from "../modal/AudioControlModal";
+// import Rodal from "rodal";
+// import "rodal/lib/rodal.css";
 import UserVideoComponent from "./UserVideoComponent";
+import AudioControlModal from "../modal/AudioControlModal";
+import ChatModal from "../modal/ChatModal";
 
 const WaitingRoom = ({
   publisher,
@@ -39,26 +40,8 @@ const WaitingRoom = ({
   setChatMode,
 }) => {
   const [isChatModalVisible, setIsChatModalVisible] = useState(false);
-  const showChatModal = () => setIsChatModalVisible(true);
-  const hideChatModal = () => setIsChatModalVisible(false);
-
-  const chatListRef = useRef(null);
-
-  useEffect(() => {
-    if (chatListRef.current) {
-      // 채팅 목록의 스크롤을 맨 아래로 이동
-      chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
-    }
-  }, [chatMode, isChatModalVisible]);
-
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedAudioOption, setSelectedAudioOption] = useState("all");
-  const showRodal = () => {
-    setIsVisible(true);
-  };
-  const hideRodal = () => {
-    setIsVisible(false);
-  };
+  const [isAudioModalVisible, setIsAudioModalVisible] = useState(false);
+  const [selectedAudioOption, setSelectedAudioOption] = useState("off");
 
   const toggleAudio = (Team, turn) => {
     Team.map((streamId) => {
@@ -72,12 +55,12 @@ const WaitingRoom = ({
   useEffect(() => {
     // 현재 사용자가 선택한 음성 옵션에 따라 다른 팀의 오디오를 업데이트
     const updateAudioBasedOnTeamChange = () => {
-      if (selectedAudioOption === "team") {
+      if (selectedAudioOption === "team" && myTeam !== "W") {
         // 현재 사용자의 팀만 오디오 켜기
         toggleAudio(myTeam === "A" ? teamA : teamB, true);
         // 다른 팀 오디오 끄기
         toggleAudio(myTeam === "A" ? teamB : teamA, false);
-      } else if (selectedAudioOption === "all") {
+      } else if (selectedAudioOption === "all" && myTeam !== "W") {
         // 모든 팀의 오디오 켜기
         toggleAudio(teamA, true);
         toggleAudio(teamB, true);
@@ -236,180 +219,48 @@ const WaitingRoom = ({
             src={micOn ? MicON : MicOFF}
             onClick={toggleMic}
           />
-          <button onClick={showRodal} className="mx-1">
-            <img className="w-[45px] h-[45px] mx-5" src={Sound} />
-          </button>
-          <Rodal
-            visible={isVisible}
-            onClose={hideRodal}
-            height={300}
-            width={300}
-            animation="slideUp"
-          >
-            <h2>음성 제어</h2>
-            <button
-              onClick={() => {
-                toggleAudio(teamA, true);
-                toggleAudio(teamB, true);
-                setSelectedAudioOption("all");
-              }}
-              className="m-4"
-            >
-              전체
-            </button>
-            <button
-              onClick={() => {
-                toggleAudio(myTeam === "A" ? teamB : teamA, false);
-                toggleAudio(myTeam === "A" ? teamA : teamB, true);
-                setSelectedAudioOption("team");
-              }}
-              className="m-4"
-            >
-              팀
-            </button>
-            <button
-              onClick={() => {
-                toggleAudio(teamA, false);
-                toggleAudio(teamB, false);
-                setSelectedAudioOption("off");
-              }}
-              className="m-4"
-            >
-              끄기
-            </button>
-          </Rodal>
 
-          {/* 채팅 모달 버튼 */}
-          <button onClick={showChatModal} className="mx-1">
+          <button
+            onClick={() => setIsAudioModalVisible(true)}
+            className="mx-1"
+            disabled={myTeam === "W"}
+          >
+            <img
+              className={`w-[45px] h-[45px] mx-5 ${myTeam === "W" ? "bg-red-500" : "bg-green-500"}`}
+              src={Sound}
+            />
+          </button>
+
+          <AudioControlModal
+            isVisible={isAudioModalVisible}
+            hideModal={() => setIsAudioModalVisible(false)}
+            toggleAudio={toggleAudio}
+            selectedAudioOption={selectedAudioOption}
+            setSelectedAudioOption={setSelectedAudioOption}
+            myTeam={myTeam}
+            teamA={teamA}
+            teamB={teamB}
+          />
+
+          <button onClick={() => setIsChatModalVisible(true)} className="mx-1">
             <img className="w-[40px] h-[40px] mx-5" src={Chat} />
           </button>
 
-          {/* 채팅 모달 */}
-          <Rodal
-            visible={isChatModalVisible}
-            onClose={hideChatModal}
-            height={400}
-            animation="slideUp"
-          >
-            <div>
-              <div className="flex my-2">
-                <button
-                  onClick={() => setChatMode("all")}
-                  className={`border-2 rounded border-solid border-sky-500 mr-4 h-8 w-12 ${chatMode === "all" ? "bg-sky-500" : ""}`}
-                >
-                  전체
-                </button>
-                <button
-                  onClick={() => setChatMode(myTeam)}
-                  className={`border-2 rounded border-solid border-sky-500 mr-4 h-8 w-12 ${chatMode === myTeam ? "bg-sky-500" : ""}`}
-                >
-                  팀
-                </button>
-              </div>
-              <h2 className="border-2 rounded border-solid border-sky-500 px-1">
-                {chatMode === "all" ? (
-                  <div className="flex justify-between">
-                    <div>전체 채팅</div>
-                    <button
-                      className="border-2 rounded-lg bg-red-300 border-red-300"
-                      onClick={() => {
-                        setChatMessages([]);
-                      }}
-                    >
-                      내역 지우기
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex justify-between">
-                    <div>팀 채팅({myTeam !== "W" ? myTeam + "팀" : "대기열"})</div>
-                    <button
-                      className="border-2 rounded-lg bg-red-300 border-red-300"
-                      onClick={() => {
-                        setTeamChatMessages([]);
-                      }}
-                    >
-                      내역 지우기
-                    </button>
-                  </div>
-                )}
-              </h2>
-              <div
-                className="h-64 overflow-y-auto border-2 rounded border-solid border-sky-500 my-1"
-                ref={chatListRef}
-              >
-                {chatMode === "all" &&
-                  chatMessages.map((msg, index) => {
-                    // 이전 메시지의 발신자와 현재 메시지의 발신자를 비교
-                    const showSender = index === 0 || chatMessages[index - 1].sender !== msg.sender;
-                    return (
-                      <div key={index} className="m-1 p-1">
-                        {msg.sender === myUserName ? (
-                          <div className="text-right">
-                            <span className="p-2 rounded-2xl bg-green-200 inline-block max-w-56 w-fit h-fit text-left">
-                              {msg.content}
-                            </span>
-                          </div>
-                        ) : (
-                          <div>
-                            {showSender && (
-                              <div className="text-sm m-1 font-semibold">{msg.sender}</div>
-                            )}
-                            <span className="p-2 rounded-2xl bg-cyan-200 inline-block max-w-56 w-fit h-fit text-left">
-                              {msg.content}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                {chatMode === myTeam &&
-                  teamChatMessages.map((msg, index) => {
-                    // 이전 메시지의 발신자와 현재 메시지의 발신자를 비교
-                    const showSender =
-                      index === 0 || teamChatMessages[index - 1].sender !== msg.sender;
-                    return (
-                      <div key={index} className="m-1 p-1">
-                        {msg.sender === myUserName ? (
-                          <div className="text-right">
-                            <span className="p-2 rounded-2xl bg-green-200 inline-block max-w-56 w-fit h-fit text-left">
-                              {msg.content}
-                            </span>
-                          </div>
-                        ) : (
-                          <div>
-                            {showSender && (
-                              <div className="text-sm m-1 font-semibold">{msg.sender}</div>
-                            )}
-                            <span className="p-2 rounded-2xl bg-cyan-200 inline-block max-w-56 w-fit h-fit text-left">
-                              {msg.content}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-              </div>
-              <div className="grid grid-flow-col justify-stretch h-8">
-                <input
-                  type="text"
-                  value={currentMessage}
-                  className="border-2 rounded border-solid border-sky-500 mr-2 p-1"
-                  onChange={(e) => setCurrentMessage(e.target.value)}
-                />
-                <button
-                  onClick={() => {
-                    if (currentMessage.length > 0) {
-                      sendChatMessage();
-                    }
-                  }}
-                  disabled={currentMessage.length === 0}
-                  className="border-2 rounded border-solid border-sky-500 bg-sky-300 hover:bg-sky-500"
-                >
-                  보내기
-                </button>
-              </div>
-            </div>
-          </Rodal>
+          <ChatModal
+            isVisible={isChatModalVisible}
+            hideModal={() => setIsChatModalVisible(false)}
+            chatMode={chatMode}
+            chatMessages={chatMessages}
+            teamChatMessages={teamChatMessages}
+            currentMessage={currentMessage}
+            setCurrentMessage={setCurrentMessage}
+            sendChatMessage={sendChatMessage}
+            setChatMode={setChatMode}
+            setChatMessages={setChatMessages}
+            setTeamChatMessages={setTeamChatMessages}
+            myTeam={myTeam}
+            myUserName={myUserName}
+          />
           <div className="mr-1 flex justify-center items-center border-4 border-orange-700 bg-green-400">
             게임 시작
           </div>

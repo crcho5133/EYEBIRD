@@ -1,4 +1,4 @@
-import EntranceComponent from "../components/lobby/EntranceComponent1";
+import EntranceComponent from "../components/lobby/EntranceComponent";
 
 const Lobby = () => {
   return (
