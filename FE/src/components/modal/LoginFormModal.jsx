@@ -2,18 +2,17 @@ import usersApiCall from "@/api/axios/usersApiCall";
 import Rodal from "rodal";
 import useFormField from "@/hooks/useFormField";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
-import { useNavigate } from "react-router-dom";
 import "rodal/lib/rodal.css";
 
 const LoginFormModal = ({ visible, onClose }) => {
   const email = useFormField("");
   const password = useFormField("");
   const accessToken = useAccessTokenState();
-  const navigate = useNavigate();
+  const useUsersApiCall = usersApiCall();
 
   const login = (event) => {
     event.preventDefault();
-    usersApiCall().login(email.value, password.value, accessToken, navigate);
+    useUsersApiCall.login(email.value, password.value, accessToken);
   };
 
   const clearAllInput = () => {

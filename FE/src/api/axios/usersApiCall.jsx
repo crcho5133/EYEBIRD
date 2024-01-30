@@ -1,14 +1,14 @@
 import axios from "axios";
 import usersUrl from "@/api/url/usersUrl";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const usersApiCall = () => {
-  // const navigate = useNavigate();
-  const signup = async (profileImage, email, password, nickname, accessToken, navigate) => {
+  const navigate = useNavigate();
+  const signup = async (profileImage, email, password, nickname, accessToken) => {
     const body = { profileImage, email, password, nickname };
     try {
       const response = await axios.post(usersUrl.signUp(), body);
-      await login(email, password, accessToken, navigate);
+      await login(email, password, accessToken);
     } catch (error) {
       alert(error.response.data.errorMessage);
     }
@@ -44,7 +44,7 @@ const usersApiCall = () => {
     }
   };
 
-  const login = async (email, password, accessToken, navigate) => {
+  const login = async (email, password, accessToken) => {
     const url = usersUrl.login();
     const body = { email, password };
     try {
@@ -61,7 +61,7 @@ const usersApiCall = () => {
     }
   };
 
-  const logout = async (accessToken, navigate) => {
+  const logout = async (accessToken) => {
     const url = usersUrl.logout();
     const body = {
       grantType: "Bearer",
