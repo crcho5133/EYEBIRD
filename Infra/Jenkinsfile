@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     // 마지막 성공한 빌드 이후 변경된 파일 목록을 가져옴
-                    def changedFiles = sh(script: "git diff --name-only HEAD $(git rev-parse HEAD~1)", returnStdout: true).trim()
+                    def changedFiles = sh(script: "git diff --name-only HEAD \$(git rev-parse HEAD~1)", returnStdout: true).trim()
                     // 변경된 파일이 백엔드 디렉토리 내에 있는지 확인
                     env.BUILD_BE = changedFiles.contains("BE/") ? "true" : "false"
                     // 변경된 파일이 프론트엔드 디렉토리 내에 있는지 확인
