@@ -1,4 +1,4 @@
-import { ROOM_CLASSIC_URL, ROOM_ITEM_URL } from "../../api/url/RoomSearchUrl"; // URL import
+import { RoomClassicUrl, RoomItemUrl } from "../../api/url/RoomSearchUrl"; // URL import
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import NavBar from "./NavBar";
@@ -53,11 +53,11 @@ const RoomSearch = () => {
     refreshroom();
     // 서버에 GET 요청을 보내 방 목록을 가져옴
     async function refreshroom() {
-      await axios.get(ROOM_CLASSIC_URL).then((response) => {
+      await axios.get(RoomClassicUrl).then((response) => {
         console.log(response);
         setRoomsClassic(response.data);
       });
-      await axios.get(ROOM_ITEM_URL).then((response) => {
+      await axios.get(RoomItemUrl).then((response) => {
         console.log(response);
         setRoomsItem(response.data);
       });
