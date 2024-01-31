@@ -2,6 +2,7 @@ import usersApiCall from "@/api/axios/usersApiCall";
 import Rodal from "rodal";
 import useFormField from "@/hooks/useFormField";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
+import { useWebSocket } from "../../context/WebSocketContext";
 import "rodal/lib/rodal.css";
 
 const LoginFormModal = ({ visible, onClose }) => {
@@ -9,10 +10,12 @@ const LoginFormModal = ({ visible, onClose }) => {
   const password = useFormField("");
   const accessToken = useAccessTokenState();
   const useUsersApiCall = usersApiCall();
+  const client = useWebSocket();
 
-  const login = (event) => {
+  const login = async (event) => {
     event.preventDefault();
-    useUsersApiCall.login(email.value, password.value, accessToken);
+    await useUsersApiCall.login(email.value, password.value, accessToken);
+    client.onConnect();
   };
 
   const clearAllInput = () => {
