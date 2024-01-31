@@ -8,7 +8,6 @@ export function PrivateRoute({ requireAuth }) {
   const [routeEle, setRouteEle] = useState(null);
 
   useEffect(() => {
-    console.log(accessToken);
     if (requireAuth) {
       setRouteEle(accessToken.accessToken ? <Outlet /> : <ForbiddenAuth />);
     } else {
