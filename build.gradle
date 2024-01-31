@@ -60,7 +60,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
 	// MySQL - 배포 시에만
-	implementation 'mysql:mysql-connector-java:8.0.35'
+	//implementation 'mysql:mysql-connector-java:8.0.35'
+
+	// RandomStringUtils를 위해
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
 
 }
 
