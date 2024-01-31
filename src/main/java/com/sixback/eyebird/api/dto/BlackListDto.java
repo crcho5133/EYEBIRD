@@ -6,13 +6,13 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class BlackListDto {
-    private String roomId;
+    private String roomName;
     private String email;
 
     @Override
     public String toString() {
         return "BlackListDto{" +
-                "roomId='" + roomId + '\'' +
+                "roomId='" + roomName + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }

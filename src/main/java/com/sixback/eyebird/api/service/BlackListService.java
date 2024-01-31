@@ -2,6 +2,7 @@ package com.sixback.eyebird.api.service;
 
 import com.sixback.eyebird.api.dto.BlackListDto;
 import com.sixback.eyebird.api.dto.RoomDto;
+import com.sixback.eyebird.util.Sha256Convert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
@@ -20,8 +21,10 @@ public class BlackListService {
         ArrayList<String> curRoomList = new ArrayList<>();
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ArrayList.class));
 
+        String roomId = Sha256Convert.ShaEncoder(blacklist.getRoomName());
+
         //pattern
-        String key = "blacklist_" + blacklist.getRoomId();
+        String key = "blacklist_" + roomId;
 
         // 현재 방에 있는 블랙리스트 리스트 불러오기
         if (redisTemplate.opsForValue().get(key) != null)

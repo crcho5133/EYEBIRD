@@ -51,7 +51,7 @@ public class RoomService {
         if (count > 30) return 0;
 
         //못만드는 경우2 : 방 이름 중복
-        if(rooms!=null)
+        if(rooms.size()>0)
         for (RoomDto check : rooms) {
             if (room.getRoomName().equals(check.getRoomName()) || check.getRoomId().equals(room.getRoomId())) {
                 return -1;
@@ -105,22 +105,25 @@ public class RoomService {
         }
 
         // 방이 없으면 false
-        if (room == null) return false;
+        if (room.getRoomName() == null) return false;
 
         // 현재 인원이 max값보다 많은
         if (room.getMaxCapacity()*2 <= room.getCurrentCapacity()) {
+            System.out.println("적정인원");
             return false;
         }
+
 
         //password 확인
         if (room.getPassword() != pw) {
             return false;
         }
 
+        System.out.println("비번확인");
         // 블랙리스트 블락
         ArrayList<String> blacklist = blackListService.blacklist(room.getRoomId());
 
-        if(blacklist!=null){
+        if(blacklist.size()>0){
             for (int i = 0; i < blacklist.size(); i++) {
                 if (userEmail.equals(blacklist.get(i))) {
                     return false;
@@ -136,6 +139,49 @@ public class RoomService {
         return true;
     }
 
+    public String quickEnterRoom(String email){
+        // 1. 방 목록 불러오기
+        // 2. 블랙리스트 확인
+        // 3. 입장
+
+        // 모든 룸 정보 받아오기
+        List<RoomDto> rlist = roomList(true);
+        rlist.addAll(roomList(false));
+
+        System.out.println(rlist);
+
+
+        for(int i = 0; i<rlist.size(); i++){
+            // 해당 방이 가득 차 있으면 입장 불가.
+            if(rlist.get(i).getCurrentCapacity() >= rlist.get(i).getMaxCapacity()*2) continue;
+
+            // 비밀 번호가 있으면 입장 불가
+            if(rlist.get(i).getPassword() != 0) continue;
+
+            // 해당 방에 블랙리스트면 입장 불가
+            ArrayList<String> blacklist = blackListService.blacklist(rlist.get(i).getRoomId());
+            boolean blist = false;
+            for(int j = 0; j< blacklist.size(); i++){
+                if(email.equals(blacklist.get(j))) {
+                    blist = true;
+                    break;
+                }
+            }
+            if (blist)continue;
+
+
+            RoomDto room = rlist.get(i);
+            //방 인원 하나 늘리고
+            room.addCapacity();
+            // 다시 저장
+            redisTemplate.opsForValue().set("room_" + room.getRoomId(), room);
+
+            return rlist.get(i).getRoomId();
+        }
+
+        return "fail";
+    }
+
     // 방 삭제
     public boolean deleteRoom(String key) {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(RoomDto.class));
@@ -145,7 +191,8 @@ public class RoomService {
             room = (RoomDto) redisTemplate.opsForValue().get("room_" + key);
         }
 
-        if (room == null) return false;
+        System.out.println(room);
+        if (room.getRoomName() == null) return false;
 
         // 1. 유저 수 줄이기.
         room.reduceCapacity();
@@ -158,11 +205,8 @@ public class RoomService {
             redisTemplate.delete("room_" + key);
             blackListService.deleteBlackList(room.getRoomId());
         }
-
         return true;
+
     }
 
-    public String makeHash(String key) {
-        return key;
-    }
 }

@@ -37,5 +37,7 @@ public class RoomDto {
     public void reduceCapacity(){
         currentCapacity -= 1;
     }
+
+    public void setRoomId(String roomId) {this.roomId = roomId;}
 }
 

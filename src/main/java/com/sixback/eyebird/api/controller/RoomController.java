@@ -1,9 +1,6 @@
 package com.sixback.eyebird.api.controller;
 
-import com.sixback.eyebird.api.dto.CreateRoomResDto;
-import com.sixback.eyebird.api.dto.EnterRoomResDto;
-import com.sixback.eyebird.api.dto.RequestRoomDto;
-import com.sixback.eyebird.api.dto.RoomDto;
+import com.sixback.eyebird.api.dto.*;
 import com.sixback.eyebird.api.service.RoomService;
 import com.sixback.eyebird.uncategorized.OpenViduManager;
 import com.sixback.eyebird.util.Sha256Convert;
@@ -63,22 +60,6 @@ public class RoomController {
 
         HashMap<Integer, String> message = new HashMap<>();
 
-        log.info("방 생성 result: " + result);
-
-        switch (result) {
-            case 1:
-                message.put(result, "정상적으로 방이 생성됨");
-                break;
-            case 0:
-                message.put(result, "방 최대 개수 초과");
-
-                break;
-            case -1:
-                message.put(result, "중복된 방");
-                break;
-        }
-
-
         if (result == 1) {
 
             Map<String, Object> openviduParams = new HashMap<String, Object>();
@@ -99,6 +80,10 @@ public class RoomController {
             return ResponseEntity.status(201).body(createRoomResDto);
         }
 
+        // 방이 만들어져서 저장되었지만 최종적으로 실패해서 방을 삭제해야함
+        if(result == 1)
+            roomService.deleteRoom(room.getRoomName());
+
         throw new RuntimeException("방 생성: 방을 생성하지 못했습니다");
 
 
@@ -106,8 +91,9 @@ public class RoomController {
 
     // 방 삭제
     @Operation(summary = "방 삭제", description = "방 나갈 때 현재 방에 사람 없으면 방 삭제")
-    @DeleteMapping("/{id}")
-    public boolean deleteRoom(@Parameter(description = "방 id = session id") @PathVariable String id) {
+    @DeleteMapping("/{roomName}")
+    public boolean deleteRoom(@Parameter(description = "방 id = hash(방이름)") @PathVariable String roomName) {
+        String id = Sha256Convert.ShaEncoder(roomName);
         return roomService.deleteRoom(id);
     }
 
@@ -119,9 +105,42 @@ public class RoomController {
     public ResponseEntity<EnterRoomResDto> enterRoom(@RequestBody RoomDto room, @RequestBody(required = false) Map<String, Object> params, Authentication authentication)
             throws OpenViduJavaClientException, OpenViduHttpException {
         String curUserEmail = authentication.getName();
-        String sessionId = room.getRoomId();
+        String sessionId = Sha256Convert.getInstance().ShaEncoder(room.getRoomName());
+        room.setRoomId(sessionId);
 
         if (roomService.enterRoom(room, curUserEmail)) {
+            OpenVidu openvidu = openViduManager.getOpenvidu();
+            Session session = openvidu.getActiveSession(sessionId);
+            if (session == null) {
+                throw new RuntimeException("방 입장: sessionId를 지닌 session이 존재하지 않습니다");
+            }
+
+            ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
+            Connection connection = session.createConnection(properties);
+
+            EnterRoomResDto enterRoomResDto = EnterRoomResDto.builder()
+                    .connectionToken(connection.getToken())
+                    .build();
+
+            return ResponseEntity.ok(enterRoomResDto);
+        }
+
+        throw new RuntimeException("방 입장: 방 입장에 실패했습니다");
+    }
+
+    // 빈 방에 아무데나 입장 신청 -> 블랙리스트 제외
+    @Operation(summary = "빠른 입장", description = "블랙리스트/방 인원수 초과 시 입장 불가")
+    @PostMapping("/quick")
+    public ResponseEntity<EnterRoomResDto> quickEnterRoom(@RequestBody(required = false) Map<String, Object> params, Authentication authentication)
+            throws OpenViduJavaClientException, OpenViduHttpException {
+        String curUserEmail = authentication.getName();
+
+        String result = roomService.quickEnterRoom(curUserEmail);
+        String sessionId = result;
+
+        System.out.println(sessionId);
+
+        if (result != "fail") {
             OpenVidu openvidu = openViduManager.getOpenvidu();
             Session session = openvidu.getActiveSession(sessionId);
             if (session == null) {
