@@ -50,15 +50,15 @@ const SignupFormModal = ({ visible, onClose }) => {
     setPasswordsMatch(password === passwordCheck);
   };
 
-  const checkEmailDuplicate = (event) => {
+  const checkEmailDuplicate = async (event) => {
     event.preventDefault();
-    useUsersApiCall.checkEmailDuplicate(email.value, email.setIsValid);
+    await useUsersApiCall.checkEmailDuplicate(email.value, email.setIsValid);
     email.setHasChecked(true);
   };
 
-  const checkNicknameDuplicate = (event) => {
+  const checkNicknameDuplicate = async (event) => {
     event.preventDefault();
-    useUsersApiCall.checkNicknameDuplicate(nickname.value, nickname.setIsValid);
+    await useUsersApiCall.checkNicknameDuplicate(nickname.value, nickname.setIsValid);
     nickname.setHasChecked(true);
   };
 

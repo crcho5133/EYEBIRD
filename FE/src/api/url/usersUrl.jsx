@@ -6,4 +6,5 @@ export default {
   logout: () => `${baseUrl}/api/auth/logout`,
   checkEmailDuplicate: () => `${baseUrl}/api/user/check/email`,
   checkNicknameDuplicate: () => `${baseUrl}/api/user/check/nickname`,
+  getFriendsList: () => `${baseUrl}/api/friend`,
 };

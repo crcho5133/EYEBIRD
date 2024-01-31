@@ -3,6 +3,7 @@ import Lobby from "@/pages/Lobby";
 import WebMobileLayout from "@/layouts/WebMobileLayout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AccessTokenProvider } from "@/context/AccessTokenContext";
+import PrivateRoute from "@/privateRoute/privateRoute";
 
 function App() {
   return (
@@ -11,8 +12,12 @@ function App() {
         <AccessTokenProvider>
           <WebMobileLayout>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/lobby" element={<Lobby />} />
+              <Route element={<PrivateRoute requireAuth={false} />}>
+                <Route path="/" element={<Home />} />
+              </Route>
+              <Route element={<PrivateRoute requireAuth={true} />}>
+                <Route path="/lobby" element={<Lobby />} />
+              </Route>
             </Routes>
           </WebMobileLayout>
         </AccessTokenProvider>

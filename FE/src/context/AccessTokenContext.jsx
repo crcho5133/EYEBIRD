@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useMemo } from "react";
+import { createContext, useContext, useState, useMemo, useEffect } from "react";
 
 export const AccessTokenContext = createContext({
   accessToken: "",
@@ -14,15 +14,17 @@ export const AccessTokenContext = createContext({
 });
 
 export function AccessTokenProvider({ children }) {
-  const [accessToken, setAccessToken] = useState("");
-  const [refreshToken, setRefreshToken] = useState("");
-  const [email, setEmail] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [profileImageIndex, setProfileImageIndex] = useState("");
-  const [classicPt, setClassicPt] = useState("");
-  const [itemPt, setItemPt] = useState("");
-  const [winNum, setWinNum] = useState("");
-  const [loseNum, setLoseNum] = useState("");
+  const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken") || "");
+  const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken") || "");
+  const [email, setEmail] = useState(localStorage.getItem("email") || "");
+  const [nickname, setNickname] = useState(localStorage.getItem("nickname") || "");
+  const [profileImageIndex, setProfileImageIndex] = useState(
+    localStorage.getItem("profileImageIndex") || ""
+  );
+  const [classicPt, setClassicPt] = useState(localStorage.getItem("classicPt") || "");
+  const [itemPt, setItemPt] = useState(localStorage.getItem("itemPt") || "");
+  const [winNum, setWinNum] = useState(localStorage.getItem("winNum") || "");
+  const [loseNum, setLoseNum] = useState(localStorage.getItem("loseNum") || "");
 
   const profileImagePath = (index) => {
     return `/src/assets/img/${index}.png`;
@@ -31,6 +33,18 @@ export function AccessTokenProvider({ children }) {
   const profile = useMemo(() => {
     return profileImagePath(profileImageIndex);
   }, [profileImageIndex]);
+
+  useEffect(() => {
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("email", email);
+    localStorage.setItem("nickname", nickname);
+    localStorage.setItem("profileImageIndex", profileImageIndex);
+    localStorage.setItem("classicPt", classicPt);
+    localStorage.setItem("itemPt", itemPt);
+    localStorage.setItem("winNum", winNum);
+    localStorage.setItem("loseNum", loseNum);
+  }, [accessToken, refreshToken, email, nickname, profileImageIndex, classicPt, winNum, loseNum]);
 
   const value = useMemo(
     () => ({

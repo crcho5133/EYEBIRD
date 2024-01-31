@@ -19,7 +19,6 @@ const usersApiCall = () => {
     const url = usersUrl.checkEmailDuplicate() + "?email=" + email;
     try {
       const response = await axios.get(url);
-      console.log(response);
       if (response.data.check === false) {
         setIsEmailValid(true);
       } else if (response.data.check === true) {
@@ -34,7 +33,6 @@ const usersApiCall = () => {
     const url = usersUrl.checkNicknameDuplicate() + "?nickname=" + nickname;
     try {
       const response = await axios.get(url);
-      console.log(response);
       if (response.data.check === false) {
         setIsNicknameValid(true);
       } else if (response.data.check === true) {
