@@ -60,7 +60,7 @@ pipeline {
                 sh 'docker stop spring-app || true'
                 sh 'docker rm spring-app || true'
                 // 백엔드 이미지 실행
-                sh 'docker run -d -p 8888:8888 --name spring-app spring-app:test'
+                sh 'docker run -d -p 8787:8787 --name spring-app spring-app:test'
             }
         }
         stage('Deploy FE') {
