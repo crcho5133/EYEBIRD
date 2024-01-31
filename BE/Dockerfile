@@ -16,5 +16,5 @@ FROM openjdk:17
 COPY --from=builder /app/build/libs/*.jar /app/app.jar
 
 # 포트 노출 및 애플리케이션 실행
-EXPOSE 8888
+EXPOSE 8787
 ENTRYPOINT ["java","-jar","/app/app.jar"]
