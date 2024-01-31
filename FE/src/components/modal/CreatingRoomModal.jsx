@@ -1,9 +1,11 @@
 // CreatingRoomModal.jsx
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // useNavigate import
 import Rodal from "rodal"; // Rodal import
 import axios from "axios";
 import "rodal/lib/rodal.css"; // Rodal CSS
+import { RoomUrl } from "../../api/url/RoomUrl";
 
 const CreatingRoomModal = ({ visible, onClose }) => {
   const [roomName, setRoomName] = useState("");
@@ -12,33 +14,44 @@ const CreatingRoomModal = ({ visible, onClose }) => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const navigate = useNavigate(); // useNavigate hook
+
   const handleCreate = async () => {
     if (roomName.length === 0) {
       setErrorMessage("방 제목을 입력해주세요.");
     } else if (roomName.length > 20) {
       setErrorMessage("방 제목은 20자를 초과할 수 없습니다.");
-    } else {
+    }
+    // else {
+    //   // 서버에 GET 요청을 보내 방 제목이 중복되는지 확인
+    //   const roomResponse = await axios.get(`http://localhost:8080/api/room/${roomName}`);
+    //   if (roomName === roomResponse.data) {
+    //     setErrorMessage("중복된 방제목 입니다.");
+    //   }
+    else {
       // 서버에 POST 요청을 보내 방을 생성
       const response = await axios.post(
-        "http://localhost:8000/api/rooms/",
+        RoomUrl,
         {
           roomName: roomName,
           password: password,
-          maxCapacity: players.replace("vs", ""),
+          maxCapacity: players[0] * 2,
           isItem: isItem,
         },
         {
           headers: { "Content-Type": "application/json" },
         }
       );
-
-      const data = response;
+      console.log(response);
+      const data = response.data;
 
       if (data === "fail") {
         setErrorMessage("방 생성에 실패했습니다.");
       } else {
         // 방 생성에 성공하면 모달을 닫고, 필요한 경우 추가 작업을 수행
         onClose();
+        // 방으로 이동
+        navigate(`/room/${data.roomId}`);
       }
     }
   };
