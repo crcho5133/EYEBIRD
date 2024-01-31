@@ -1,15 +1,20 @@
-import axios from "axios";
+import { ROOM_CLASSIC_URL, ROOM_ITEM_URL } from "../../api/url/RoomSearchUrl"; // URL import
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import NavBar from "./NavBar";
+import Rodal from "rodal";
+import axios from "axios";
 
 const RoomSearch = () => {
   const [refresh, setRefresh] = useState(false);
   const [roomsClassic, setRoomsClassic] = useState([]);
   const [roomsItem, setRoomsItem] = useState([]);
-
   const [showMenu, setShowMenu] = useState(false);
   const [tabName, setTapName] = useState("클래식");
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRoom, setSelectedRoom] = useState(null); // 선택된 방
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 표시 여부
+  const navigate = useNavigate(); // useNavigate hook
   const roomsPerPage = 5;
 
   const handleButtonClick = () => {
@@ -25,6 +30,18 @@ const RoomSearch = () => {
     setCurrentPage(pageNumber);
   };
 
+  // 방을 더블 클릭했을 때의 처리
+  const handleRoomDoubleClick = (room) => {
+    setSelectedRoom(room);
+    setIsModalOpen(true);
+  };
+
+  // [[예]] 버튼을 클릭했을 때의 처리
+  const handleConfirm = () => {
+    setIsModalOpen(false);
+    navigate(`/room/${selectedRoom.id}`);
+  };
+
   const indexOfLastRoom = currentPage * roomsPerPage;
   const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
   const currentRooms =
@@ -36,11 +53,11 @@ const RoomSearch = () => {
     refreshroom();
     // 서버에 GET 요청을 보내 방 목록을 가져옴
     async function refreshroom() {
-      await axios.get("http://localhost:8080/api/room/classic").then((response) => {
+      await axios.get(ROOM_CLASSIC_URL).then((response) => {
         console.log(response);
         setRoomsClassic(response.data);
       });
-      await axios.get("http://localhost:8080/api/room/item").then((response) => {
+      await axios.get(ROOM_ITEM_URL).then((response) => {
         console.log(response);
         setRoomsItem(response.data);
       });
@@ -86,30 +103,34 @@ const RoomSearch = () => {
           </div>
         </header>
         <main className="p-4">
-          {/* <h2 className="text-2xl mb-4">게임 방 리스트</h2>
-          <div className="flex justify-between">
-            <p className="flex-1 text-center">공개 여부</p>
-            <p className="flex-1 text-center">방제목</p>
-            <p className="flex-1 text-center">인원</p>
-            <p className="flex-1 text-center">방장</p>
-          </div> */}
-
           {currentRooms.map((room) => (
-            <div key={room.roomName} className="border p-2 mb-2">
-              <div className="flex justify-between">
-                <p>{room.password ? "🔒" : ""}</p>
-                <p>{room.roomName}</p>
-                <p>
-                  {room.maxCapacity} vs {room.maxCapacity}
-                </p>
+            <Link to={`/room/${room.id}`}>
+              <div
+                key={room.roomName}
+                className="border p-2 mb-2"
+                onDoubleClick={() => handleRoomDoubleClick(room)}
+              >
+                <div className="flex justify-between">
+                  <p>{room.password ? "🔒" : ""}</p>
+                  <p>{room.roomName}</p>
+                  <p>
+                    {room.maxCapacity} vs {room.maxCapacity}
+                  </p>
+                </div>
+                <div className="flex justify-between">
+                  <p>{room.leader}</p>
+                  <p>{`${room.currentCapacity} / ${room.maxCapacity}`}</p>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <p>{room.leader}</p>
-                <p>{`${room.currentCapacity} / ${room.maxCapacity}`}</p>
-              </div>
-            </div>
+            </Link>
           ))}
+          {/* 방 입장 확인 모달 */}
+          <Rodal visible={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            <p>방에 입장 하시겠습니까?</p>
+            <button onClick={handleConfirm}>[[예]]</button>
+          </Rodal>
         </main>
+
         <footer className="p-4">
           <div className="flex justify-center space-x-2">
             {/* 페이지 번호 버튼을 출력합니다. 여기서는 1~7까지 출력합니다. */}
