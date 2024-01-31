@@ -56,41 +56,35 @@ public class PointService {
 
 
     // 상위 유저 리스트 Redis -> Front
-    public List<PointDto> getTopPoint(boolean item){
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(PointDto.class));
+    public List<PointDto> getTopPoint(boolean item) {
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(List.class));
         List<PointDto> points = new ArrayList<>();
         String pattern = "classicRank";
 
-        if(item == true){
+        if (item == true) {
             pattern = "itemRank";
         }
-        Cursor<byte[]> cursor = redisTemplate.getConnectionFactory().getConnection().scan(ScanOptions.scanOptions().match(pattern).build());
+        if (redisTemplate.opsForValue().get(pattern) != null) {
+            points = (List<PointDto>) redisTemplate.opsForValue().get(pattern);
 
-        while (cursor.hasNext()) {
-            String key = new String(cursor.next());
-            PointDto point = new PointDto();
-            if (redisTemplate.opsForValue().get(key) != null)
-                point = (PointDto) redisTemplate.opsForValue().get(key);
-
-            points.add(point);
         }
-
         return points;
     }
 
     // 갱신을 위한 스케쥴 DB -> Redis
     // 30분마다 업데이트
-    @Scheduled(fixedRate = 1800000)
-    public void updateRanking(){
+    //@Scheduled(fixedRate = 1800000)
+    @Scheduled(fixedRate = 18000)
+    public void updateRanking() {
         System.out.println("스케쥴 실행");
-        List<Point> itemRank = pointRepository.findTop25ByOrderByItemPtDesc(PageRequest.of(0,10));
-        List<Point> classicRank = pointRepository.findTop25ByOrderByClassicPtDesc(PageRequest.of(0,10));
+        List<Point> itemRank = pointRepository.findTop25ByOrderByItemPtDesc(PageRequest.of(0, 10));
+        List<Point> classicRank = pointRepository.findTop25ByOrderByClassicPtDesc(PageRequest.of(0, 10));
 
-        if(itemRank.size() > 0) {
+        if (itemRank.size() > 0) {
             System.out.println("아이템 랭크 있음");
-            ArrayList<PointDto> itemRankList = new ArrayList<>();
-            for(int i = 0; i<itemRank.size(); i++){
-                PointDto itemPoint = new PointDto(itemRank.get(i).getUser().getNickname(),itemRank.get(i).getUser().getProfileImage(), itemRank.get(i).getItemPt());
+            List<PointDto> itemRankList = new ArrayList<>();
+            for (int i = 0; i < itemRank.size(); i++) {
+                PointDto itemPoint = new PointDto(itemRank.get(i).getUser().getNickname(), itemRank.get(i).getUser().getProfileImage(), itemRank.get(i).getItemPt());
                 itemRankList.add(itemPoint);
             }
 
@@ -98,15 +92,15 @@ public class PointService {
         }
 
 
-        if(classicRank.size() > 0) {
+        if (classicRank.size() > 0) {
             System.out.println("클래식 랭크 있음");
             ArrayList<PointDto> classicRankList = new ArrayList<>();
-            for(int i = 0; i<itemRank.size(); i++){
-                PointDto classicPoint = new PointDto(classicRank.get(i).getUser().getNickname(),classicRank.get(i).getUser().getProfileImage(), classicRank.get(i).getItemPt());
+            for (int i = 0; i < itemRank.size(); i++) {
+                PointDto classicPoint = new PointDto(classicRank.get(i).getUser().getNickname(), classicRank.get(i).getUser().getProfileImage(), classicRank.get(i).getClassicPt());
                 classicRankList.add(classicPoint);
             }
             redisTemplate.opsForValue().set("classicRank", classicRankList);
-            System.out.println(classicRankList);
+            //System.out.println(classicRankList);
         }
     }
 
