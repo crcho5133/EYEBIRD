@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor // 의존성 주입
 @RequestMapping("/api/user")
 @Tag(name = "User")
-@Slf4j
+//@Slf4j
 public class UserController {
 
     private final UserService userService;

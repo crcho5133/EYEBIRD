@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,6 +24,7 @@ import java.util.List;
 public class PointController {
     private final PointService pointService;
 
+    @Operation(summary = "포인트 갱신", description = "Front -> Back -> DB")
     @PatchMapping("")
     public ResponseEntity<Void> update(@RequestBody PointReqDto pointReqDto, Authentication authentication) {
         String curUserEmail = authentication.getName();
@@ -37,7 +39,10 @@ public class PointController {
     @GetMapping("/rank/item")
     @Operation(summary = "아이템 랭크 받아오기", description = "redis에서 item rank 받아오기")
     public List<PointDto> listTopItemPoint() {
-        return pointService.getTopPoint(true);
+
+        List<PointDto> test = pointService.getTopPoint(true);
+        System.out.println(test);
+    return test;
     }
 
     @GetMapping("/rank/classic")
