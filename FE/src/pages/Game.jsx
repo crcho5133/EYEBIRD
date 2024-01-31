@@ -48,6 +48,7 @@ const Game = () => {
 
   // OpenVidu 라이브러리 사용
   const OV = useRef(new OpenVidu());
+  OV.current.enableProdMode();
 
   useEffect(() => {
     if (mySessionId && myUserName) {
@@ -76,7 +77,7 @@ const Game = () => {
           let publisher = await OV.current.initPublisherAsync(undefined, {
             audioSource: undefined,
             videoSource: undefined,
-            publishAudio: true,
+            publishAudio: false,
             publishVideo: true,
             resolution: "640x480",
             frameRate: 30,
@@ -152,9 +153,9 @@ const Game = () => {
       setSubscriber(subscriber);
     });
 
-    // mySession.on("streamDestroyed", (event) => {
-    //   deleteSubscriber(event.stream.streamManager);
-    // });
+    mySession.on("streamDestroyed", (event) => {
+      deleteSubscriber(event.stream.streamManager);
+    });
 
     mySession.on("exception", (exception) => {
       console.warn(exception);
@@ -186,18 +187,9 @@ const Game = () => {
     setPublisher(undefined);
   }, [session]);
 
-  // const deleteSubscriber = useCallback((streamManager) => {
-  //   setSubscribers((prevSubscribers) => {
-  //     const index = prevSubscribers.indexOf(streamManager);
-  //     if (index > -1) {
-  //       const newSubscribers = [...prevSubscribers];
-  //       newSubscribers.splice(index, 1);
-  //       return newSubscribers;
-  //     } else {
-  //       return prevSubscribers;
-  //     }
-  //   });
-  // }, []);
+  const deleteSubscriber = useCallback((streamManager) => {
+    setSubscriber(streamManager);
+  }, []);
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
