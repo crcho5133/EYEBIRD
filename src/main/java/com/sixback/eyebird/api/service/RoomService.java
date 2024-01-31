@@ -20,13 +20,6 @@ public class RoomService {
     BlackListService blackListService;
 
     // 방 만들기
-
-    /**
-     * Create Map
-     * 1 : 정상적으로 방이 생성됨
-     * 0 : 방 최대 개수 초과
-     * -1 : id or 방 이름 중복됨
-     */
     public int createRoom(RoomDto room) {
         // 명시적인 타입 정보 제공
         // Jackson2JsonRedisSerializer나 GenericJackson2JsonRedisSerializer를 사용할 때,
@@ -93,7 +86,18 @@ public class RoomService {
     }
 
     //방 들어가기
-    public boolean enterRoom(RoomDto room, String userEmail) {
+
+    /**
+     * 
+     * @param room
+     * @param userEmail
+     * @return   1 : 성공
+     *           0 : 방 없음
+     *          -1 : 인원 초과
+     *          -2 : 비번 틀림
+     *          -3 : 블랙리스트
+     */
+    public int enterRoom(RoomDto room, String userEmail) {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(RoomDto.class));
 
         // 미리 pw 저장
@@ -105,18 +109,18 @@ public class RoomService {
         }
 
         // 방이 없으면 false
-        if (room.getRoomName() == null) return false;
+        if (room.getRoomName() == null) return 0;
 
         // 현재 인원이 max값보다 많은
         if (room.getMaxCapacity()*2 <= room.getCurrentCapacity()) {
             System.out.println("적정인원");
-            return false;
+            return -1;
         }
 
 
         //password 확인
         if (room.getPassword() != pw) {
-            return false;
+            return -2;
         }
 
         System.out.println("비번확인");
@@ -126,7 +130,7 @@ public class RoomService {
         if(blacklist.size()>0){
             for (int i = 0; i < blacklist.size(); i++) {
                 if (userEmail.equals(blacklist.get(i))) {
-                    return false;
+                    return -3;
                 }
             }
         }
@@ -136,7 +140,7 @@ public class RoomService {
         // 다시 저장
         redisTemplate.opsForValue().set("room_" + room.getRoomId(), room);
 
-        return true;
+        return 1;
     }
 
     public String quickEnterRoom(String email){

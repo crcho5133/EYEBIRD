@@ -84,9 +84,11 @@ public class RoomController {
         if(result == 1)
             roomService.deleteRoom(room.getRoomName());
 
+        if(result == 0)        throw new RuntimeException("방 생성: 최대 방 갯수 초과");
+        else if(result == -1)        throw new RuntimeException("방 생성: 방 이름 중복");
+
+
         throw new RuntimeException("방 생성: 방을 생성하지 못했습니다");
-
-
     }
 
     // 방 삭제
@@ -108,7 +110,8 @@ public class RoomController {
         String sessionId = Sha256Convert.getInstance().ShaEncoder(room.getRoomName());
         room.setRoomId(sessionId);
 
-        if (roomService.enterRoom(room, curUserEmail)) {
+        int result = roomService.enterRoom(room, curUserEmail);
+        if (result == 1) {
             OpenVidu openvidu = openViduManager.getOpenvidu();
             Session session = openvidu.getActiveSession(sessionId);
             if (session == null) {
@@ -124,8 +127,22 @@ public class RoomController {
 
             return ResponseEntity.ok(enterRoomResDto);
         }
+        
+        String msg = "";
+        switch (result){
+            case 0:
+                msg = "방 입장 : 해당 방 인원 초과";
+                break;
+            case -1:
+                msg = "방 입장 : 해당 방 비밀번호 불일치";
+                break;
+            case -2:
+                msg = "방 입장 : 해당 방에서 추방되었습니다.";
+                break;
+        }
 
-        throw new RuntimeException("방 입장: 방 입장에 실패했습니다");
+
+        throw new RuntimeException(msg);
     }
 
     // 빈 방에 아무데나 입장 신청 -> 블랙리스트 제외
