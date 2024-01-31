@@ -5,6 +5,7 @@ import CreatingRoomModal from "../modal/CreatingRoomModal";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import NavBar from "./NavBar";
+import { RoomUrl } from "../../api/url/RoomUrl";
 
 const NormalGameChoice = () => {
   const [creatingRoomVisible, setCreatingRoomVisible] = useState(false);
@@ -12,7 +13,7 @@ const NormalGameChoice = () => {
 
   const handleFastClassicClick = async () => {
     // 서버에게 현재 개설된 방 목록을 요청
-    const response = await axios.get("http://localhost:8000/api/rooms");
+    const response = await axios.get(RoomUrl);
     const rooms = response.data;
 
     // 방 인원이 홀수인 방을 찾음
@@ -33,7 +34,7 @@ const NormalGameChoice = () => {
 
   const handleFastItemClick = async () => {
     // 서버에게 현재 개설된 방 목록을 요청
-    const response = await axios.get("http://localhost:8000/api/rooms");
+    const response = await axios.get(RoomUrl);
     const rooms = response.data;
 
     // 아이템전이면서 방 인원이 홀수인 방을 찾음
