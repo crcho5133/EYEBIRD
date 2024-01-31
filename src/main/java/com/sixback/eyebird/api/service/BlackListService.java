@@ -20,12 +20,11 @@ public class BlackListService {
         ArrayList<String> curRoomList = new ArrayList<>();
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ArrayList.class));
 
-
         //pattern
         String key = "blacklist_" + blacklist.getRoomId();
 
         // 현재 방에 있는 블랙리스트 리스트 불러오기
-        if(redisTemplate.opsForValue().get(key)!=null)
+        if (redisTemplate.opsForValue().get(key) != null)
             curRoomList = (ArrayList<String>) redisTemplate.opsForValue().get(key);
 
 
@@ -38,7 +37,7 @@ public class BlackListService {
     }
 
     // 해당 방의 블랙리스트 받아오기
-    public ArrayList<String> blacklist(String roomId){
+    public ArrayList<String> blacklist(String roomId) {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ArrayList.class));
 
         ArrayList<String> curRoomList = new ArrayList<>();
@@ -47,18 +46,18 @@ public class BlackListService {
         String key = "blacklist_" + roomId;
 
         // 현재 방에 있는 블랙리스트 리스트 불러오기
-        if(redisTemplate.opsForValue().get(key)!=null)
+        if (redisTemplate.opsForValue().get(key) != null)
             curRoomList = (ArrayList<String>) redisTemplate.opsForValue().get(key);
 
         return curRoomList;
     }
 
     // 블랙리스트 삭제 - 룸 컨트롤러가 방을 삭제할 때 같이 삭제할것
-    public boolean deleteBlackList(String roomId){
+    public boolean deleteBlackList(String roomId) {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ArrayList.class));
 
-        if(redisTemplate.opsForValue().get("blacklist_" + roomId) !=null){
-           redisTemplate.delete("blacklist_" + roomId);
+        if (redisTemplate.opsForValue().get("blacklist_" + roomId) != null) {
+            redisTemplate.delete("blacklist_" + roomId);
             return true;
         }
         return false;
