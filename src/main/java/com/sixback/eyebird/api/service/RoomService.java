@@ -149,17 +149,43 @@ public class RoomService {
         return 1;
     }
 
-    public String quickEnterRoom(String email){
+    // 초대 받아서 입장
+    // 방 존재 여부와 현재 인원만 체크
+    public int inviteEnterRoom(RoomDto room, String userEmail) {
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(RoomDto.class));
+
+        // 룸 id로 key값을 조회해 해당 방을 가져옴
+        if (redisTemplate.opsForValue().get("room_" + room.getRoomId()) != null) {
+            room = (RoomDto) redisTemplate.opsForValue().get("room_" + room.getRoomId());
+        }
+
+        // 방이 없으면 false
+        if (room.getRoomName() == null) return 0;
+
+        // 현재 인원이 max값보다 많은
+        if (room.getMaxCapacity()*2 <= room.getCurrentCapacity()) {
+            System.out.println("적정인원");
+            return -1;
+        }
+
+        //방 인원 하나 늘리고
+        room.addCapacity();
+        // 다시 저장
+        redisTemplate.opsForValue().set("room_" + room.getRoomId(), room);
+
+        return 1;
+    }
+
+    public String quickEnterRoom(boolean isItem, String email){
         // 1. 방 목록 불러오기
         // 2. 블랙리스트 확인
         // 3. 입장
 
         // 모든 룸 정보 받아오기
-        List<RoomDto> rlist = roomList(true);
-        rlist.addAll(roomList(false));
-
-        System.out.println(rlist);
-
+        List<RoomDto> rlist;
+        rlist = roomList(true);
+        if(isItem)
+            rlist = roomList(false);
 
         for(int i = 0; i<rlist.size(); i++){
             // 해당 방이 가득 차 있으면 입장 불가.
