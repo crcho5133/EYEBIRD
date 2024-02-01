@@ -145,6 +145,7 @@ public class RoomController {
         throw new RuntimeException(msg);
     }
 
+
     // 빈 방에 아무데나 입장 신청 -> 블랙리스트 제외
     @Operation(summary = "빠른 입장", description = "블랙리스트/방 인원수 초과 시 입장 불가")
     @PostMapping("/quick")
