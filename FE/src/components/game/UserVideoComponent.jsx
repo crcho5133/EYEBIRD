@@ -1,32 +1,36 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useWebSocket } from "../../context/VideoWebSocketContext";
 import OpenViduVideoComponent from "./OvVideo";
 
-// function ClosedEyeMessage({ socket }) {
-//   const [closed, setClosed] = useState(false);
+function ClosedEyeMessage({ socket }) {
+  const [closed, setClosed] = useState(false);
 
-//   useEffect(() => {
-//     const handleMessage = (message) => {
-//       if (message.data === "xxx") setClosed(false);
-//       else setClosed(true);
-//     };
+  useEffect(() => {
+    const handleMessage = (message) => {
+      if (message.data === "xxx") setClosed(false);
+      else setClosed(true);
+    };
 
-//     socket.addEventListener("message", handleMessage);
+    socket.addEventListener("message", handleMessage);
 
-//     return () => {
-//       socket.removeEventListener("message", handleMessage);
-//     };
-//   }, [socket]);
+    return () => {
+      socket.removeEventListener("message", handleMessage);
+    };
+  }, [socket]);
 
-//   return closed && <div>눈이 감겼습니다!</div>;
-// }
+  return closed ? (
+    <div className="text-xl text-red-600">눈이 감겼습니다!</div>
+  ) : (
+    <div className="text-xl">?</div>
+  );
+}
 export default function UserVideoComponent({ streamManager, gameState }) {
   console.log(streamManager);
   const { socket, message } = useWebSocket();
 
   useEffect(() => {
-    if (streamManager && socket && gameState === "play") {
-      // if (streamManager && socket) {
+    // if (streamManager && socket && gameState === "play") {
+    if (streamManager && socket) {
       const video = document.querySelector("video");
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
@@ -106,7 +110,7 @@ export default function UserVideoComponent({ streamManager, gameState }) {
         <div className="">
           <OpenViduVideoComponent streamManager={streamManager} />
           <p>{getNicknameTag()}</p>
-          {/* <ClosedEyeMessage socket={socket} /> */}
+          <ClosedEyeMessage socket={socket} />
         </div>
       ) : null}
     </div>
