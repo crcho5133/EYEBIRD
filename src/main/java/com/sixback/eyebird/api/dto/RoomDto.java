@@ -39,5 +39,9 @@ public class RoomDto {
     }
 
     public void setRoomId(String roomId) {this.roomId = roomId;}
+
+    public void setPassword(){
+        this.password = 0;
+    }
 }
 

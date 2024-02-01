@@ -53,7 +53,7 @@ public class RoomController {
     public ResponseEntity<CreateRoomResDto> createRoom(@RequestBody RequestRoomDto reqRoom) throws OpenViduJavaClientException, OpenViduHttpException {
         // Issue : 토큰은 나중에 새로 주면 쓰기
         //System.out.println(reqRoom);
-        RoomDto room = new RoomDto(Sha256Convert.getInstance().ShaEncoder(reqRoom.getRoomName()), reqRoom.getRoomName(), reqRoom.isItem(), reqRoom.getMaxCapacity(), 1, reqRoom.getPassword(), 0);
+        RoomDto room = new RoomDto(Sha256Convert.getInstance().ShaEncoder(reqRoom.getRoomName()), reqRoom.getRoomName(), reqRoom.isItem(), reqRoom.getMaxCapacity(), 0, reqRoom.getPassword(), 0);
         log.info(room.getRoomId());
         int result = roomService.createRoom(room);
 
@@ -81,7 +81,7 @@ public class RoomController {
 
         // 방이 만들어져서 저장되었지만 최종적으로 실패해서 방을 삭제해야함
         if(result == 1)
-            roomService.deleteRoom(room.getRoomName());
+            roomService.deleteRoom(room.getRoomId());
 
         if(result == 0)        throw new RuntimeException("방 생성: 최대 방 갯수 초과");
         else if(result == -1)        throw new RuntimeException("방 생성: 방 이름 중복");
@@ -92,10 +92,9 @@ public class RoomController {
 
     // 방 삭제
     @Operation(summary = "방 삭제", description = "방 나갈 때 현재 방에 사람 없으면 방 삭제")
-    @DeleteMapping("/{roomName}")
-    public boolean deleteRoom(@Parameter(description = "방 id = hash(방이름)") @PathVariable String roomName) {
-        String id = Sha256Convert.ShaEncoder(roomName);
-        return roomService.deleteRoom(id);
+    @DeleteMapping("/{roomId}")
+    public boolean deleteRoom(@Parameter(description = "방 id = hash(방이름)") @PathVariable String roomId) {
+        return roomService.deleteRoom(roomId);
     }
 
     // 방 들어가기
@@ -118,13 +117,16 @@ public class RoomController {
         String msg = "";
         switch (result){
             case 0:
-                msg = "방 입장 : 해당 방 인원 초과";
+                msg = "Room Enter : No Room";
                 break;
             case -1:
-                msg = "방 입장 : 해당 방 비밀번호 불일치";
+                msg = "Room Enter : Full Room";
                 break;
             case -2:
-                msg = "방 입장 : 해당 방에서 추방되었습니다.";
+                msg = "Room Enter : Password miss";
+                break;
+            case -3:
+                msg = "Room Enter : You are BlackList.";
                 break;
         }
 

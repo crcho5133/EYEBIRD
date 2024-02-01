@@ -58,7 +58,13 @@ public class RoomService {
 
     // 룸 찾기
     public RoomDto findRoom(String id) {
-        return (RoomDto) redisTemplate.opsForValue().get("room_" + id);
+        RoomDto room = new RoomDto();
+        if (redisTemplate.opsForValue().get("room_" + id) != null) {
+            room = (RoomDto) redisTemplate.opsForValue().get("room_" + id);
+        }
+        //비밀번호 clear
+        room.setPassword();
+        return room;
     }
 
     // Redis에서 room으로 시작하는 key값을 검색합니다.
