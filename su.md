@@ -29,3 +29,11 @@
 3. DB -> Redis
 4. 스케쥴러를 통해 30분마다 불러오기 실행
 5. 현재 랭크가 없으면 리스트에 담지 못하게 함.
+
+24-02-01
+1. Friend Repository 추가
+2. Friend Service 추가
+3. Friend Controller 추가
+4. Room 입장 roomId로 들어오도록 수정
+5. 빠른 방 찾기 기능 item/classic로 나누기
+6. 방 초대 기능 추가

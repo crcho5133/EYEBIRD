@@ -50,7 +50,6 @@ public class RoomController {
     // 방 생성
     @Operation(summary = "방 생성", description = "현재 방 생성 갯수(35개) 초과 불가, 방 이름 중복 불가")
     @PostMapping()
-    //public Map<Integer, String> createRoom(@RequestBody Room room){
     public ResponseEntity<CreateRoomResDto> createRoom(@RequestBody RequestRoomDto reqRoom) throws OpenViduJavaClientException, OpenViduHttpException {
         // Issue : 토큰은 나중에 새로 주면 쓰기
         //System.out.println(reqRoom);
@@ -104,28 +103,16 @@ public class RoomController {
     // 2. 입장 가능 여부 체크 후 리턴
     @Operation(summary = "방 들어가기", description = "블랙리스트/방 인원수 초과 시 입장 불가")
     @PostMapping("/enter")
-    public ResponseEntity<EnterRoomResDto> enterRoom(@RequestBody RoomDto room, @RequestBody(required = false) Map<String, Object> params, Authentication authentication)
+    public ResponseEntity<EnterRoomResDto> enterRoom(@RequestBody RoomReqDto roomReq, @RequestBody(required = false) Map<String, Object> params, Authentication authentication)
             throws OpenViduJavaClientException, OpenViduHttpException {
         String curUserEmail = authentication.getName();
-        String sessionId = Sha256Convert.getInstance().ShaEncoder(room.getRoomName());
+        String sessionId = roomReq.getRoomId();
+        RoomDto room = new RoomDto();
         room.setRoomId(sessionId);
 
         int result = roomService.enterRoom(room, curUserEmail);
         if (result == 1) {
-            OpenVidu openvidu = openViduManager.getOpenvidu();
-            Session session = openvidu.getActiveSession(sessionId);
-            if (session == null) {
-                throw new RuntimeException("방 입장: sessionId를 지닌 session이 존재하지 않습니다");
-            }
-
-            ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
-            Connection connection = session.createConnection(properties);
-
-            EnterRoomResDto enterRoomResDto = EnterRoomResDto.builder()
-                    .connectionToken(connection.getToken())
-                    .build();
-
-            return ResponseEntity.ok(enterRoomResDto);
+            return ResponseEntity.ok(enterOpenVidu(sessionId, params));
         }
         
         String msg = "";
@@ -140,7 +127,6 @@ public class RoomController {
                 msg = "방 입장 : 해당 방에서 추방되었습니다.";
                 break;
         }
-
 
         throw new RuntimeException(msg);
     }
@@ -158,24 +144,28 @@ public class RoomController {
         System.out.println(sessionId);
 
         if (result != "fail") {
-            OpenVidu openvidu = openViduManager.getOpenvidu();
-            Session session = openvidu.getActiveSession(sessionId);
-            if (session == null) {
-                throw new RuntimeException("방 입장: sessionId를 지닌 session이 존재하지 않습니다");
-            }
-
-            ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
-            Connection connection = session.createConnection(properties);
-
-            EnterRoomResDto enterRoomResDto = EnterRoomResDto.builder()
-                    .connectionToken(connection.getToken())
-                    .build();
-
-            return ResponseEntity.ok(enterRoomResDto);
+            return ResponseEntity.ok(enterOpenVidu(sessionId, params));
         }
 
         throw new RuntimeException("방 입장: 방 입장에 실패했습니다");
 
+    }
+
+    public EnterRoomResDto enterOpenVidu(String sessionId, Map<String, Object> params)throws OpenViduJavaClientException, OpenViduHttpException{
+        OpenVidu openvidu = openViduManager.getOpenvidu();
+        Session session = openvidu.getActiveSession(sessionId);
+        if (session == null) {
+            throw new RuntimeException("방 입장: sessionId를 지닌 session이 존재하지 않습니다");
+        }
+
+        ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
+        Connection connection = session.createConnection(properties);
+
+        EnterRoomResDto enterRoomResDto = EnterRoomResDto.builder()
+                .connectionToken(connection.getToken())
+                .build();
+
+        return enterRoomResDto;
     }
 
 }
