@@ -3,19 +3,13 @@ package com.sixback.eyebird.api.dto;
 import com.sixback.eyebird.db.entity.GameResult;
 import com.sixback.eyebird.db.entity.Point;
 import com.sixback.eyebird.db.entity.User;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter
-@NoArgsConstructor
-public class LoginResDto {
-    @Email
-    private String email;
+
+public class SearchUserResDto {
     @NotBlank
     private String nickname;
     private int profileImage;
@@ -26,14 +20,8 @@ public class LoginResDto {
     private int winNumClassic;
     private int loseNumClassic;
 
-    @NotBlank
-    private String accessToken;
-    @NotBlank
-    private String refreshToken;
-
     @Builder
-    public LoginResDto(User user, JwtTokenDto jwtTokenDto) {
-        this.email = user.getEmail();
+    public SearchUserResDto(User user) {
         this.nickname = user.getNickname();
         this.profileImage = user.getProfileImage();
 
@@ -63,10 +51,5 @@ public class LoginResDto {
         this.winNumClassic = winNum - winNumItem;
         this.loseNumClassic = loseNum - loseNumItem;
 
-        this.accessToken = jwtTokenDto.getAccessToken();
-        this.refreshToken = jwtTokenDto.getRefreshToken();
-
     }
-
-
 }
