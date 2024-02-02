@@ -15,7 +15,7 @@ public class GameResult extends BaseTime{
     private Long id;
 
     // 랭크 게임이 아이템 전이었는지의 여부
-    private boolean isItem;
+    private boolean ifItem;
 
     // 랭크 게임의 승자
     @ManyToOne
@@ -29,7 +29,7 @@ public class GameResult extends BaseTime{
 
     @Builder
     public GameResult(boolean isItem, User userWinner, User userLoser) {
-        this.isItem = isItem;
+        this.ifItem = isItem;
         this.userWinner = userWinner;
         this.userLoser = userLoser;
     }
