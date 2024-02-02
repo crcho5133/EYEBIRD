@@ -1,7 +1,7 @@
 # 빌드 단계
 FROM node:20.11.0 AS build
 WORKDIR /app
-COPY package*.json ./
+COPY package.json ./
 RUN npm install
 COPY . .
 RUN npm run build
