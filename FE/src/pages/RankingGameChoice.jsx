@@ -2,19 +2,54 @@
 import NavBar from "@/components/lobby/NavBar";
 import wooden_plate from "@/assets/img/wooden_plate.png";
 import old_paper from "@/assets/img/old_paper.png";
+import { useNavigate } from "react-router-dom";
+import { useWebSocket } from "../context/WebSocketContext";
+import { useEffect, useState } from "react";
 
 const RankingGameChoice = () => {
+  const { client, match, gameId } = useWebSocket();
+  const [gameType, setGameType] = useState("");
+
+  const navigate = useNavigate();
+  const nickname = sessionStorage.getItem("nickname");
+
+  useEffect(() => {
+    if (match && gameId) {
+      navigate(`/game/${gameId}`, { state: { gameType } });
+    }
+  });
+
+  const startMatch = (isItem) => {
+    if (client) {
+      client.publish({
+        destination: "/stomp/matching",
+        body: JSON.stringify({
+          // Your JSON data here
+          item: isItem,
+          email: nickname,
+        }),
+      });
+      console.log("Invitation sent");
+    } else {
+      console.log("WebSocket connection is not active");
+    }
+  };
+
   const handleClassicClick = () => {
     // 클래식 버튼 클릭 시 수행하는 함수를 여기에 작성하세요.
+    setGameType("classic");
+    startMatch(false);
   };
 
   const handleItemClick = () => {
     // 아이템 버튼 클릭 시 수행하는 함수를 여기에 작성하세요.
+    setGameType("item");
+    startMatch(true);
   };
 
   return (
     <>
-      <NavBar />
+      {/* <NavBar /> */}
       <div className="h-screen flex flex-col content-center justify-center">
         {/* 랭킹전 푯말 */}
         <div className="mt-20 absolute top-40 w-full flex justify-center">

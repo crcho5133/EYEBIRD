@@ -62,12 +62,12 @@ const NormalGameChoice = () => {
   };
 
   const handleRoomSearchClick = () => {
-    navigate("/normalGame/roomSearch"); // 랭킹전 화면으로 이동
+    navigate("roomSearch"); // 랭킹전 화면으로 이동
   };
 
   return (
     <>
-      <NavBar />
+      {/* <NavBar /> */}
       {/* // 아이템 버튼 클릭 시 수행하는 함수를 여기에 작성하세요. */}
       <div className="h-screen flex flex-col items-center mt-40">
         {/* 랭킹전 푯말 */}

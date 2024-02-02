@@ -7,7 +7,10 @@ const WebSocketContext = createContext();
 
 export const WebSocketProvider = ({ children }) => {
   const [client, setClient] = useState(undefined);
+  const [match, setMatch] = useState(false);
+  const [gameId, setGameId] = useState(undefined);
   const accessToken = useAccessTokenState();
+  const nickname = localStorage.getItem("nickname");
 
   useEffect(() => {
     if (!accessToken.accessToken) return;
@@ -21,6 +24,15 @@ export const WebSocketProvider = ({ children }) => {
       },
       onConnect: () => {
         console.log("Connected to WebSocket");
+
+        // 랭크 게임 매칭 성공 수신
+        newClient.subscribe("/user/match/" + nickname, (message) => {
+          const newMessage = message.body;
+          console.log("Received message:", newMessage);
+          // 메시지를 받았을 때 처리 (예: 상태 업데이트)
+          setMatch(true);
+          setGameId(newMessage);
+        });
       },
       onDisconnect: () => {
         console.log("Disconnected from WebSocket");
@@ -50,7 +62,11 @@ export const WebSocketProvider = ({ children }) => {
   //   }
   // };
 
-  return <WebSocketContext.Provider value={{ client }}>{children}</WebSocketContext.Provider>;
+  return (
+    <WebSocketContext.Provider value={{ client, match, gameId }}>
+      {children}
+    </WebSocketContext.Provider>
+  );
 };
 
 export const useWebSocket = () => {
