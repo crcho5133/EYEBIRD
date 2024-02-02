@@ -1,2 +1,34 @@
-package com.sixback.eyebird.db.entity;public class Message {
+package com.sixback.eyebird.db.entity;
+
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Getter
+@NoArgsConstructor // 필요함
+public class Message extends BaseTime {
+    @Id
+    @GeneratedValue
+    private int msgType; // 메세지의 타입: 0은 친구 추가, 1은 쪽지
+    private String msgText; // 메세지의 내용
+    private boolean ifRead; // 메세지가 읽혔는 지
+
+    @ManyToOne
+    @JoinColumn(name="user_from")
+    private User userFrom;
+
+    @ManyToOne
+    @JoinColumn(name = "user_to")
+    private User userTo;
+
+    @Builder
+    public Message(int msgType, String msgText, boolean ifRead, User userFrom, User userTo) {
+        this.msgType = msgType;
+        this.msgText = msgText;
+        this.ifRead = ifRead;
+        this.userFrom = userFrom;
+        this.userTo = userTo;
+    }
 }
