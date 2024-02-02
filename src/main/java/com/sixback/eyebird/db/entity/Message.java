@@ -31,4 +31,8 @@ public class Message extends BaseTime {
         this.userFrom = userFrom;
         this.userTo = userTo;
     }
+
+    public void readMessage() {
+        this.ifRead = true;
+    }
 }
