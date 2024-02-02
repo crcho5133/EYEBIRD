@@ -1,5 +1,5 @@
 import NotificationIcon from "../../assets/img/notificationicon.png";
-import SettingIcon from "../../assets/img/SettingIcon.png";
+import SettingIcon from "../../assets/img/settingicon.png";
 import NotificationModal from "../modal/NotificationModal.jsx";
 import SettingModal from "../modal/SettingModal"; // SettingRodal import
 // import BackMark from "../../assets/img/back_mark.png";
