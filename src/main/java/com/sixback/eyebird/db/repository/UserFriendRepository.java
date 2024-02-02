@@ -14,8 +14,8 @@ import java.util.Optional;
 
 public interface UserFriendRepository extends JpaRepository<UserFriend, Long> {
     // 유저의 친구 모두 조회
-    @Query("SELECT u FROM UserFriend u WHERE u.userFrom.id = :userId OR u.userTo.id = :userId")
-    List<User> findByUserFromOrUserTo(@Param("userId") long userId);
+    @Query("SELECT u FROM  UserFriend u WHERE u.userFrom.id = :userId OR u.userTo.id = :userId")
+    List<UserFriend> findByUserFromOrUserTo(@Param("userId") long userId);
 
     // 유저 둘을 모두 포함하는 colum 조회
     @Query("SELECT u FROM UserFriend u WHERE (u.userFrom.id = :userFromId OR u.userTo.id = :userFromId) AND (u.userTo.id = :userToId OR u.userFrom.id = :userToId)")

@@ -27,5 +27,13 @@ public class UserFriend  {
     private User userTo;
 
     // TODO createdAt, updatedAt
-    
+
+    @Override
+    public String toString() {
+        return "UserFriend{" +
+                "id=" + id +
+                ", userFrom=" + userFrom +
+                ", userTo=" + userTo +
+                '}';
+    }
 }

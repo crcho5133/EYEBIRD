@@ -1,15 +1,15 @@
 package com.sixback.eyebird.api.controller;
 
+import com.sixback.eyebird.api.dto.UserReqDto;
 import com.sixback.eyebird.api.service.UserFriendService;
+import com.sixback.eyebird.db.entity.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,13 +22,14 @@ public class UserFriendController {
 
     // 친구 생성
     @PostMapping()
-    public void createFriendShip(@RequestBody Map<String, String> reqFriend, Authentication authentication){
+    public boolean createFriendShip(@RequestBody Map<String, String> reqFriend, Authentication authentication){
         String curUserEmail = authentication.getName();
         String userTo = reqFriend.get("userTo");
-        userFriendService.createFriend(userTo, curUserEmail);
+        return userFriendService.createFriend(userTo, curUserEmail);
     }
     
     // 친구 제거
+    @DeleteMapping()
     public void deleteFriendShip(@RequestBody Map<String, String> reqFriend, Authentication authentication){
         String curUserEmail = authentication.getName();
         String userTo = reqFriend.get("userTo");
@@ -36,9 +37,10 @@ public class UserFriendController {
     }
     
     // 유저가 가진 아이디로 친구 불러오기
-    public void findFriend(Authentication authentication){
+    @GetMapping()
+    public List<UserReqDto> findFriend(Authentication authentication){
         String curUserEmail = authentication.getName();
 
-        userFriendService.findFriend(curUserEmail);
+        return userFriendService.findFriend(curUserEmail);
     }
 }
