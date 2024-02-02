@@ -16,6 +16,8 @@ const RankingModal = ({ visible, onClose }) => {
   const indexOfLastItem = currentPage * itemsCountPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsCountPerPage;
   const rankings = useLobbyApiCall.getRankingList(mode);
+
+  // console.log(rankings);
   const currentItems = rankings.slice(indexOfFirstItem, indexOfLastItem);
 
   const ToggleButton = ({ modeType, label }) => (

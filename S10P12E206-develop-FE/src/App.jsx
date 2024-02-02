@@ -7,8 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AccessTokenProvider } from "@/context/AccessTokenContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import PrivateRoute from "@/privateRoute/privateRoute";
-
+import PrivateRoute from "@/privateRoute/PrivateRoute";
 import { WebSocketProvider } from "@/context/WebSocketContext";
 import { VideoWebSocketProvider } from "./context/VideoWebSocketContext";
 

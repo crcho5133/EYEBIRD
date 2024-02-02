@@ -52,7 +52,7 @@ const DeleteUser = () => {
       <button
         onClick={() => useUsersApiCall.deleteUser(password.value)}
         disabled={!passwordsMatch || !passwordCheck.value}
-        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className={`mr-2 py-1 px-4 text-white font-semibold rounded-md transition duration-200 ${!passwordsMatch || !passwordCheck.value ? "bg-green-300 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"}`}
       >
         회원 탈퇴
       </button>

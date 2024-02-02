@@ -71,12 +71,13 @@ const Profile = () => {
               <button
                 onClick={() => {
                   myInfo.setNickname(nickname.value);
-                  useUsersApiCall.changeNickname(myInfo.nickname);
+                  useUsersApiCall.changeNickname(nickname.value);
+                  myInfo.setNickname(nickname.value);
                   setIsEditingNickname(false);
                   nickname.setHasChecked(false);
                 }}
                 className={`mr-2 py-1 px-4 text-white font-semibold rounded-md transition duration-200 ${!(!nickname.isValid && nickname.hasChecked) ? "bg-green-300 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"}`}
-                disabled={nickname.isValid && nickname.hasChecked}
+                disabled={!(!nickname.isValid && nickname.hasChecked)}
               >
                 수정 완료
               </button>

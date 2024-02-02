@@ -68,7 +68,8 @@ const PasswordChange = () => {
         <button
           type="submit"
           onClick={onClick}
-          className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
+          disabled={!passwordsMatch || !newPasswordCheck.value || !currentPassword.value}
+          className={`mr-2 py-1 px-4 text-white font-semibold rounded-md transition duration-200 ${!passwordsMatch || !newPasswordCheck.value || !currentPassword.value ? "bg-green-300 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"}`}
         >
           비밀번호 변경
         </button>

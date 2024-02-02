@@ -76,10 +76,8 @@ const usersApiCall = () => {
     try {
       await axios.post(url, body);
       webSocket.client.deactivate();
-      accessToken.setAccessToken("");
-      accessToken.setRefreshToken("");
       alert("로그아웃 되었습니다.");
-
+      accessToken.clear();
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -87,30 +85,31 @@ const usersApiCall = () => {
     }
   };
 
-  const changeProfileImage = async (newIndex) => {
+  const changeProfileImage = async (profileImage) => {
     const url = usersUrl.changeProfileImage();
     try {
       const response = await axios.patch(
         url,
         {
-          newIndex,
+          profileImage,
         },
         {
           headers: { Authorization: `Bearer ${accessToken.accessToken}` },
         }
       );
     } catch (error) {
+      console.log(error);
       alert(error.response.data.errorMessage);
     }
   };
 
-  const changeNickname = async (newNickName) => {
+  const changeNickname = async (nickname) => {
     const url = usersUrl.changeNickname();
     try {
       const response = await axios.patch(
         url,
         {
-          newNickName,
+          nickname,
         },
         {
           headers: { Authorization: `Bearer ${accessToken.accessToken}` },
@@ -135,7 +134,8 @@ const usersApiCall = () => {
           headers: { Authorization: `Bearer ${accessToken.accessToken}` },
         }
       );
-      navigate("/lobby");
+      alert("비밀번호가 수정 되었습니다");
+      logout();
     } catch (error) {
       alert(error.response.data.errorMessage);
     }
@@ -151,11 +151,11 @@ const usersApiCall = () => {
           headers: { Authorization: `Bearer ${accessToken.accessToken}` },
         }
       );
-      sessionStorage.clear();
-      accessToken.accessToken("");
       alert("회원이 탈퇴 되었습니다.");
+      accessToken.clear();
       navigate("/");
     } catch (error) {
+      console.log(error);
       alert(error.response.data.errorMessage);
     }
   };
