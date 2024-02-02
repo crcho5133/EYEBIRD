@@ -1,8 +1,6 @@
 package com.sixback.eyebird.api.service;
 
-import com.sixback.eyebird.api.dto.SearchUserResDto;
-import com.sixback.eyebird.api.dto.UpdateUserReqDto;
-import com.sixback.eyebird.api.dto.SignupReqDto;
+import com.sixback.eyebird.api.dto.*;
 import com.sixback.eyebird.db.repository.UserRepository;
 import com.sixback.eyebird.db.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -64,26 +62,42 @@ public class UserService {
         return savedUser.getEmail();
     }
 
-
-    public void update(UpdateUserReqDto modifyUserDto, String email) {
+    public void updatePassword(UpdatePasswordReqDto updatePasswordReqDto, String email) {
         // 현재 로그인된 유저를 DB에서 찾는다
         User user = userRepository.findUserByEmail(email).orElseThrow(() -> new IllegalArgumentException("회원수정: 유저가 인증되지 않았습니다"));
 
-        String currentPassword = modifyUserDto.getCurrentPassword();
-        String newPassword = modifyUserDto.getNewPassword();
-        String newNickname = modifyUserDto.getNewNickname();
-        int newProfileImage = modifyUserDto.getNewProfileImage();
-
-        // 현재 비밀번호의 해싱된 결과가 DB에 저장된 것과 같은지 확인
+        String currentPassword = updatePasswordReqDto.getCurrentPassword();
+        String newPassword = updatePasswordReqDto.getNewPassword();
 
         if (!encoder.matches(currentPassword, user.getPassword())) {
-            throw new IllegalArgumentException("회원수정: 인증된 유저의 비밀번호가 입력된 비밀번호와 일치하지 않습니다");
+            throw new IllegalArgumentException("비밀번호 수정: 인증된 유저의 비밀번호가 입력된 비밀번호와 일치하지 않습니다");
         }
 
         String newHashedPassword = encoder.encode(newPassword);
 
-        user.updateUser(newHashedPassword, newNickname, newProfileImage);
-        log.info("회원수정 성공: email이 " + user.getEmail() + "인 유저를 수정함");
+        user.updatePassword(newHashedPassword);
+        log.info("비밀번호 수정 성공");
+    }
+
+    public void updateNickname(UpdateNicknameReqDto updateNicknameReqDto, String email) {
+        // 현재 로그인된 유저를 DB에서 찾는다
+        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new IllegalArgumentException("회원수정: 유저가 인증되지 않았습니다"));
+
+        String newNickname = updateNicknameReqDto.getNickname();
+
+        user.updateNickname(newNickname);
+        log.info("닉네임 수정 성공");
+    }
+
+
+    public void updateProfileImage(UpdateProfileImageReqDto updateProfileImageReqDto, String email) {
+        // 현재 로그인된 유저를 DB에서 찾는다
+        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new IllegalArgumentException("회원수정: 유저가 인증되지 않았습니다"));
+
+        int newProfileImage = updateProfileImageReqDto.getProfileImage();
+
+        user.updateProfileImage(newProfileImage);
+        log.info("프로필 이미지 수정 성공");
     }
 
     public boolean existsNickname(String nickname) {
@@ -100,8 +114,13 @@ public class UserService {
         return encoder.matches(password, user.getPassword());
     }
 
-    public void deleteUser(String email) {
+    public void deleteUser(DeleteUserReqDto deleteUserReqDto, String email) {
         User user = userRepository.findUserByEmail(email).orElseThrow(() -> new IllegalArgumentException("유저 삭제: 삭제할 유저가 존재하지 않는다"));
+
+        if (!encoder.matches(deleteUserReqDto.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("유저 삭제: 유저의 비밀번호가 올바르지 않습니다");
+        }
+
         user.deleteUser();
 
         log.info("유저 삭제 성공");
@@ -121,6 +140,13 @@ public class UserService {
         }
 
         return searchUserResDtoList;
+    }
+
+    // 유저의 이메일로부터 유저의 닉네임 가져오기
+    public String getNicknameFromEmail(String email) {
+        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new IllegalArgumentException("이메일을 지닌 유저가 존재하지 않습니다"));
+
+        return user.getNickname();
     }
 
 

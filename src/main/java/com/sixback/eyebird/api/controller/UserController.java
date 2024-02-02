@@ -31,20 +31,32 @@ public class UserController {
         return ResponseEntity.status(201).body(signupResDto);
     }
 
-    // 회원수정
-    @PatchMapping("")
-    public ResponseEntity<UpdateUserResDto> update(@RequestBody @Valid UpdateUserReqDto modifyUserDto, Authentication authentication) {
+
+    @PatchMapping("/password")
+    public ResponseEntity<Void> updatePassword(@RequestBody @Valid UpdatePasswordReqDto updatePasswordReqDto, Authentication authentication) {
         String email = authentication.getName();
-        userService.update(modifyUserDto, email);
+        userService.updatePassword(updatePasswordReqDto, email);
 
-        UpdateUserResDto updateUserResDto = UpdateUserResDto.builder().
-                email(email)
-                .message("회원수정 성공: " + email + "의 개인정보를 수정했습니다")
-                .build();
-
-        return ResponseEntity.status(200).body(updateUserResDto);
+        return ResponseEntity.ok().build();
     }
 
+    // TODO 회원수정 - 닉네임
+    @PatchMapping("/nickname")
+    public ResponseEntity<Void> updateNickname(@RequestBody @Valid UpdateNicknameReqDto updateNicknameReqDto, Authentication authentication) {
+        String email = authentication.getName();
+        userService.updateNickname(updateNicknameReqDto, email);
+
+        return ResponseEntity.ok().build();
+    }
+
+    // TODO 회원수정 - 프로필 이미지
+    @PatchMapping("/profile-image")
+    public ResponseEntity<Void> updateProfileImage(@RequestBody @Valid UpdateProfileImageReqDto updateProfileImageReqDto, Authentication authentication) {
+        String email = authentication.getName();
+        userService.updateProfileImage(updateProfileImageReqDto, email);
+
+        return ResponseEntity.ok().build();
+    }
     // 닉네임 중복확인
     @GetMapping("/check/nickname")
     public ResponseEntity<CheckDuplicateResDto> checkDuplicateNickname(@RequestParam("nickname") String nickname) {
@@ -87,10 +99,10 @@ public class UserController {
     }
 
     // 유저 삭제
-    @DeleteMapping("")
-    public ResponseEntity<Void> delete(Authentication authentication) {
+    @PatchMapping("")
+    public ResponseEntity<Void> delete(@RequestBody @Valid DeleteUserReqDto deleteUserReqDto, Authentication authentication) {
         String email = authentication.getName();
-        userService.deleteUser(email);
+        userService.deleteUser(deleteUserReqDto, email);
         return ResponseEntity.status(200).build();
     }
 

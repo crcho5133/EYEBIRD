@@ -39,11 +39,11 @@ public class SearchUserResDto {
         int loseNumItem = 0;
 
         for (GameResult g: winGameResults) {
-            if (g.isItem()) winNumItem++;
+            if (g.isIfItem()) winNumItem++;
         }
 
         for (GameResult g: loseGameResults) {
-            if (g.isItem()) loseNumItem++;
+            if (g.isIfItem()) loseNumItem++;
         }
 
         this.winNumItem = winNumItem;
