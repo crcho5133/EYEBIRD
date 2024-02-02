@@ -38,7 +38,7 @@ public class User extends BaseTime { // 생성시간과 수정시간을 다루�
     private Point point;
 
     @Column(columnDefinition = "boolean default false")
-    private boolean isDeleted;
+    private boolean ifDeleted;
 
     // 승리한 게임 결과들의 리스트
     @OneToMany(mappedBy = "userWinner", fetch = FetchType.LAZY)
@@ -62,8 +62,20 @@ public class User extends BaseTime { // 생성시간과 수정시간을 다루�
         this.profileImage = newProfileImage;
     }
 
+    public void updatePassword(String newHashedPassword) {
+        this.password = newHashedPassword;
+    }
+
+    public void updateNickname(String newNickname) {
+        this.nickname = newNickname;
+    }
+
+    public void updateProfileImage(int newProfileImage) {
+        this.profileImage = newProfileImage;
+    }
+
     public void deleteUser() {
-        this.isDeleted = true;
+        this.ifDeleted = true;
     }
 
 //    public SearchUserResDto() {
