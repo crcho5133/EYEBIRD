@@ -9,7 +9,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://i10e206.p.ssafy.io/") // TODO 추후 배포시 수정
+                .allowedOrigins("http://localhost:5173") // TODO 추후 배포시 수정
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
