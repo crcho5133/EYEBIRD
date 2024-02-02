@@ -1,25 +1,51 @@
-import { useState } from "react";
-
+import Home from "@/pages/Home";
+import Lobby from "@/pages/Lobby";
+import Game from "@/pages/Game";
+import Room from "@/pages/Room";
+import WebMobileLayout from "@/layouts/WebMobileLayout";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AccessTokenProvider } from "@/context/AccessTokenContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import PrivateRoute from "@/privateRoute/privateRoute";
+import RankingGameChoice from "@/pages/RankingGameChoice";
+import NormalGameChoice from "@/pages/NormalGameChoice";
+import RoomSearch from "@/components/lobby/RoomSearch";
+import { WebSocketProvider } from "@/context/WebSocketContext";
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
-      <div className="flex justify-start space-x-4 mt-4">
-        <h1 className="text-3xl font-bold underline">Hello world!</h1>
-        <button
-          className="bg-gradient-to-br from-purple-600 to-blue-500 text-white px-4 py-2 rounded-xl"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          count is {count}
-        </button>
-        <button
-          type="button"
-          class="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-        >
-          버튼
-        </button>
-      </div>
+      <BrowserRouter>
+        <ToastContainer stacked pauseOnFocusLoss={false} />
+        <AccessTokenProvider>
+          <WebSocketProvider>
+            <WebMobileLayout>
+              <Routes>
+                <Route element={<PrivateRoute requireAuth={false} />}>
+                  <Route path="/" element={<Home />} />
+                </Route>
+
+                <Route path="/lobby/*" element={<Lobby />} />
+
+                <Route path="/room/:sessionId" element={<Room />} />
+                <Route path="/game/:sessionId" element={<Game />} />
+
+                {/* <Route element={<PrivateRoute requireAuth={true} />}>
+                <Route path="/rankingGame" element={<RankingGameChoice />} />
+              </Route>
+
+              <Route element={<PrivateRoute requireAuth={true} />}>
+                <Route path="/normalGame" element={<NormalGameChoice />} />
+              </Route>
+
+              <Route element={<PrivateRoute requireAuth={true} />}>
+                <Route path="/normalGame/roomSearch" element={<RoomSearch />} />
+              </Route> */}
+              </Routes>
+            </WebMobileLayout>
+          </WebSocketProvider>
+        </AccessTokenProvider>
+      </BrowserRouter>
     </>
   );
 }
