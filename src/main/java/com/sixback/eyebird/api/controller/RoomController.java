@@ -216,4 +216,6 @@ public class RoomController {
         return enterRoomResDto;
     }
 
+
+
 }
