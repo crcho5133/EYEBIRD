@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -176,5 +177,25 @@ public class PointController {
         return ResponseEntity.ok(matchingResDto);
 
     }
+
+    // openvidu sessionId를 받고, token을 발금함
+    @PostMapping("/enter")
+    public ResponseEntity<MatchingGameResDto> enter(@RequestBody MatchingGameReqDto matchingGameReqDto, @RequestBody(required = false) Map<String, Object> params) throws OpenViduJavaClientException, OpenViduHttpException {
+        OpenVidu openvidu = openViduManager.getOpenvidu();
+        Session session = openvidu.getActiveSession(matchingGameReqDto.getGameId());
+        if (session == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
+        Connection connection = session.createConnection(properties);
+
+        MatchingGameResDto matchingGameResDto = MatchingGameResDto.builder()
+                .token(connection.getToken())
+                .build();
+
+        return ResponseEntity.ok().body(matchingGameResDto);
+    }
+
+
 
 }
