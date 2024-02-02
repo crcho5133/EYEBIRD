@@ -114,8 +114,13 @@ public class UserService {
         return encoder.matches(password, user.getPassword());
     }
 
-    public void deleteUser(String email) {
+    public void deleteUser(DeleteUserReqDto deleteUserReqDto, String email) {
         User user = userRepository.findUserByEmail(email).orElseThrow(() -> new IllegalArgumentException("유저 삭제: 삭제할 유저가 존재하지 않는다"));
+
+        if (!encoder.matches(deleteUserReqDto.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("유저 삭제: 유저의 비밀번호가 올바르지 않습니다");
+        }
+
         user.deleteUser();
 
         log.info("유저 삭제 성공");

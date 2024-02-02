@@ -99,10 +99,10 @@ public class UserController {
     }
 
     // 유저 삭제
-    @DeleteMapping("")
-    public ResponseEntity<Void> delete(Authentication authentication) {
+    @PatchMapping("")
+    public ResponseEntity<Void> delete(@RequestBody @Valid DeleteUserReqDto deleteUserReqDto, Authentication authentication) {
         String email = authentication.getName();
-        userService.deleteUser(email);
+        userService.deleteUser(deleteUserReqDto, email);
         return ResponseEntity.status(200).build();
     }
 
