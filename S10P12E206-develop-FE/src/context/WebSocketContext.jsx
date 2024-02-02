@@ -15,7 +15,7 @@ export const WebSocketProvider = ({ children }) => {
   useEffect(() => {
     if (!accessToken.accessToken) return;
     const newClient = new Client({
-      webSocketFactory: () => new SockJS("http://localhost:8080/ws"),
+      webSocketFactory: () => new SockJS("https://i10e206.p.ssafy.io/api/ws"),
       connectHeaders: {
         Authorization: `Bearer ${accessToken.accessToken}`,
       },
