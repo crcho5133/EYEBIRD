@@ -75,7 +75,7 @@ pipeline {
                 sh 'docker stop react-app || true'
                 sh 'docker rm react-app || true'
                 // 프론트엔드 이미지 실행
-                sh 'docker run -d -p 3000:80 --name react-app react-app:test'
+                sh 'docker run -d -p 3000:3000 --name react-app react-app:test'
             }
         }
     }
