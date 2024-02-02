@@ -118,7 +118,7 @@ public class RoomService {
         if (room.getRoomName() == null) return 0;
 
         // 현재 인원이 max값보다 많은
-        if (room.getMaxCapacity()*2 <= room.getCurrentCapacity()) {
+        if (room.getMaxCapacity() <= room.getCurrentCapacity()) {
             System.out.println("적정인원");
             return -1;
         }
@@ -163,7 +163,7 @@ public class RoomService {
         if (room.getRoomName() == null) return 0;
 
         // 현재 인원이 max값보다 많은
-        if (room.getMaxCapacity()*2 <= room.getCurrentCapacity()) {
+        if (room.getMaxCapacity() <= room.getCurrentCapacity()) {
             System.out.println("적정인원");
             return -1;
         }
@@ -189,7 +189,7 @@ public class RoomService {
 
         for(int i = 0; i<rlist.size(); i++){
             // 해당 방이 가득 차 있으면 입장 불가.
-            if(rlist.get(i).getCurrentCapacity() >= rlist.get(i).getMaxCapacity()*2) continue;
+            if(rlist.get(i).getCurrentCapacity() >= rlist.get(i).getMaxCapacity()) continue;
 
             // 비밀 번호가 있으면 입장 불가
             if(rlist.get(i).getPassword() != 0) continue;
