@@ -144,7 +144,7 @@ const usersApiCall = () => {
   const deleteUser = async (password) => {
     const url = usersUrl.deleteUser();
     try {
-      const response = await axios.delete(
+      const response = await axios.patch(
         url,
         { password },
         {

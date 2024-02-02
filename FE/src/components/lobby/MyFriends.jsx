@@ -1,22 +1,20 @@
 import React, { useState } from "react";
 import Pagination from "react-js-pagination";
 import lobbyApiCall from "@/api/axios/lobbyApiCall";
-import { useWebSocket } from "@/context/WebSocketContext";
 
 const MyComponent = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsCountPerPage = 5; // 페이지 당 아이템 수
+  const itemsCountPerPage = 5;
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-  const getFriends = lobbyApiCall();
-  const friends = getFriends.getFriendsList();
+  const useLobbyApiCall = lobbyApiCall();
+  const friends = useLobbyApiCall.getFriendsList();
 
   // 현재 접속중인 친구 요청
   // const webSocket = useWebSocket();
   // const currentUsers = webSocket.currentUsers();
 
-  // 현재 페이지에 해당하는 친구 목록을 계산
   const indexOfLastItem = currentPage * itemsCountPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsCountPerPage;
   const currentItems = friends.slice(indexOfFirstItem, indexOfLastItem);

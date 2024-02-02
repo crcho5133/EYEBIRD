@@ -1,6 +1,5 @@
 import usersApiCall from "@/api/axios/usersApiCall";
 import LobbyBtn from "@/components/lobby/LobbyBtn";
-import { useAccessTokenState } from "@/context/AccessTokenContext";
 import MyInfo from "@/components/lobby/MyInfo";
 import useShowComponent from "@/hooks/useShowComponent";
 import profile from "@/assets/img/bird_weard_pirate-hat.png";
@@ -12,7 +11,6 @@ import RankingModal from "@/components/modal/RankingModal";
 import useShowRodal from "@/hooks/useShowRodal";
 
 const Lobby = () => {
-  const accessToken = useAccessTokenState();
   const useUsersApiCall = usersApiCall();
   const isMyInfoVisible = useShowComponent();
   const isRankingVisible = useShowRodal();
@@ -33,20 +31,17 @@ const Lobby = () => {
     isBtnVisible.showComponent();
   };
 
-  const onClose = () => {
+  const onCloseMyInfo = () => {
     isMyInfoVisible.hideComponent();
     isBtnVisible.hideComponent();
   };
 
+  const onCloseRanking = () => {
+    isRankingVisible.hideRodal();
+    isBtnVisible.hideComponent();
+  };
+
   const navigate = useNavigate();
-
-  const handleRankingClick = () => {
-    onClickRanking();
-  };
-
-  const handleMyInfoClick = () => {
-    onClickMyInfo();
-  };
 
   const handleRankingGameChoiceClick = () => {
     navigate("/rankingGame");
@@ -59,9 +54,8 @@ const Lobby = () => {
   return (
     <>
       {!isBtnVisible.value && <LobbyBtn text="로그아웃" onClick={logout} />}
-      {/* {!isBtnVisible.value && <LobbyIconBtn text="내 정보" onClick={onClick} />} */}
-      {isMyInfoVisible.value && <MyInfo onClose={onClose} />}
-      <RankingModal visible={isRankingVisible.value} onClose={isRankingVisible.hideRodal} />
+      {isMyInfoVisible.value && <MyInfo onClose={onCloseMyInfo} />}
+      <RankingModal visible={isRankingVisible.value} onClose={onCloseRanking} />
       {!isBtnVisible.value && (
         <div>
           <NavBarNoBack />
@@ -82,7 +76,7 @@ const Lobby = () => {
               {/* 랭킹, 내정보 버튼 */}
               <div className="flex flex-col items-end mr-4 gap-1">
                 <button
-                  onClick={handleRankingClick}
+                  onClick={onClickRanking}
                   className="mb-4"
                   style={{
                     width: "130%",
@@ -91,7 +85,7 @@ const Lobby = () => {
                   <img src={cup_gold} alt="CupGold" />
                 </button>
                 <button
-                  onClick={handleMyInfoClick}
+                  onClick={onClickMyInfo}
                   style={{
                     width: "130%",
                   }}

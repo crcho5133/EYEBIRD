@@ -9,8 +9,6 @@ const DeleteUser = () => {
   const [passwordsMatch, setPasswordsMatch] = useState(false);
   const useUsersApiCall = usersApiCall();
 
-  //닫으면 인풋태그 초기화 하는 로직
-
   const passwordHandleChange = (event) => {
     password.onChange(event.target.value);
     validatePasswords(event.target.value, passwordCheck.value);
