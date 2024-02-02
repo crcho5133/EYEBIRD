@@ -28,7 +28,7 @@ public class SecurityConfig {
     private final AuthEntryPointJwt unauthorizedHandler;
     private static final String[] AUTH_WHITELIST = {
         "/swagger-ui/**", "/v3/api-docs/**", "/api/auth/login", "/api/auth/logout", "/api/auth/reissue", "/api/user/signup", "/api/user/check/nickname", "/api/user/check/email",
-            "/api/sessions", "/api/sessions/{sessionId}/connections", "ws/**"
+            "/api/sessions", "/api/sessions/{sessionId}/connections"
     };
 
     @Bean
