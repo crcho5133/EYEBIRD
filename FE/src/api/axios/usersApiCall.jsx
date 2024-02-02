@@ -19,7 +19,7 @@ const usersApiCall = () => {
       alert(error.response.data.errorMessage);
     }
   };
-
+  
   const checkEmailDuplicate = async (email, setIsEmailValid) => {
     const url = usersUrl.checkEmailDuplicate() + "?email=" + email;
     try {
