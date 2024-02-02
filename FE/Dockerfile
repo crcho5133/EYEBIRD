@@ -17,7 +17,7 @@ RUN npm run build
 # EXPOSE 3000
 # CMD ["serve", "-s", ".", "-l", "3000"]
 
-# Nginx 단계
+# Nginx 단계 
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
