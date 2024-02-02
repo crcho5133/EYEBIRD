@@ -29,8 +29,8 @@ public class JwtTokenUtil {
     }
 
     // Authentication으로 access, refresh token
-    public JwtTokenDto generateToken(LoginReqDto loginReqDto) {
-        String email = loginReqDto.getEmail();
+    public JwtTokenDto generateToken(String email) {
+
 
         // 유저의 권한을 다룰 필요없음: 모든 유저는 동등함
 
@@ -97,6 +97,14 @@ public class JwtTokenUtil {
         } catch(ExpiredJwtException e) { // jwt의 유효시간이 지났음
             return e.getClaims();
         }
+    }
+
+    // access token의 남은 유효기간 구하기
+    public Long getExpiration(String accessToken) {
+        Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody().getExpiration();
+        // 현재 시간
+        Long now = new Date().getTime();
+        return (expiration.getTime() - now);
     }
 
 }

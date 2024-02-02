@@ -1,22 +1,26 @@
 import Rodal from "rodal";
 import "rodal/lib/rodal.css";
+import usersApiCall from "@/api/axios/usersApiCall";
+const ProfileImageModal = ({ visible, onClose, setProfileImage, setProfileImageIndex, myInfo }) => {
+  const useUsersApiCall = usersApiCall();
 
-const ProfileImageModal = ({ visible, onClose, setProfileImage, setProfileImageIndex }) => {
   const profileImages = [
-    "src/assets/img/케이셉.PNG",
-    "src/assets/img/포이즌.PNG",
-    "src/assets/img/케이셉.PNG",
-    "src/assets/img/포이즌.PNG",
-    "src/assets/img/케이셉.PNG",
-    "src/assets/img/포이즌.PNG",
-    "src/assets/img/케이셉.PNG",
-    "src/assets/img/포이즌.PNG",
+    "src/assets/img/1.PNG",
+    "src/assets/img/2.PNG",
+    "src/assets/img/3.PNG",
+    "src/assets/img/4.PNG",
   ];
 
-  const ImageSelect = (imageUrl, index) => {
-    setProfileImage(imageUrl);
-    setProfileImageIndex(index);
-    onClose();
+  const ImageSelect = async (imageUrl, index) => {
+    if (myInfo) {
+      myInfo.setProfileImageIndex(index);
+      await useUsersApiCall.changeProfileImage(index);
+      onClose();
+    } else {
+      setProfileImage(imageUrl);
+      setProfileImageIndex(index);
+      onClose();
+    }
   };
 
   return (
@@ -39,6 +43,7 @@ const ProfileImageModal = ({ visible, onClose, setProfileImage, setProfileImageI
           </div>
         ))}
       </div>
+      <button onClick={onClose}> 닫기 </button>
     </Rodal>
   );
 };
