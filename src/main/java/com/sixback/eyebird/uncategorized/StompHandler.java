@@ -2,6 +2,7 @@ package com.sixback.eyebird.uncategorized;
 
 import com.sixback.eyebird.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class StompHandler implements ChannelInterceptor {
 
     private final JwtTokenUtil jwtTokenUtil;
@@ -22,13 +24,12 @@ public class StompHandler implements ChannelInterceptor {
         // websocket 연결 시
         if ((StompCommand.CONNECT.equals(accessor.getCommand()))) {
             String authorizationHeader = accessor.getFirstNativeHeader("Authorization");
-
             // Authorization header의
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 String token = authorizationHeader.substring(7);
 
                 jwtTokenUtil.validateToken(token);
-
+                log.info("websocket interceptor: token 인증 완료");
             }
 
         }
