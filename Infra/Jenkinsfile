@@ -60,7 +60,7 @@ pipeline {
                 dir('FE') {
                     sh '''
                     rm -rf node_modules
-                    tar -cvf build.tar dist
+                    tar -cvf dist.tar dist
                     '''
                 }
             }
@@ -103,9 +103,9 @@ pipeline {
                 sshagent(credentials: ['SSH']) {
                     sh '''
                         ssh -o StrictHostKeyChecking=no ubuntu@i10e206.p.ssafy.io
-                        scp /var/jenkins_home/workspace/e206_gitlab/FE/build.tar ubuntu@i10e206.p.ssafy.io:${HOME_PATH}
+                        scp /var/jenkins_home/workspace/e206_gitlab/FE/dist.tar ubuntu@i10e206.p.ssafy.io:${HOME_PATH}
                         
-                        ssh -t ubuntu@i10e206.p.ssafy.io "cd /home/ubuntu && tar -xvf build.tar && cp -r build/* /var/www/html/"
+                        ssh -t ubuntu@i10e206.p.ssafy.io "cd /home/ubuntu && tar -xvf dist.tar && cp -r dist/* /var/www/html/"
                     '''
                 }
             }
