@@ -1,6 +1,14 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'NodeJS 20.10.0'
+    }
+
+    environment {
+        HOME_PATH = '/home/ubuntu'
+    }
+
     stages {
         stage('Check Changes') {
             steps {
@@ -35,9 +43,25 @@ pipeline {
             steps {
                 echo 'Building Front-End...'
                 // 백엔드 소스코드가 있는 경로로 이동
+                // dir('FE') {
+                //     // Docker 이미지 빌드 명령어
+                //     sh 'docker build -t react-app:test .'
+                // }
+                dir('frontend') {
+                        sh "npm install"
+                        // Build the project using npm
+                        sh "CI=false npm run build"
+                    }
+            }
+        }
+
+        stage('Compression FE') {
+            steps {
                 dir('FE') {
-                    // Docker 이미지 빌드 명령어
-                    sh 'docker build -t react-app:test .'
+                    sh '''
+                    rm -rf node_modules
+                    tar -cvf build.tar dist
+                    '''
                 }
             }
         }
@@ -68,14 +92,21 @@ pipeline {
                 expression { env.BUILD_FE == "true" }
             }
             steps {
-                // 배포 관련 작업을 여기에 추가
-                echo 'Deploying FE...'
-                echo '제발'
-                // 빌드가 진행되면 기존의 컨테이너 중지 및 제거 & 컨테이너가 없어도 실패하지 않고계속 수행
-                sh 'docker stop react-app || true'
-                sh 'docker rm react-app || true'
-                // 프론트엔드 이미지 실행
-                sh 'docker run -d -p 3000:3000 --name react-app react-app:test'
+                // // 배포 관련 작업을 여기에 추가
+                // echo 'Deploying FE...'
+                // echo '제발'
+                // // 빌드가 진행되면 기존의 컨테이너 중지 및 제거 & 컨테이너가 없어도 실패하지 않고계속 수행
+                // sh 'docker stop react-app || true'
+                // sh 'docker rm react-app || true'
+                // // 프론트엔드 이미지 실행
+                // sh 'docker run -d -p 3000:3000 --name react-app react-app:test'
+                sshagent(credentials: ['SSH']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ubuntu@i10e206.p.ssafy.io
+                        scp /var/jenkins_home/workspace/e206_gitlab/FE/build.tar ubuntu@i10e206.p.ssafy.io:${HOME_PATH}
+                        ssh -t ubuntu@i10e206.p.ssafy.io "chmod +x ${HOME_PATH}/deploy.sh && ${HOME_PATH}/deploy.sh"
+                    '''
+                }
             }
         }
     }
