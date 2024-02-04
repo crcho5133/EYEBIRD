@@ -17,7 +17,7 @@ const usersApiCall = () => {
       const response = await privateAxios.post(usersUrl.signUp(), body);
       await login(email, password, accessToken.accessToken);
     } catch (error) {
-      alert(error.response);
+      alert(error.response?.data?.errorMessage);
     }
   };
 
@@ -61,7 +61,8 @@ const usersApiCall = () => {
       accessToken.setProfileImageIndex(response.data.profileImage);
       navigate("/lobby");
     } catch (error) {
-      alert(error.response);
+      console.log(error);
+      alert(error.response?.data?.errorMessage);
     }
   };
 
@@ -81,8 +82,7 @@ const usersApiCall = () => {
       navigate("/");
     } catch (error) {
       console.log(error);
-      alert(error);
-      alert(error.response.data.errorMessage);
+      alert(error.response?.data?.errorMessage);
     }
   };
 
@@ -104,7 +104,8 @@ const usersApiCall = () => {
         nickname,
       });
     } catch (error) {
-      alert(error.response);
+      console.log(error);
+      alert(error.response?.data?.errorMessage);
     }
   };
 
@@ -119,7 +120,7 @@ const usersApiCall = () => {
       alert("비밀번호가 수정 되었습니다");
       logout();
     } catch (error) {
-      alert(error.response);
+      alert(error.response?.data?.errorMessage);
     }
   };
 
@@ -131,7 +132,7 @@ const usersApiCall = () => {
       accessToken.clear();
       navigate("/");
     } catch (error) {
-      alert(error.response);
+      alert(error.response?.data?.errorMessage);
     }
   };
 

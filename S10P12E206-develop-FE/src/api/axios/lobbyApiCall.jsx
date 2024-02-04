@@ -1,5 +1,4 @@
 import lobbyUrl from "@/api/url/lobbyUrl";
-import usersUrl from "@/api/url/usersUrl";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
 import useAxiosConfig from "@/hooks/useAxiosConfig";
 
@@ -19,7 +18,6 @@ const lobbyApiCall = () => {
     const getRankUrl = lobbyUrl.getRankingList() + "/" + type;
     try {
       const response = await privateAxios.get(getRankUrl);
-
       return response.data;
     } catch (error) {
       throw error;

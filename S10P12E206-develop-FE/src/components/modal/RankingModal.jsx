@@ -33,7 +33,7 @@ const RankingModal = ({ visible, onClose }) => {
 
   const currentItems =
     rankings.length === 0 ? [] : rankings.slice(indexOfFirstItem, indexOfLastItem);
-
+  console.log(currentItems);
   const ToggleButton = ({ modeType, label }) => (
     <button
       className={`px-4 py-2 ${mode === modeType ? "bg-blue-500 text-white" : "bg-white text-blue-500"} border border-blue-500 rounded-lg`}
