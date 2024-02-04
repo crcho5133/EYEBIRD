@@ -57,14 +57,14 @@ pipeline {
             }
         }
 
-        stage('FastAPI') {
+        stage('Build FastAPI') {
             when {
                 expression { env.BUILD_FastAPI == "true" }
             }
             steps {
                 echo 'Building FastAPI'
                 dir('FastAPI') {
-                    sh 'docker build -t fastapi-app:test .'
+                    sh 'docker build -t fastapi:test .'
                 }
             }
         }
