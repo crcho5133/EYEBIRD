@@ -15,85 +15,85 @@ const RankingModal = ({ visible, onClose }) => {
 
   const indexOfLastItem = currentPage * itemsCountPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsCountPerPage;
-  const rankings = useLobbyApiCall.getRankingList(mode);
+  // const rankings = useLobbyApiCall.getRankingList(mode);
 
-  // console.log(rankings);
-  const currentItems = rankings.slice(indexOfFirstItem, indexOfLastItem);
+  // // console.log(rankings);
+  // const currentItems = rankings.slice(indexOfFirstItem, indexOfLastItem);
 
-  const ToggleButton = ({ modeType, label }) => (
-    <button
-      className={`px-4 py-2 ${mode === modeType ? "bg-blue-500 text-white" : "bg-white text-blue-500"} border border-blue-500 rounded-lg`}
-      onClick={() => setMode(modeType)}
-    >
-      {label}
-    </button>
-  );
+  // const ToggleButton = ({ modeType, label }) => (
+  //   <button
+  //     className={`px-4 py-2 ${mode === modeType ? "bg-blue-500 text-white" : "bg-white text-blue-500"} border border-blue-500 rounded-lg`}
+  //     onClick={() => setMode(modeType)}
+  //   >
+  //     {label}
+  //   </button>
+  // );
 
-  return (
-    <>
-      <Rodal
-        visible={visible}
-        onClose={() => {
-          onClose();
-        }}
-        customStyles={{ width: "80%", height: "auto" }}
-      >
-        <div className="flex justify-center space-x-4 my-4">
-          <ToggleButton modeType="classic" label="클래식" />
-          <ToggleButton modeType="item" label="아이템" />
-        </div>
-        <div>
-          <table className="min-w-full table-auto border-collapse border border-gray-200">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border px-4 py-2">순위</th>
-                <th className="border px-4 py-2">닉네임</th>
-                <th className="border px-4 py-2">포인트</th>
-                <th className="border px-4 py-2">프로필</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentItems.map((item, index) => (
-                <tr key={item.nickname}>
-                  <td className="border px-4 py-2">
-                    {(currentPage - 1) * itemsCountPerPage + index + 1}
-                  </td>
-                  <td className="border px-4 py-2">{item.nickname}</td>
-                  <td className="border px-4 py-2">
-                    {mode === "classic" ? item.classic_pt : item.item_pt}
-                  </td>
-                  <td className="border px-4 py-2">
-                    {index < 3 ? (
-                      <img
-                        src={`/path/to/profile/${item.profileImg}.jpg`}
-                        alt="Profile"
-                        className="h-10 w-10 rounded-full"
-                      />
-                    ) : (
-                      ""
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <Pagination
-          activePage={currentPage}
-          itemsCountPerPage={itemsCountPerPage}
-          totalItemsCount={rankings.length}
-          pageRangeDisplayed={5}
-          onChange={handlePageChange}
-          itemClass="page-item"
-          linkClass="page-link text-blue-500 hover:text-blue-600"
-          innerClass="flex pl-0 rounded list-none flex-wrap justify-center space-x-2"
-          activeClass="active bg-blue-500 text-white"
-          firstPageText="처음"
-          lastPageText="마지막"
-        />
-      </Rodal>
-    </>
-  );
+  // return (
+  //   <>
+  //     <Rodal
+  //       visible={visible}
+  //       onClose={() => {
+  //         onClose();
+  //       }}
+  //       customStyles={{ width: "80%", height: "auto" }}
+  //     >
+  //       <div className="flex justify-center space-x-4 my-4">
+  //         <ToggleButton modeType="classic" label="클래식" />
+  //         <ToggleButton modeType="item" label="아이템" />
+  //       </div>
+  //       <div>
+  //         <table className="min-w-full table-auto border-collapse border border-gray-200">
+  //           <thead>
+  //             <tr className="bg-gray-100">
+  //               <th className="border px-4 py-2">순위</th>
+  //               <th className="border px-4 py-2">닉네임</th>
+  //               <th className="border px-4 py-2">포인트</th>
+  //               <th className="border px-4 py-2">프로필</th>
+  //             </tr>
+  //           </thead>
+  //           <tbody>
+  //             {currentItems.map((item, index) => (
+  //               <tr key={item.nickname}>
+  //                 <td className="border px-4 py-2">
+  //                   {(currentPage - 1) * itemsCountPerPage + index + 1}
+  //                 </td>
+  //                 <td className="border px-4 py-2">{item.nickname}</td>
+  //                 <td className="border px-4 py-2">
+  //                   {mode === "classic" ? item.classic_pt : item.item_pt}
+  //                 </td>
+  //                 <td className="border px-4 py-2">
+  //                   {index < 3 ? (
+  //                     <img
+  //                       src={`/path/to/profile/${item.profileImg}.jpg`}
+  //                       alt="Profile"
+  //                       className="h-10 w-10 rounded-full"
+  //                     />
+  //                   ) : (
+  //                     ""
+  //                   )}
+  //                 </td>
+  //               </tr>
+  //             ))}
+  //           </tbody>
+  //         </table>
+  //       </div>
+  //       <Pagination
+  //         activePage={currentPage}
+  //         itemsCountPerPage={itemsCountPerPage}
+  //         totalItemsCount={rankings.length}
+  //         pageRangeDisplayed={5}
+  //         onChange={handlePageChange}
+  //         itemClass="page-item"
+  //         linkClass="page-link text-blue-500 hover:text-blue-600"
+  //         innerClass="flex pl-0 rounded list-none flex-wrap justify-center space-x-2"
+  //         activeClass="active bg-blue-500 text-white"
+  //         firstPageText="처음"
+  //         lastPageText="마지막"
+  //       />
+  //     </Rodal>
+  //   </>
+  // );
 };
 
 export default RankingModal;

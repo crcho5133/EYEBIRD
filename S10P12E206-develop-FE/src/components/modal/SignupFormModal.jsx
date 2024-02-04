@@ -43,15 +43,23 @@ const SignupFormModal = ({ visible, onClose }) => {
   };
 
   const checkEmailDuplicate = async (event) => {
-    event.preventDefault();
-    await useUsersApiCall.checkEmailDuplicate(email.value, email.setIsValid);
-    email.setHasChecked(true);
+    try {
+      event.preventDefault();
+      await useUsersApiCall.checkEmailDuplicate(email.value, email.setIsValid);
+      email.setHasChecked(true);
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const checkNicknameDuplicate = async (event) => {
-    event.preventDefault();
-    await useUsersApiCall.checkNicknameDuplicate(nickname.value, nickname.setIsValid);
-    nickname.setHasChecked(true);
+    try {
+      event.preventDefault();
+      await useUsersApiCall.checkNicknameDuplicate(nickname.value, nickname.setIsValid);
+      nickname.setHasChecked(true);
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const clearAllInput = () => {

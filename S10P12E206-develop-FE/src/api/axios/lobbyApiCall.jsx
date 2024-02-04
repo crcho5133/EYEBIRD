@@ -1,14 +1,15 @@
 import lobbyUrl from "@/api/url/lobbyUrl";
 import usersUrl from "@/api/url/usersUrl";
-import axios from "axios";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
+import useAxiosConfig from "@/hooks/useAxiosConfig";
 
 const lobbyApiCall = () => {
   const accessToken = useAccessTokenState();
+  const privateAxios = useAxiosConfig().privateAxios;
   const getFriendsList = () => {
     // const url = lobbyUrl.getFriendsList();
     try {
-      // const response = await axios.get(url);
+      // const response = await privateAxios.get(url);
       const friends = [
         { nickname: "정종길1", classic_pt: 30, item_pt: 350 },
         { nickname: "정종길2", classic_pt: 40, item_pt: 360 },
@@ -35,14 +36,9 @@ const lobbyApiCall = () => {
   const getRankingList = async (type) => {
     const getRankUrl = lobbyUrl.getRankingList() + "/" + type;
     try {
-      const response = await axios.get(getRankUrl, {
-        headers: {
-          Authorization: `Bearer ${accessToken.accessToken}`,
-        },
-      });
+      const response = await privateAxios.get(getRankUrl);
 
       // console.log(response);
-
       return response.data;
     } catch (e) {
       // console.log(e);

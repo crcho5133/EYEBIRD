@@ -1,50 +1,50 @@
-import axios from "axios";
 import usersUrl from "@/api/url/usersUrl";
 import { useNavigate } from "react-router-dom";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
 import { useWebSocket } from "@/context/WebSocketContext";
+import useAxiosConfig from "@/hooks/useAxiosConfig";
 
 const usersApiCall = () => {
   const navigate = useNavigate();
   const accessToken = useAccessTokenState();
   const webSocket = useWebSocket();
+  const privateAxios = useAxiosConfig().privateAxios;
 
   const signup = async (profileImage, email, password, nickname) => {
     const body = { profileImage, email, password, nickname };
     try {
-      const response = await axios.post(usersUrl.signUp(), body);
+      const response = await privateAxios.post(usersUrl.signUp(), body);
       await login(email, password, accessToken.accessToken);
     } catch (error) {
-      console.log(error);
-      alert(error.response.data.errorMessage);
+      alert(error.response);
     }
   };
 
   const checkEmailDuplicate = async (email, setIsEmailValid) => {
     const url = usersUrl.checkEmailDuplicate() + "?email=" + email;
     try {
-      const response = await axios.get(url);
+      const response = await privateAxios.get(url);
       if (response.data.check === false) {
         setIsEmailValid(true);
       } else if (response.data.check === true) {
         setIsEmailValid(false);
       }
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 
   const checkNicknameDuplicate = async (nickname, setIsNicknameValid) => {
     const url = usersUrl.checkNicknameDuplicate() + "?nickname=" + nickname;
     try {
-      const response = await axios.get(url);
+      const response = await privateAxios.get(url);
       if (response.data.check === false) {
         setIsNicknameValid(true);
       } else if (response.data.check === true) {
         setIsNicknameValid(false);
       }
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 
@@ -52,7 +52,7 @@ const usersApiCall = () => {
     const url = usersUrl.login();
     const body = { email, password };
     try {
-      const response = await axios.post(url, body);
+      const response = await privateAxios.post(url, body);
       accessToken.setAccessToken(response.data.accessToken);
       accessToken.setRefreshToken(response.data.refreshToken);
       accessToken.setEmail(response.data.email);
@@ -60,8 +60,7 @@ const usersApiCall = () => {
       accessToken.setProfileImageIndex(response.data.profileImage);
       navigate("/lobby");
     } catch (error) {
-      console.log(error);
-      alert(error.response.data.errorMessage);
+      alert(error.response);
     }
   };
 
@@ -74,7 +73,7 @@ const usersApiCall = () => {
     };
 
     try {
-      await axios.post(url, body);
+      await privateAxios.post(url, body);
       webSocket.client.deactivate();
       alert("로그아웃 되었습니다.");
       accessToken.clear();
@@ -88,35 +87,22 @@ const usersApiCall = () => {
   const changeProfileImage = async (profileImage) => {
     const url = usersUrl.changeProfileImage();
     try {
-      const response = await axios.patch(
-        url,
-        {
-          profileImage,
-        },
-        {
-          headers: { Authorization: `Bearer ${accessToken.accessToken}` },
-        }
-      );
+      const response = await privateAxios.patch(url, {
+        profileImage,
+      });
     } catch (error) {
-      console.log(error);
-      alert(error.response.data.errorMessage);
+      alert(error.response);
     }
   };
 
   const changeNickname = async (nickname) => {
     const url = usersUrl.changeNickname();
     try {
-      const response = await axios.patch(
-        url,
-        {
-          nickname,
-        },
-        {
-          headers: { Authorization: `Bearer ${accessToken.accessToken}` },
-        }
-      );
+      const response = await privateAxios.patch(url, {
+        nickname,
+      });
     } catch (error) {
-      alert(error.response.data.errorMessage);
+      alert(error.response);
     }
   };
 
@@ -124,39 +110,26 @@ const usersApiCall = () => {
     const url = usersUrl.changePassword();
 
     try {
-      const response = await axios.patch(
-        url,
-        {
-          currentPassword,
-          newPassword,
-        },
-        {
-          headers: { Authorization: `Bearer ${accessToken.accessToken}` },
-        }
-      );
+      const response = await privateAxios.patch(url, {
+        currentPassword,
+        newPassword,
+      });
       alert("비밀번호가 수정 되었습니다");
       logout();
     } catch (error) {
-      alert(error.response.data.errorMessage);
+      alert(error.response);
     }
   };
 
   const deleteUser = async (password) => {
     const url = usersUrl.deleteUser();
     try {
-      const response = await axios.patch(
-        url,
-        { password },
-        {
-          headers: { Authorization: `Bearer ${accessToken.accessToken}` },
-        }
-      );
+      const response = await privateAxios.patch(url, { password });
       alert("회원이 탈퇴 되었습니다.");
       accessToken.clear();
       navigate("/");
     } catch (error) {
-      console.log(error);
-      alert(error.response.data.errorMessage);
+      alert(error.response);
     }
   };
 
