@@ -19,6 +19,8 @@ pipeline {
                     env.BUILD_BE = changedFiles.contains("BE/") ? "true" : "false"
                     // 변경된 파일이 프론트엔드 디렉토리 내에 있는지 확인
                     env.BUILD_FE = changedFiles.contains("FE/") ? "true" : "false"
+                    // 변경된 파일이 FastAPI 디렉토리 내에 있는지 확인
+                    env.BUILD_FastAPI = changedFiles.contains("FastAPI/") ? "true" : "false"
                 }
             }
         }
@@ -55,6 +57,18 @@ pipeline {
             }
         }
 
+        stage('FastAPI') {
+            when {
+                expression { env.BUILD_FastAPI == "true" }
+            }
+            steps {
+                echo 'Building FastAPI'
+                dir('FastAPI') {
+                    sh 'docker build -t fastapi-app:test .'
+                }
+            }
+        }
+
         stage('Compression FE') {
             steps {
                 dir('FE') {
@@ -87,13 +101,14 @@ pipeline {
                 sh 'docker run -d -p 8787:8787 --name spring-app spring-app:test'
             }
         }
+        
         stage('Deploy FE') {
             when {
                 expression { env.BUILD_FE == "true" }
             }
             steps {
                 // // 배포 관련 작업을 여기에 추가
-                // echo 'Deploying FE...'
+                echo 'Deploying FE...'
                 // echo '제발'
                 // // 빌드가 진행되면 기존의 컨테이너 중지 및 제거 & 컨테이너가 없어도 실패하지 않고계속 수행
                 // sh 'docker stop react-app || true'
@@ -107,6 +122,18 @@ pipeline {
                         
                         ssh -t ubuntu@i10e206.p.ssafy.io "cd /home/ubuntu && tar -xvf dist.tar && sudo cp -r dist/* /var/www/html/"
                     '''
+                }
+            }
+        }
+
+        stage('Deploy FastAPI') {
+            when {
+                expression { env.BUILD_FastAPI == "true" }
+            }
+            steps {
+                echo 'Deploying FastAPI...'
+                dir('FastAPI') {
+                    sh 'docker run -d -p 8000:8000 --name fastapi-app fastapi:test'
                 }
             }
         }
