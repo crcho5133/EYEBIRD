@@ -56,7 +56,7 @@ public class PointService {
 
 
     // 상위 유저 리스트 Redis -> Front
-    public List<PointDto> getTopPoint(boolean item) {
+    public List<PointDto> getTopPoint(boolean item, int page) {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(List.class));
         List<PointDto> points = new ArrayList<>();
         String pattern = "classicRank";
@@ -67,18 +67,30 @@ public class PointService {
         if (redisTemplate.opsForValue().get(pattern) != null) {
             // 리스트로 저장했기 때문에 리스트로 받아야 한다.
             points = (List<PointDto>) redisTemplate.opsForValue().get(pattern);
-
         }
-        return points;
+
+        if (page == 1) {
+            if (points.size() > 3)
+                return points.subList(0, 3);
+            else return points;
+        }
+        int pageidx = (page - 1) * 10 - 6;
+
+        if(pageidx > points.size()) return new ArrayList<PointDto>();
+
+        //만약 요구하는 것 보다 현재 랭크 수가 작다면
+        if(pageidx + 10 >= points.size())
+            return  points.subList(pageidx, points.size());
+        return points.subList(pageidx, pageidx + 10);
     }
 
     // 갱신을 위한 스케쥴 DB -> Redis
     // 30분마다 업데이트
-    @Scheduled(fixedRate = 1800000)
-    //@Scheduled(fixedRate = 18000)
+    //@Scheduled(fixedRate = 1800000)
+    @Scheduled(fixedRate = 18000)
     public void updateRanking() {
-        List<Point> itemRank = pointRepository.findTop25ByOrderByItemPtDesc(PageRequest.of(0, 10));
-        List<Point> classicRank = pointRepository.findTop25ByOrderByClassicPtDesc(PageRequest.of(0, 10));
+        List<Point> itemRank = pointRepository.findTop25ByOrderByItemPtDesc(PageRequest.of(0, 25));
+        List<Point> classicRank = pointRepository.findTop25ByOrderByClassicPtDesc(PageRequest.of(0, 25));
 
         // 랭크가 있는 경우 = 유저가 존재하는 경우에 갱신.
         if (itemRank.size() > 0) {
