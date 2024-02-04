@@ -35,7 +35,7 @@ export function AccessTokenProvider({ children }) {
   );
 
   const profileImagePath = (index) => {
-    return `/src/assets/img/${index}.png`;
+    return `/src/assets/img/profile/${index}.png`;
   };
 
   const profile = useMemo(() => {

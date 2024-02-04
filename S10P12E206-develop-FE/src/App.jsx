@@ -19,18 +19,18 @@ function App() {
         <AccessTokenProvider>
           <WebSocketProvider>
             <VideoWebSocketProvider>
-              <WebMobileLayout>
-                <Routes>
-                  <Route element={<PrivateRoute requireAuth={false} />}>
-                    <Route path="/" element={<Home />} />
-                  </Route>
+              {/* <WebMobileLayout> */}
+              <Routes>
+                <Route element={<PrivateRoute requireAuth={false} />}>
+                  <Route path="/" element={<Home />} />
+                </Route>
 
-                  <Route path="/lobby/*" element={<Lobby />} />
+                <Route path="/lobby/*" element={<Lobby />} />
 
-                  <Route path="/room/:sessionId" element={<Room />} />
-                  <Route path="/game/:sessionId" element={<Game />} />
+                <Route path="/room/:sessionId" element={<Room />} />
+                <Route path="/game/:sessionId" element={<Game />} />
 
-                  {/* <Route element={<PrivateRoute requireAuth={true} />}>
+                {/* <Route element={<PrivateRoute requireAuth={true} />}>
                 <Route path="/rankingGame" element={<RankingGameChoice />} />
               </Route>
 
@@ -41,8 +41,8 @@ function App() {
               <Route element={<PrivateRoute requireAuth={true} />}>
                 <Route path="/normalGame/roomSearch" element={<RoomSearch />} />
               </Route> */}
-                </Routes>
-              </WebMobileLayout>
+              </Routes>
+              {/* </WebMobileLayout> */}
             </VideoWebSocketProvider>
           </WebSocketProvider>
         </AccessTokenProvider>

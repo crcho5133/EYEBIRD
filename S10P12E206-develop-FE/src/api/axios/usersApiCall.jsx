@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
 import { useWebSocket } from "@/context/WebSocketContext";
 import useAxiosConfig from "@/hooks/useAxiosConfig";
+import axios from "axios";
 
 const usersApiCall = () => {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ const usersApiCall = () => {
     const url = usersUrl.login();
     const body = { email, password };
     try {
-      const response = await privateAxios.post(url, body);
+      const response = await axios.post(url, body);
       accessToken.setAccessToken(response.data.accessToken);
       accessToken.setRefreshToken(response.data.refreshToken);
       accessToken.setEmail(response.data.email);
@@ -80,6 +81,7 @@ const usersApiCall = () => {
       navigate("/");
     } catch (error) {
       console.log(error);
+      alert(error);
       alert(error.response.data.errorMessage);
     }
   };

@@ -14,7 +14,8 @@ const useAxiosConfig = () => {
   privateAxios.interceptors.request.use(
     (config) => {
       if (accessToken.accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken.accessToken}`;
+        config.headers["Authorization"] = `Bearer ${accessToken.accessToken}`;
+        // config.headers["Content-Type"] = "application/json";
       }
       return config;
     },
@@ -52,7 +53,7 @@ const useAxiosConfig = () => {
       return Promise.reject(error);
     }
   );
-  return { privateAxios };
+  return privateAxios;
 };
 
 export default useAxiosConfig;
