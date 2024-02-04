@@ -9,7 +9,7 @@ export const VideoWebSocketProvider = ({ children }) => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8000/ws");
+    const ws = new WebSocket("ws://i10e206.p.ssafy.io:8000/api/ws");
     console.log(ws);
     ws.onmessage = (event) => {
       // 서버로부터 메시지 수신 시 처리
