@@ -11,15 +11,15 @@ const ProfileImageModal = ({ visible, onClose, setProfileImage, setProfileImageI
   const useUsersApiCall = usersApiCall();
 
 
-  const profileImages = [
-    a,b,c,d
-  ];
   // const profileImages = [
-  //   "src/assets/img/aaa.jpg",
-  //   "src/assets/img/bbb.jpg",
-  //   "src/assets/img/ccc.png",
-  //   "src/assets/img/ddd.png",
+  //   a,b,c,d
   // ];
+  const profileImages = [
+    "src/assets/img/aaa.jpg",
+    "src/assets/img/bbb.jpg",
+    "src/assets/img/ccc.png",
+    "src/assets/img/ddd.png",
+  ];
 
   const ImageSelect = async (imageUrl, index) => {
     if (myInfo) {

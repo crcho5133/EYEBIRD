@@ -7,6 +7,7 @@ import com.sixback.eyebird.db.repository.UserRepository;
 import com.sixback.eyebird.db.entity.User;
 import com.sixback.eyebird.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -64,6 +65,8 @@ public class AuthService {
 
         // refreshToken이 redis에 저장된 refreshToken과 일치하는지 확인
         String email = jwtTokenUtil.getUserEmail(accessToken);
+        // 직렬화
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
         String redisRefreshToken = (String) redisTemplate.opsForValue().get("RT:"+email);
         // 만약 로그아웃되어 redisRefreshToken이 없는 경우
         if (ObjectUtils.isEmpty(redisRefreshToken)) {
@@ -93,6 +96,7 @@ public class AuthService {
         String email = jwtTokenUtil.getUserEmail(accessToken);
 
         // redis의 refreshToken을 삭제한다
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
         if (redisTemplate.opsForValue().get("RT:"+email) != null) {
             redisTemplate.delete("RT:"+email);
         }

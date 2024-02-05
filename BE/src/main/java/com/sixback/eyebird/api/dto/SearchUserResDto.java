@@ -22,6 +22,7 @@ public class SearchUserResDto {
 
     @Builder
     public SearchUserResDto(User user) {
+
         this.nickname = user.getNickname();
         this.profileImage = user.getProfileImage();
 

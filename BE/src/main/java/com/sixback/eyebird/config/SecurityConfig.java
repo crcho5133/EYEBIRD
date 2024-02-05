@@ -28,7 +28,7 @@ public class SecurityConfig {
     private final AuthEntryPointJwt unauthorizedHandler;
     private static final String[] AUTH_WHITELIST = {
         "/swagger-ui/**", "/v3/api-docs/**", "/api/auth/login", "/api/auth/logout", "/api/auth/reissue", "/api/user/signup", "/api/user/check/nickname", "/api/user/check/email",
-            "/api/sessions", "/api/sessions/{sessionId}/connections", "api/ws/**", "/api/auth/qqq"
+            "/api/sessions", "/api/sessions/{sessionId}/connections", "/api/ws/**"
     };
 
     @Bean
@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .headers(header -> header.frameOptions(options -> options.sameOrigin()))
                 .addFilterBefore(new JwtAuthFilter(jwtTokenUtil, userDetailsServiceImpl, redisTemplate), UsernamePasswordAuthenticationFilter.class) // jwtAuthFilter를 UsernamePasswordAuthenticationFilter 이전에 실행
                 .authorizeHttpRequests(auth -> auth.requestMatchers(AUTH_WHITELIST).permitAll() // 접근 허용
-                        // .requestMatchers(toH2Console()).permitAll() // h2 database 사용을 위해
+                        //.requestMatchers(toH2Console()).permitAll() // h2 database 사용을 위해
                         .anyRequest().authenticated() // 이외의 endpoint 들은 인증 요구
                 );
 
