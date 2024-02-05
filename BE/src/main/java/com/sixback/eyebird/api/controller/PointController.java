@@ -20,6 +20,7 @@ import com.sixback.eyebird.api.dto.PointReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,6 +80,7 @@ public class PointController {
     }
 
     // 랭크 게임의 매칭 요청이 왔을 때
+    @Transactional
     @MessageMapping("/matching")
     public void matching(MatchingReqDto matchingReqDto) throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
         String reqUserEmail = matchingReqDto.getEmail();

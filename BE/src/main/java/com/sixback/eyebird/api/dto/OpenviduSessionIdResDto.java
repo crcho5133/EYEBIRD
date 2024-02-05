@@ -4,9 +4,10 @@ import com.sixback.eyebird.db.entity.GameResult;
 import com.sixback.eyebird.db.entity.Point;
 import com.sixback.eyebird.db.entity.User;
 import lombok.Builder;
-
+import lombok.Getter;
 import java.util.List;
 
+@Getter
 public class OpenviduSessionIdResDto {
     private String openviduSessionId;
     private String nickname;
