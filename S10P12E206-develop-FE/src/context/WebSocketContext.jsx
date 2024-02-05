@@ -10,12 +10,12 @@ export const WebSocketProvider = ({ children }) => {
   const [match, setMatch] = useState(false);
   const [gameId, setGameId] = useState(undefined);
   const accessToken = useAccessTokenState();
-  const nickname = sessionStorage.getItem("nickname");
+  const email = sessionStorage.getItem("email");
 
   useEffect(() => {
     if (!accessToken.accessToken) return;
     const newClient = new Client({
-      webSocketFactory: () => new SockJS("http://localhost:8080/ws"),
+      webSocketFactory: () => new SockJS("http://localhost:8080/api/ws"),
       connectHeaders: {
         Authorization: `Bearer ${accessToken.accessToken}`,
       },
@@ -26,45 +26,47 @@ export const WebSocketProvider = ({ children }) => {
         console.log("Connected to WebSocket");
 
         // 랭크 게임 매칭 성공 수신
-        newClient.subscribe("/api/message/match/" + nickname, (message) => {
+        newClient.subscribe("/user/match/" + email, (message) => {
           const newMessage = message.body;
           console.log("Received message:", newMessage);
+          const messageObject = JSON.parse(newMessage);
+          console.log(messageObject);
           // 메시지를 받았을 때 처리 (예: 상태 업데이트)
           setMatch(true);
-          setGameId(newMessage);
+          setGameId(messageObject.openviduSessionId);
         });
-        newClient.subscribe("/api/message/invitations", (message) => {
-          console.log("Received message:", message.body);
-          alert("알림: " + message.body);
-        });
+        // newClient.subscribe("/api/message/invitations", (message) => {
+        //   console.log("Received message:", message.body);
+        //   alert("알림: " + message.body);
+        // });
 
-        newClient.subscribe("/api/message/alerts", (message) => {
-          alert("알림: " + message.body);
-        });
+        // newClient.subscribe("/api/message/alerts", (message) => {
+        //   alert("알림: " + message.body);
+        // });
 
-        // 메시지를 받을 대상 토픽 구독
-        client.subscribe("/api/message/private-messages", (message) => {
-          const newMessage = JSON.parse(message.body);
-          console.log("Received message:", newMessage);
-          // 메시지를 받았을 때 처리 (예: 상태 업데이트)
-          setMessages((prevMessages) => [newMessage, ...prevMessages]); // 최신 메시지가 앞에 오도록
-        });
+        // // 메시지를 받을 대상 토픽 구독
+        // client.subscribe("/api/message/private-messages", (message) => {
+        //   const newMessage = JSON.parse(message.body);
+        //   console.log("Received message:", newMessage);
+        //   // 메시지를 받았을 때 처리 (예: 상태 업데이트)
+        //   setMessages((prevMessages) => [newMessage, ...prevMessages]); // 최신 메시지가 앞에 오도록
+        // });
 
-        // 사용자 목록 주제 구독
-        newClient.subscribe("/api/message/users", (message) => {
-          setUsers(JSON.parse(message.body)); // 사용자 목록 업데이트
-        });
+        // // 사용자 목록 주제 구독
+        // newClient.subscribe("/api/message/users", (message) => {
+        //   setUsers(JSON.parse(message.body)); // 사용자 목록 업데이트
+        // });
 
-        // 웹소켓 연결 후 사용자 목록 요청
-        newClient.publish({ destination: "/api/message/users" });
+        // // 웹소켓 연결 후 사용자 목록 요청
+        // newClient.publish({ destination: "/api/message/users" });
 
-        // 메시지를 받을 대상 토픽 구독
-        newClient.subscribe("/api/message/private-" + nickname, (message) => {
-          const newMessage = JSON.parse(message.body);
-          console.log("Received message:", newMessage);
-          // 메시지를 받았을 때 처리 (예: 상태 업데이트)
-          setReceivedMessages((prevMessages) => [newMessage, ...prevMessages]); // 최신 메시지가 앞에 오도록
-        });
+        // // 메시지를 받을 대상 토픽 구독
+        // newClient.subscribe("/api/message/private-" + nickname, (message) => {
+        //   const newMessage = JSON.parse(message.body);
+        //   console.log("Received message:", newMessage);
+        //   // 메시지를 받았을 때 처리 (예: 상태 업데이트)
+        //   setReceivedMessages((prevMessages) => [newMessage, ...prevMessages]); // 최신 메시지가 앞에 오도록
+        // });
       },
       onDisconnect: () => {
         console.log("Disconnected from WebSocket");
@@ -115,7 +117,7 @@ export const WebSocketProvider = ({ children }) => {
   };
 
   return (
-    <WebSocketContext.Provider value={{ client, match, gameId }}>
+    <WebSocketContext.Provider value={{ client, match, gameId, setMatch }}>
       {children}
     </WebSocketContext.Provider>
   );
