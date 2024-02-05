@@ -3,14 +3,12 @@ package com.sixback.eyebird.api.dto;
 import com.sixback.eyebird.db.entity.GameResult;
 import com.sixback.eyebird.db.entity.Point;
 import com.sixback.eyebird.db.entity.User;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 import java.util.List;
 
-
-public class SearchUserResDto {
-    @NotBlank
+public class OpenviduSessionIdResDto {
+    private String openviduSessionId;
     private String nickname;
     private int profileImage;
     private int classicPt;
@@ -21,7 +19,8 @@ public class SearchUserResDto {
     private int loseNumClassic;
 
     @Builder
-    public SearchUserResDto(User user) {
+    public OpenviduSessionIdResDto(User user, String openviduSessionId) {
+        this.openviduSessionId = openviduSessionId;
 
         this.nickname = user.getNickname();
         this.profileImage = user.getProfileImage();

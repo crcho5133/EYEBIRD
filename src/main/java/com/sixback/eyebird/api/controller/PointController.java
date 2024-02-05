@@ -1,8 +1,12 @@
 package com.sixback.eyebird.api.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sixback.eyebird.api.dto.*;
 import com.sixback.eyebird.api.service.PointService;
+import com.sixback.eyebird.db.repository.UserRepository;
 import com.sixback.eyebird.uncategorized.OpenViduManager;
+import com.sixback.eyebird.db.entity.User;
 import io.openvidu.java.client.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import com.sixback.eyebird.api.dto.PointReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -41,6 +46,10 @@ public class PointController {
     // openvidu 실행을 위해
     private final OpenViduManager openViduManager;
 
+    private final UserRepository userRepository;
+
+    private final ObjectMapper objectMapper;
+
     // 랭크 게임 후 현재 유저의 점수를 변동
     @Operation(summary = "포인트 갱신", description = "Front -> Back -> DB")
     @PatchMapping("")
@@ -54,25 +63,24 @@ public class PointController {
 
 
     //받아오기
-    @GetMapping("/rank/item")
+    @GetMapping("/rank/item/{page}")
     @Operation(summary = "아이템 랭크 받아오기", description = "redis에서 item rank 받아오기")
-    public List<PointDto> listTopItemPoint() {
-
-        List<PointDto> test = pointService.getTopPoint(true);
+    public List<PointDto> listTopItemPoint(@PathVariable int page) {
+        List<PointDto> test = pointService.getTopPoint(true, page);
         System.out.println(test);
-    return test;
+        return test;
     }
 
-    @GetMapping("/rank/classic")
+    @GetMapping("/rank/classic/{page}")
     @Operation(summary = "클래식 랭크 받아오기", description = "redis에서 classic rank 받아오기")
-    public List<PointDto> listTopClassicPoint() {
-        return pointService.getTopPoint(false);
+    public List<PointDto> listTopClassicPoint(@PathVariable int page) {
+        return pointService.getTopPoint(false, page);
 
     }
 
     // 랭크 게임의 매칭 요청이 왔을 때
     @MessageMapping("/matching")
-    public void matching(MatchingReqDto matchingReqDto) throws OpenViduJavaClientException, OpenViduHttpException {
+    public void matching(MatchingReqDto matchingReqDto) throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
         String reqUserEmail = matchingReqDto.getEmail();
         boolean isItem = matchingReqDto.isIfItem();
         log.info(matchingReqDto.toString());
@@ -83,10 +91,9 @@ public class PointController {
 
             if (matchingQueueItem.size() >= 2) {
                 String firstUserEmail = matchingQueueItem.poll();
-
-
                 String secondUserEmail = matchingQueueItem.poll();
-
+                User firstUser = userRepository.findUserByEmail(firstUserEmail).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 지닌 유저가 존재하지 않습니다"));
+                User secondUser = userRepository.findUserByEmail(secondUserEmail).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 지닌 유저가 존재하지 않습니다"));
 
                 //  두 유저에게 openvidu sessionId를 알려준다
                 // 길이가 20인 랜덤 문자열 생성
@@ -100,9 +107,23 @@ public class PointController {
                 OpenVidu openvidu = openViduManager.getOpenvidu();
                 Session session = openvidu.createSession(properties);
 
-                // 각 유저에게 openvidu의 sessionId 전달
-                messagingTemplate.convertAndSend("/user/match/"  + firstUserEmail, session.getSessionId());
-                messagingTemplate.convertAndSend("/user/match/" + secondUserEmail, session.getSessionId());
+                // 각 유저 상대방 유저의 정보와 sessionId를 전달
+                OpenviduSessionIdResDto firstUserOpenviduSessionIdResDto = OpenviduSessionIdResDto.builder()
+                        .openviduSessionId(session.getSessionId())
+                        .user(secondUser)
+                        .build();
+
+                OpenviduSessionIdResDto secondUserOpenviduSessionIdResDto = OpenviduSessionIdResDto.builder()
+                        .openviduSessionId(session.getSessionId())
+                        .user(firstUser)
+                        .build();
+
+                String jsonFirstUserOpenviduSessionIdResDto = objectMapper.writeValueAsString(firstUserOpenviduSessionIdResDto);
+                String jsonSecondUserOpenviduSessionIdResDto = objectMapper.writeValueAsString(secondUserOpenviduSessionIdResDto);
+
+                messagingTemplate.convertAndSend("/user/match/"  + firstUserEmail, jsonFirstUserOpenviduSessionIdResDto);
+                messagingTemplate.convertAndSend("/user/match/" + secondUserEmail, jsonSecondUserOpenviduSessionIdResDto);
+
             }
 
         }
@@ -114,7 +135,8 @@ public class PointController {
             if (matchingQueueClassic.size() >= 2) {
                 String firstUserEmail = matchingQueueClassic.poll();
                 String secondUserEmail = matchingQueueClassic.poll();
-
+                User firstUser = userRepository.findUserByEmail(firstUserEmail).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 지닌 유저가 존재하지 않습니다"));
+                User secondUser = userRepository.findUserByEmail(secondUserEmail).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 지닌 유저가 존재하지 않습니다"));
 
                 // 두 유저에게 openvidu sessionId를 알려준다
                 // 길이가 20인 랜덤 문자열 생성
@@ -128,9 +150,25 @@ public class PointController {
                 OpenVidu openvidu = openViduManager.getOpenvidu();
                 Session session = openvidu.createSession(properties);
 
+                // 각 유저 상대방 유저의 정보와 sessionId를 전달
+                OpenviduSessionIdResDto firstUserOpenviduSessionIdResDto = OpenviduSessionIdResDto.builder()
+                        .openviduSessionId(session.getSessionId())
+                        .user(secondUser)
+                        .build();
+
+                OpenviduSessionIdResDto secondUserOpenviduSessionIdResDto = OpenviduSessionIdResDto.builder()
+                        .openviduSessionId(session.getSessionId())
+                        .user(firstUser)
+                        .build();
+
+                String jsonFirstUserOpenviduSessionIdResDto = objectMapper.writeValueAsString(firstUserOpenviduSessionIdResDto);
+                String jsonSecondUserOpenviduSessionIdResDto = objectMapper.writeValueAsString(secondUserOpenviduSessionIdResDto);
+
+
                 // 각 유저에게 openvidu의 sessionId 전달
-                messagingTemplate.convertAndSend("/user/match/"  + firstUserEmail, session.getSessionId());
-                messagingTemplate.convertAndSend("/user/match/" + secondUserEmail, session.getSessionId());
+                // TODO sessionId뿐 만 아니라 상대방 유저의 정보또한 돌려준다.
+                messagingTemplate.convertAndSend("/user/match/"  + firstUserEmail, jsonFirstUserOpenviduSessionIdResDto);
+                messagingTemplate.convertAndSend("/user/match/" + secondUserEmail, jsonSecondUserOpenviduSessionIdResDto);
 
             }
 
@@ -195,7 +233,6 @@ public class PointController {
 
         return ResponseEntity.ok().body(matchingGameResDto);
     }
-
 
 
 }
