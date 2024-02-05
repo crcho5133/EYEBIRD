@@ -74,7 +74,7 @@ public class PointService {
                 return points.subList(0, 3);
             else return points;
         }
-        int pageidx = (page - 1) * 10 - 6;
+        int pageidx = (page - 1) * 10 - 7;
 
         if(pageidx > points.size()) return new ArrayList<PointDto>();
 
@@ -86,7 +86,7 @@ public class PointService {
 
     // 갱신을 위한 스케쥴 DB -> Redis
     // 30분마다 업데이트
-    //@Scheduled(fixedRate = 1800000)
+    //@Scheduled(fixedRate = 18000)
     @Scheduled(fixedRate = 180000)
     public void updateRanking() {
         List<Point> itemRank = pointRepository.findTop25ByOrderByItemPtDesc(PageRequest.of(0, 25));
@@ -96,7 +96,7 @@ public class PointService {
         if (itemRank.size() > 0) {
             List<PointDto> itemRankList = new ArrayList<>();
             for (int i = 0; i < itemRank.size(); i++) {
-                PointDto itemPoint = new PointDto(itemRank.get(i).getUser().getNickname(), itemRank.get(i).getUser().getProfileImage(), itemRank.get(i).getItemPt());
+                PointDto itemPoint = new PointDto(i+1, itemRank.get(i).getUser().getNickname(), itemRank.get(i).getUser().getProfileImage(), itemRank.get(i).getItemPt());
                 itemRankList.add(itemPoint);
             }
 
@@ -107,7 +107,7 @@ public class PointService {
         if (classicRank.size() > 0) {
             List<PointDto> classicRankList = new ArrayList<>();
             for (int i = 0; i < itemRank.size(); i++) {
-                PointDto classicPoint = new PointDto(classicRank.get(i).getUser().getNickname(), classicRank.get(i).getUser().getProfileImage(), classicRank.get(i).getClassicPt());
+                PointDto classicPoint = new PointDto(i+1, classicRank.get(i).getUser().getNickname(), classicRank.get(i).getUser().getProfileImage(), classicRank.get(i).getClassicPt());
                 classicRankList.add(classicPoint);
             }
             redisTemplate.opsForValue().set("classicRank", classicRankList);
