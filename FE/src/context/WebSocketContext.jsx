@@ -9,6 +9,7 @@ export const WebSocketProvider = ({ children }) => {
   const [client, setClient] = useState(undefined);
   const [match, setMatch] = useState(false);
   const [gameId, setGameId] = useState(undefined);
+  const [opponentInfo, setOpponentInfo] = useState(undefined);
   const accessToken = useAccessTokenState();
   // const email = sessionStorage.getItem("email");
 
@@ -32,6 +33,7 @@ export const WebSocketProvider = ({ children }) => {
           const messageObject = JSON.parse(newMessage);
           console.log(messageObject);
           // 메시지를 받았을 때 처리 (예: 상태 업데이트)
+          setOpponentInfo(newMessage);
           setMatch(true);
           setGameId(messageObject.openviduSessionId);
         });
@@ -65,7 +67,7 @@ export const WebSocketProvider = ({ children }) => {
   // };
 
   return (
-    <WebSocketContext.Provider value={{ client, match, gameId, setMatch }}>
+    <WebSocketContext.Provider value={{ client, match, gameId, setMatch, opponentInfo }}>
       {children}
     </WebSocketContext.Provider>
   );

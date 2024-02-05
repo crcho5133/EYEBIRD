@@ -59,6 +59,13 @@ const usersApiCall = () => {
       accessToken.setEmail(response.data.email);
       accessToken.setNickname(response.data.nickname);
       accessToken.setProfileImageIndex(response.data.profileImage);
+      accessToken.setClassicPt(response.data.classicPt);
+      accessToken.setItemPt(response.data.itemPt);
+      accessToken.setWinNumItem(response.data.winNumItem);
+      accessToken.setLoseNumItem(response.data.loseNumItem);
+      accessToken.setWinNumClassic(response.data.winNumClassic);
+      accessToken.setLoseNumClassic(response.data.loseNumClassic);
+
       navigate("/lobby");
     } catch (error) {
       console.log(error);
