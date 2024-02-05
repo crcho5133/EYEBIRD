@@ -116,6 +116,7 @@ const usersApiCall = () => {
           headers: { Authorization: `Bearer ${accessToken.accessToken}` },
         }
       );
+      console.log(response)
     } catch (error) {
       alert(error.response.data.errorMessage);
     }
