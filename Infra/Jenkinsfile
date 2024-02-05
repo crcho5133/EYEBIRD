@@ -123,7 +123,7 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no ubuntu@i10e206.p.ssafy.io
                         scp /var/jenkins_home/workspace/e206_gitlab/FE/dist.tar ubuntu@i10e206.p.ssafy.io:${HOME_PATH}
                         
-                        ssh -t ubuntu@i10e206.p.ssafy.io "cd /home/ubuntu && tar -xvf dist.tar && sudo cp -r dist/* /var/www/html/"
+                        ssh -t ubuntu@i10e206.p.ssafy.io "cd ${HOME_PATH} && tar -xvf dist.tar && sudo cp -r dist/* /var/www/html/"
                     '''
                 }
             }
