@@ -17,6 +17,7 @@ const Home = () => {
       <LobbyBtn text="게임설명" onClick={isDescriptionModalVisible.showRodal} />
       <p> 테스트 </p>
       <img src="../assets/img/bbb.jpg" alt="bbb" />
+      <img src="@/assets/img/aaa.jpg" alt="aaa" />
       <SignupFormModal
         visible={isSignupModalVisible.value}
         onClose={isSignupModalVisible.hideRodal}
