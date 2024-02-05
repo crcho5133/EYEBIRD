@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import com.sixback.eyebird.api.dto.PointReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -54,19 +55,18 @@ public class PointController {
 
 
     //받아오기
-    @GetMapping("/rank/item")
+    @GetMapping("/rank/item/{page}")
     @Operation(summary = "아이템 랭크 받아오기", description = "redis에서 item rank 받아오기")
-    public List<PointDto> listTopItemPoint() {
-
-        List<PointDto> test = pointService.getTopPoint(true);
+    public List<PointDto> listTopItemPoint(@PathVariable int page) {
+        List<PointDto> test = pointService.getTopPoint(true, page);
         System.out.println(test);
-    return test;
+        return test;
     }
 
-    @GetMapping("/rank/classic")
+    @GetMapping("/rank/classic/{page}")
     @Operation(summary = "클래식 랭크 받아오기", description = "redis에서 classic rank 받아오기")
-    public List<PointDto> listTopClassicPoint() {
-        return pointService.getTopPoint(false);
+    public List<PointDto> listTopClassicPoint(@PathVariable int page) {
+        return pointService.getTopPoint(false, page);
 
     }
 
@@ -101,7 +101,7 @@ public class PointController {
                 Session session = openvidu.createSession(properties);
 
                 // 각 유저에게 openvidu의 sessionId 전달
-                messagingTemplate.convertAndSend("/user/match/"  + firstUserEmail, session.getSessionId());
+                messagingTemplate.convertAndSend("/user/match/" + firstUserEmail, session.getSessionId());
                 messagingTemplate.convertAndSend("/user/match/" + secondUserEmail, session.getSessionId());
             }
 
@@ -129,7 +129,7 @@ public class PointController {
                 Session session = openvidu.createSession(properties);
 
                 // 각 유저에게 openvidu의 sessionId 전달
-                messagingTemplate.convertAndSend("/user/match/"  + firstUserEmail, session.getSessionId());
+                messagingTemplate.convertAndSend("/user/match/" + firstUserEmail, session.getSessionId());
                 messagingTemplate.convertAndSend("/user/match/" + secondUserEmail, session.getSessionId());
 
             }
@@ -195,7 +195,6 @@ public class PointController {
 
         return ResponseEntity.ok().body(matchingGameResDto);
     }
-
 
 
 }
