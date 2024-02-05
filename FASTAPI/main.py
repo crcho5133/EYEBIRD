@@ -67,8 +67,9 @@ async def websocket_endpoint(websocket: WebSocket):
                 
                 # 눈 감김 판단
                 if left_EAR < 0.15 or right_EAR < 0.15:
-                    await websocket.send_text(str(left_EAR) + " " + str(right_EAR) + " " + "눈 감김 감지됨")
+                    # await websocket.send_text(str(left_EAR) + " " + str(right_EAR) + " " + "눈 감김 감지됨")
+                    await websocket.send_text("check")
                 # else:
-                    # await websocket.send_text(str(left_EAR) + " " + str(right_EAR) + " " + "눈 감김 감지 안 됨")
-                else:
-                    await websocket.send_text("xxx")
+                #     await websocket.send_text(str(left_EAR) + " " + str(right_EAR) + " " + "눈 감김 감지 안 됨")
+                # else:
+                #     await websocket.send_text("xxx")
