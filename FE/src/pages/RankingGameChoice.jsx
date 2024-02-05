@@ -11,7 +11,7 @@ const RankingGameChoice = () => {
   const [gameType, setGameType] = useState("");
 
   const navigate = useNavigate();
-  const nickname = sessionStorage.getItem("nickname");
+  const email = sessionStorage.getItem("email");
 
   useEffect(() => {
     if (match && gameId) {
@@ -26,8 +26,8 @@ const RankingGameChoice = () => {
         destination: "/stomp/matching",
         body: JSON.stringify({
           // Your JSON data here
-          item: isItem,
-          email: nickname,
+          ifItem: isItem,
+          email: email,
         }),
       });
       console.log("Invitation sent");
