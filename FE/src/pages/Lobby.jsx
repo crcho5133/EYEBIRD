@@ -22,6 +22,7 @@ const Lobby = () => {
   const isBtnVisible = useShowComponent();
   const location = useLocation();
   const isMainLobby = location.pathname === "/lobby";
+  const myInfo = useAccessTokenState();
 
   const logout = (event) => {
     event.preventDefault();
@@ -85,7 +86,7 @@ const Lobby = () => {
                   {/* 프로필 사진 */}
                   <div className="item">
                     <img
-                      src={profile}
+                      src={myInfo.profile}
                       alt="Profile"
                       className="object-contain h-full ml-4"
                       style={{

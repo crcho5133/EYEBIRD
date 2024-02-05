@@ -18,11 +18,28 @@ const CreatingRoomModal = ({ visible, onClose }) => {
 
   const navigate = useNavigate(); // useNavigate hook
 
+<<<<<<< HEAD
+=======
+  const resetModal = () => {
+    setRoomName("");
+    setIsItem(false);
+    setPlayers("1vs1");
+    setPassword("");
+    setErrorMessage("");
+  };
+
+  const onCloseModal = () => {
+    resetModal();
+    onClose();
+  };
+
+>>>>>>> origin/develop-FE-js_02_05
   const handleCreate = async () => {
     if (roomName.length === 0) {
       setErrorMessage("방 제목을 입력해주세요.");
     } else if (roomName.length > 20) {
       setErrorMessage("방 제목은 20자를 초과할 수 없습니다.");
+<<<<<<< HEAD
     }
     // else {
     //   // 서버에 GET 요청을 보내 방 제목이 중복되는지 확인
@@ -55,12 +72,57 @@ const CreatingRoomModal = ({ visible, onClose }) => {
         onClose();
         // 방으로 이동
         navigate(`/room/${data.sessionId}`, { state: { roomName } });
+=======
+    } else if (!/^\d*$/.test(password)) {
+      setErrorMessage("패스워드에는 숫자만 입력해주세요.");
+    } else {
+      try {
+        const response = await axios.post(
+          RoomUrl,
+          {
+            roomName: roomName,
+            password: password,
+            maxCapacity: players[0] * 2,
+            isItem: isItem,
+          },
+          {
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+          }
+        );
+
+        console.log(response);
+        const data = response.data;
+
+        if (data === "fail") {
+          setErrorMessage("방 생성에 실패했습니다.");
+        } else {
+          // 방 생성에 성공하면 모달을 닫고, 필요한 경우 추가 작업을 수행
+          onClose();
+          // 방으로 이동
+          navigate(`/room/${data.sessionId}`, { state: { roomName } });
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.data.errorMessage);
+          if (error.response.data.errorMessage === "방 생성: 최대 방 갯수 초과") {
+            setErrorMessage("최대 방 갯수가 초과 되었습니다.");
+          } else if (error.response.data.errorMessage === "방 생성: 방 이름 중복") {
+            setErrorMessage("중복된 방 이름입니다.");
+          }
+        }
+>>>>>>> origin/develop-FE-js_02_05
       }
     }
   };
 
   return (
+<<<<<<< HEAD
     <Rodal visible={visible} onClose={onClose} closeOnEsc={true} closeMaskOnClick={false}>
+=======
+    <Rodal visible={visible} onClose={onCloseModal} closeOnEsc={true} closeMaskOnClick={false}>
+>>>>>>> origin/develop-FE-js_02_05
       <input
         type="text"
         value={roomName}

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import UserVideoComponent from "./UserVideoComponent";
 import AudioControlModal from "../modal/AudioControlModal";
 import ChatModal from "../modal/ChatModal";
-
+import InviteModal from "../modal/InviteModal";
 const WaitingRoom = ({
   publisher,
   subscribers,
@@ -43,8 +43,17 @@ const WaitingRoom = ({
   const [isChatModalVisible, setIsChatModalVisible] = useState(false);
   const [isAudioModalVisible, setIsAudioModalVisible] = useState(false);
   const [selectedAudioOption, setSelectedAudioOption] = useState("off");
+  const [inviteVisible, setInviteVisible] = useState(false); // 설정 모달 가시성 state
 
   const navigate = useNavigate();
+
+  const handleInviteOpen = () => {
+    setInviteVisible(true); // 설정 모달 열기
+  };
+
+  const handleInviteClose = () => {
+    setInviteVisible(false); // 설정 모달 닫기
+  };
 
   const toggleAudio = (Team, turn) => {
     Team.map((streamId) => {
@@ -80,16 +89,26 @@ const WaitingRoom = ({
   return (
     <div className="waiting-room h-screen">
       <div>
-        <button
-          className="btn btn-large btn-danger bg-red-600"
-          id="buttonLeaveSession"
-          onClick={() => {
-            leaveSession();
-            navigate(-1);
-          }}
-        >
-          방 나가기
-        </button>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <button
+            className="btn btn-large btn-danger bg-red-600"
+            id="buttonLeaveSession"
+            onClick={() => {
+              leaveSession();
+              navigate(-1);
+            }}
+          >
+            방 나가기
+          </button>
+
+          <button
+            className="btn btn-large btn-primary bg-green-600"
+            id="buttonInviteModal"
+            onClick={handleInviteOpen}
+          >
+            초대하기
+          </button>
+        </div>
         <div className="text-center">
           <h2>대기방: {mySessionId}</h2>
         </div>
@@ -272,6 +291,8 @@ const WaitingRoom = ({
           </div>
         </div>
       </div>
+      {/* 설정 모달 */}
+      <InviteModal visible={inviteVisible} onClose={handleInviteClose} />
     </div>
   );
 };
