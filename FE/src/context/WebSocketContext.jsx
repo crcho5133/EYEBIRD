@@ -26,24 +26,24 @@ export const WebSocketProvider = ({ children }) => {
         console.log("Connected to WebSocket");
 
         // 랭크 게임 매칭 성공 수신
-        newClient.subscribe("/user/match/" + nickname, (message) => {
+        newClient.subscribe("/api/message/match/" + nickname, (message) => {
           const newMessage = message.body;
           console.log("Received message:", newMessage);
           // 메시지를 받았을 때 처리 (예: 상태 업데이트)
           setMatch(true);
           setGameId(newMessage);
         });
-        newClient.subscribe("/user/invitations", (message) => {
+        newClient.subscribe("/api/message/invitations", (message) => {
           console.log("Received message:", message.body);
           alert("알림: " + message.body);
         });
 
-        newClient.subscribe("/user/alerts", (message) => {
+        newClient.subscribe("/api/message/alerts", (message) => {
           alert("알림: " + message.body);
         });
 
         // 메시지를 받을 대상 토픽 구독
-        client.subscribe("/user/private-messages", (message) => {
+        client.subscribe("/api/message/private-messages", (message) => {
           const newMessage = JSON.parse(message.body);
           console.log("Received message:", newMessage);
           // 메시지를 받았을 때 처리 (예: 상태 업데이트)
@@ -51,15 +51,15 @@ export const WebSocketProvider = ({ children }) => {
         });
 
         // 사용자 목록 주제 구독
-        newClient.subscribe("/user/users", (message) => {
+        newClient.subscribe("/api/message/users", (message) => {
           setUsers(JSON.parse(message.body)); // 사용자 목록 업데이트
         });
 
         // 웹소켓 연결 후 사용자 목록 요청
-        newClient.publish({ destination: "/app/users" });
+        newClient.publish({ destination: "/api/message/users" });
 
         // 메시지를 받을 대상 토픽 구독
-        newClient.subscribe("/user/private-" + nickname, (message) => {
+        newClient.subscribe("/api/message/private-" + nickname, (message) => {
           const newMessage = JSON.parse(message.body);
           console.log("Received message:", newMessage);
           // 메시지를 받았을 때 처리 (예: 상태 업데이트)
