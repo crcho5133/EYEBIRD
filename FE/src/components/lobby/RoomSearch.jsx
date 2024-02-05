@@ -17,6 +17,8 @@ const RoomSearch = () => {
   const navigate = useNavigate(); // useNavigate hook
   const roomsPerPage = 5;
 
+  const token = sessionStorage.getItem("accessToken");
+
   const handleButtonClick = () => {
     setShowMenu(!showMenu);
   };
@@ -39,7 +41,7 @@ const RoomSearch = () => {
   // [[예]] 버튼을 클릭했을 때의 처리
   const handleConfirm = () => {
     setIsModalOpen(false);
-    navigate(`/room/${selectedRoom.id}`);
+    navigate(`/room/${selectedRoom.roomId}`);
   };
 
   const indexOfLastRoom = currentPage * roomsPerPage;
@@ -53,21 +55,29 @@ const RoomSearch = () => {
     refreshroom();
     // 서버에 GET 요청을 보내 방 목록을 가져옴
     async function refreshroom() {
-      await axios.get(RoomClassicUrl).then((response) => {
-        console.log(response);
-        setRoomsClassic(response.data);
-      });
-      await axios.get(RoomItemUrl).then((response) => {
-        console.log(response);
-        setRoomsItem(response.data);
-      });
+      await axios
+        .get(RoomClassicUrl, {
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        })
+        .then((response) => {
+          console.log(response);
+          setRoomsClassic(response.data);
+        });
+      await axios
+        .get(RoomItemUrl, {
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        })
+        .then((response) => {
+          console.log(response);
+          setRoomsItem(response.data);
+        });
     }
     setRefresh(false);
   }, [refresh]);
 
   return (
     <>
-      <NavBar />
+      {/* <NavBar /> */}
       <div className="App">
         <header className="flex justify-between p-4 bg-blue-500 text-white">
           <h1>방목록</h1>
@@ -104,7 +114,7 @@ const RoomSearch = () => {
         </header>
         <main className="p-4">
           {currentRooms.map((room) => (
-            <Link to={`/room/${room.id}`}>
+            <Link to={`/room/${room.roomId}`}>
               <div
                 key={room.roomName}
                 className="border p-2 mb-2"
