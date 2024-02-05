@@ -28,24 +28,26 @@ const DeleteUser = () => {
 
   return (
     <div className="w-1/2 mx-auto">
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">비밀번호:</label>
-        <input
-          type="password"
-          value={password.value}
-          onChange={passwordHandleChange}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">비밀번호 확인:</label>
-        <input
-          type="password"
-          value={passwordCheck.value}
-          onChange={passwordCheckHandleChange}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
-      </div>
+      <form>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">비밀번호:</label>
+          <input
+            type="password"
+            value={password.value}
+            onChange={passwordHandleChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">비밀번호 확인:</label>
+          <input
+            type="password"
+            value={passwordCheck.value}
+            onChange={passwordCheckHandleChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
+      </form>
       {!passwordsMatch && passwordCheck.value && (
         <div className="text-red-500">비밀번호가 일치하지 않습니다</div>
       )}

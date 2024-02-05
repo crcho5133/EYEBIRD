@@ -73,7 +73,6 @@ const Lobby = () => {
       {isMainLobby && (
         <div>
           {!isBtnVisible.value && <LobbyBtn text="로그아웃" onClick={logout} />}
-          {/* {!isBtnVisible.value && <LobbyIconBtn text="내 정보" onClick={onClick} />} */}
           {isMyInfoVisible.value && <MyInfo onClose={onCloseMyInfo} />}
           <RankingModal visible={isRankingVisible.value} onClose={onCloseRanking} />
           {!isBtnVisible.value && (

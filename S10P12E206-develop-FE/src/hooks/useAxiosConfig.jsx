@@ -14,7 +14,8 @@ const useAxiosConfig = () => {
   privateAxios.interceptors.request.use(
     (config) => {
       if (accessToken.accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken.accessToken}`;
+        config.headers["Authorization"] = `Bearer ${accessToken.accessToken}`;
+        // config.headers["Content-Type"] = "application/json";
       }
       return config;
     },
@@ -41,8 +42,6 @@ const useAxiosConfig = () => {
 
           const originalRequest = error.config;
           originalRequest.headers.Authorization = `Bearer ${accessToken.accessToken}`;
-
-          // 복제된 요청을 다시 보내고 응답을 반환
           return axios(originalRequest);
         } catch (refreshError) {
           navigate("/");

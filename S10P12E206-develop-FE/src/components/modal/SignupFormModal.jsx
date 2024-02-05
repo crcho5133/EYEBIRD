@@ -149,27 +149,29 @@ const SignupFormModal = ({ visible, onClose }) => {
             ※ 닉네임은 영문자, 숫자, 한글로 이루어진 1~8자 까지 가능합니다
           </div>
 
-          <input
-            type="password"
-            placeholder="비밀번호"
-            value={password.value}
-            onChange={passwordHandleChange}
-            className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <div className="text-xs text-gray-600">
-            ※ 비밀번호는 적어도 하나의 영문자,특수문자, 숫자를 포함하여 6자리 이상이 되어야 합니다
-          </div>
-          <input
-            type="password"
-            placeholder="비밀번호 확인"
-            value={passwordCheck.value}
-            onChange={passwordCheckHandleChange}
-            className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          {!passwordsMatch && passwordCheck.value && (
-            <div className="text-red-500">비밀번호가 일치하지 않습니다</div>
-          )}
+          <form>
+            <input
+              type="password"
+              placeholder="비밀번호"
+              value={password.value}
+              onChange={passwordHandleChange}
+              className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <div className="text-xs text-gray-600">
+              ※ 비밀번호는 적어도 하나의 영문자,특수문자, 숫자를 포함하여 6자리 이상이 되어야 합니다
+            </div>
 
+            <input
+              type="password"
+              placeholder="비밀번호 확인"
+              value={passwordCheck.value}
+              onChange={passwordCheckHandleChange}
+              className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            {!passwordsMatch && passwordCheck.value && (
+              <div className="text-red-500">비밀번호가 일치하지 않습니다</div>
+            )}
+          </form>
           <ModalBtn
             onClick={signup}
             type="submit"
