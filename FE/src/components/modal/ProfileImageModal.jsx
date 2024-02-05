@@ -2,10 +2,10 @@ import Rodal from "rodal";
 import "rodal/lib/rodal.css";
 import usersApiCall from "@/api/axios/usersApiCall";
 
-import a from "../assets/img/1.png";
-import b from "../assets/img/2.png";
-import c from "../assets/img/3.png";
-import d from "../assets/img/4.png";
+// import a from "../assets/img/1.png";
+// import b from "../assets/img/2.png";
+// import c from "../assets/img/3.png";
+// import d from "../assets/img/4.png";
 
 const ProfileImageModal = ({ visible, onClose, setProfileImage, setProfileImageIndex, myInfo }) => {
   const useUsersApiCall = usersApiCall();
