@@ -17,7 +17,7 @@ export const WebSocketProvider = ({ children }) => {
     const newClient = new Client({
       webSocketFactory: () => new SockJS("https://i10e206.p.ssafy.io/api/ws"),
       connectHeaders: {
-        Authorization: `Bearer ${accessToken.accessToken}`,
+        Authorization: o`Bearer ${accessToken.accessToken}`,
       },
       beforeConnect: () => {
         console.log("Connecting to WebSocket");
