@@ -8,8 +8,10 @@ const GamePlay = ({
   ready,
   setReady,
   opponentReady,
-  setOpponentReady,
   sendReady,
+  sendLose,
+  myLose,
+  opponentLose,
 }) => {
   const [gameState, setGameState] = useState("waiting");
   const [time, setTime] = useState(3);
@@ -44,6 +46,12 @@ const GamePlay = ({
     };
   }, [ready, opponentReady]);
 
+  const gameProps = {
+    sendLose,
+    myLose,
+    opponentLose,
+  };
+
   return (
     <>
       <div className="h-screen flex justify-center items-center text-center">
@@ -64,7 +72,7 @@ const GamePlay = ({
                   setReady(true);
                   sendReady();
                 }}
-                className="m-3 border-2 rounded-xl border-green-500 hover:bg-green-500 text-xl"
+                className={`m-3 border-2 rounded-xl border-green-500 hover:bg-green-500 ${ready ? "bg-green-500" : ""} text-xl`}
               >
                 준비 완료
               </button>
@@ -80,17 +88,19 @@ const GamePlay = ({
         )}
         {!isLoading && gameState === "play" && (
           <div>
+            <div className="invisible absolute">
+              {/* <div className="hidden"> */}
+              나
+              <UserVideoComponent streamManager={publisher} gameState={gameState} {...gameProps} />
+            </div>
             <div>
               상대방
               <OpponentVideoComponent streamManager={subscriber} />
-            </div>
-            <div>
-              나<UserVideoComponent streamManager={publisher} gameState={gameState} />
+              <div className="text-xl text-red-500">나 {myLose ? "패배" : "대기"}</div>
+              <div className="text-xl text-red-500">상대{opponentLose ? "패배" : "대기"}</div>
             </div>
           </div>
         )}
-        {/* <UserVideoComponent streamManager={publisher} />
-      <UserVideoComponent streamManager={subscriber} /> */}
       </div>
     </>
   );

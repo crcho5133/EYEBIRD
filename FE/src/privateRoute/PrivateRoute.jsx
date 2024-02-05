@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import { useAccessTokenState } from "@/context/AccessTokenContext";
+import { useAccessTokenState } from "@/context/accessTokenContext";
 import ForbiddenAuth from "@/pages/ForbiddenAuth";
 
 export function PrivateRoute({ requireAuth }) {

@@ -17,7 +17,7 @@ export const WebSocketProvider = ({ children }) => {
     const newClient = new Client({
       webSocketFactory: () => new SockJS("https://i10e206.p.ssafy.io/api/ws"),
       connectHeaders: {
-        Authorization: o`Bearer ${accessToken.accessToken}`,
+        Authorization: `Bearer ${accessToken.accessToken}`,
       },
       beforeConnect: () => {
         console.log("Connecting to WebSocket");
@@ -63,7 +63,7 @@ export const WebSocketProvider = ({ children }) => {
   // };
 
   return (
-    <WebSocketContext.Provider value={{ client, match, gameId }}>
+    <WebSocketContext.Provider value={{ client, match, gameId, setMatch }}>
       {children}
     </WebSocketContext.Provider>
   );

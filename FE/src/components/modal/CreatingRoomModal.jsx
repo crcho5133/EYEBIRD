@@ -18,49 +18,69 @@ const CreatingRoomModal = ({ visible, onClose }) => {
 
   const navigate = useNavigate(); // useNavigate hook
 
+  const resetModal = () => {
+    setRoomName("");
+    setIsItem(false);
+    setPlayers("1vs1");
+    setPassword("");
+    setErrorMessage("");
+  };
+
+  const onCloseModal = () => {
+    resetModal();
+    onClose();
+  };
+
   const handleCreate = async () => {
     if (roomName.length === 0) {
       setErrorMessage("방 제목을 입력해주세요.");
     } else if (roomName.length > 20) {
       setErrorMessage("방 제목은 20자를 초과할 수 없습니다.");
-    }
-    // else {
-    //   // 서버에 GET 요청을 보내 방 제목이 중복되는지 확인
-    //   const roomResponse = await axios.get(`http://localhost:8080/api/room/${roomName}`);
-    //   if (roomName === roomResponse.data) {
-    //     setErrorMessage("중복된 방제목 입니다.");
-    //   }
-    else {
-      // 서버에 POST 요청을 보내 방을 생성
-      console.log(RoomUrl);
-      const response = await axios.post(
-        RoomUrl,
-        {
-          roomName: roomName,
-          password: password,
-          maxCapacity: players[0] * 2,
-          isItem: isItem,
-        },
-        {
-          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-        }
-      );
-      console.log(response);
-      const data = response.data;
+    } else if (!/^\d*$/.test(password)) {
+      setErrorMessage("패스워드에는 숫자만 입력해주세요.");
+    } else {
+      try {
+        const response = await axios.post(
+          RoomUrl,
+          {
+            roomName: roomName,
+            password: password,
+            maxCapacity: players[0] * 2,
+            isItem: isItem,
+          },
+          {
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+          }
+        );
 
-      if (data === "fail") {
-        setErrorMessage("방 생성에 실패했습니다.");
-      } else {
-        // 방 생성에 성공하면 모달을 닫고, 필요한 경우 추가 작업을 수행
-        onClose();
-        // 방으로 이동
-        navigate(`/room/${data.sessionId}`, { state: { roomName } });
+        console.log(response);
+        const data = response.data;
+
+        if (data === "fail") {
+          setErrorMessage("방 생성에 실패했습니다.");
+        } else {
+          // 방 생성에 성공하면 모달을 닫고, 필요한 경우 추가 작업을 수행
+          onClose();
+          // 방으로 이동
+          navigate(`/room/${data.sessionId}`, { state: { roomName } });
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.data.errorMessage);
+          if (error.response.data.errorMessage === "방 생성: 최대 방 갯수 초과") {
+            setErrorMessage("최대 방 갯수가 초과 되었습니다.");
+          } else if (error.response.data.errorMessage === "방 생성: 방 이름 중복") {
+            setErrorMessage("중복된 방 이름입니다.");
+          }
+        }
       }
     }
   };
 
   return (
-    <Rodal visible={visible} onClose={onClose} closeOnEsc={true} closeMaskOnClick={false}>
+    <Rodal visible={visible} onClose={onCloseModal} closeOnEsc={true} closeMaskOnClick={false}>
       <input
         type="text"
         value={roomName}
