@@ -514,31 +514,31 @@ const Room = () => {
     return response.data.connectionToken; // The token
   };
 
-  const getToken = useCallback(async () => {
-    return createSession(mySessionId).then((sessionId) => createToken(sessionId));
-  }, [mySessionId]);
+  // const getToken = useCallback(async () => {
+  //   return createSession(mySessionId).then((sessionId) => createToken(sessionId));
+  // }, [mySessionId]);
 
-  const createSession = async (sessionId) => {
-    const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions",
-      { customSessionId: sessionId },
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    return response.data; // The sessionId
-  };
+  // const createSession = async (sessionId) => {
+  //   const response = await axios.post(
+  //     APPLICATION_SERVER_URL + "api/sessions",
+  //     { customSessionId: sessionId },
+  //     {
+  //       headers: { "Content-Type": "application/json" },
+  //     }
+  //   );
+  //   return response.data; // The sessionId
+  // };
 
-  const createToken = async (sessionId) => {
-    const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
-      {},
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    return response.data; // The token
-  };
+  // const createToken = async (sessionId) => {
+  //   const response = await axios.post(
+  //     APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
+  //     {},
+  //     {
+  //       headers: { "Content-Type": "application/json" },
+  //     }
+  //   );
+  //   return response.data; // The token
+  // };
 
   // 유틸리티 함수
   const isTeamFull = (team) => team.filter((id) => id !== null).length >= 4;
