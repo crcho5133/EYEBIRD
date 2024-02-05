@@ -71,7 +71,7 @@ pipeline {
 
         stage('Compression FE') {
             when {
-                expression { env.BUILD_BE == "true" }
+                expression { env.BUILD_FE == "true" }
             }
             steps {
                 dir('FE') {
