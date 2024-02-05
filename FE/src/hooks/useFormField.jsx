@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function useFormField(initialValue, validator) {
+const useFormField = (initialValue, validator) => {
   const [value, setValue] = useState(initialValue);
   const [isValid, setIsValid] = useState(false);
   const [hasChecked, setHasChecked] = useState(false);
@@ -29,6 +29,6 @@ function useFormField(initialValue, validator) {
     setHasChecked,
     clear,
   };
-}
+};
 
 export default useFormField;
