@@ -5,10 +5,10 @@ const ProfileImageModal = ({ visible, onClose, setProfileImage, setProfileImageI
   const useUsersApiCall = usersApiCall();
 
   const profileImages = [
-    "src/assets/img/1.PNG",
-    "src/assets/img/2.PNG",
-    "src/assets/img/3.PNG",
-    "src/assets/img/4.PNG",
+    "src/assets/img/profile/1.PNG",
+    "src/assets/img/profile/2.PNG",
+    "src/assets/img/profile/3.PNG",
+    "src/assets/img/profile/4.PNG",
   ];
 
   const ImageSelect = async (imageUrl, index) => {

@@ -1,20 +1,8 @@
-<<<<<<< HEAD
-// SettingModal.jsx
-
-=======
 import { useState, useEffect } from "react";
->>>>>>> origin/develop-FE-js_02_05
 import Rodal from "rodal"; // Rodal import
 import "rodal/lib/rodal.css"; // Rodal CSS
 
 const SettingModal = ({ visible, onClose }) => {
-<<<<<<< HEAD
-  return (
-    <Rodal visible={visible} onClose={onClose} closeOnEsc={true} closeMaskOnClick={false}>
-      <div>
-        <h1>설정</h1>
-        <button>ON/OFF</button>
-=======
   const [volume, setVolume] = useState(50); // 앱의 소리 조절 상태
   const [micVolume, setMicVolume] = useState(50); // 마이크 소리 조절 상태
   const [blockInvites, setBlockInvites] = useState(false); // 초대 차단 상태
@@ -64,7 +52,6 @@ const SettingModal = ({ visible, onClose }) => {
             className={`w-10 h-6 rounded-full ${blockInvites ? "bg-green-500" : "bg-red-500"}`}
           ></button>
         </div>
->>>>>>> origin/develop-FE-js_02_05
       </div>
     </Rodal>
   );

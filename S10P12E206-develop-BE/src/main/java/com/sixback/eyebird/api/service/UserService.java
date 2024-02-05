@@ -80,7 +80,6 @@ public class UserService {
     }
 
     public void updateNickname(UpdateNicknameReqDto updateNicknameReqDto, String email) {
-        System.out.println("UPDATE NICKNAME TEST");
         // 현재 로그인된 유저를 DB에서 찾는다
         User user = userRepository.findUserByEmail(email).orElseThrow(() -> new IllegalArgumentException("회원수정: 유저가 인증되지 않았습니다"));
 

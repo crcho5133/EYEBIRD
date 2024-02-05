@@ -1,8 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-<<<<<<< HEAD
 import { useAccessTokenState } from "@/context/AccessTokenContext";
-=======
->>>>>>> origin/develop-FE-js_02_05
 
 const VideoWebSocketContext = createContext(null);
 
@@ -11,15 +8,10 @@ export const useWebSocket = () => useContext(VideoWebSocketContext);
 export const VideoWebSocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState("");
-<<<<<<< HEAD
   const accessToken = useAccessTokenState();
 
   useEffect(() => {
     if (!accessToken.accessToken) return;
-=======
-
-  useEffect(() => {
->>>>>>> origin/develop-FE-js_02_05
     const ws = new WebSocket("ws://localhost:8000/ws");
     console.log(ws);
     ws.onmessage = (event) => {
@@ -31,11 +23,7 @@ export const VideoWebSocketProvider = ({ children }) => {
     setSocket(ws);
 
     // return () => ws.close();
-<<<<<<< HEAD
   }, [accessToken.accessToken]);
-=======
-  }, []);
->>>>>>> origin/develop-FE-js_02_05
 
   return (
     <VideoWebSocketContext.Provider value={{ socket, message }}>

@@ -35,12 +35,26 @@ export function AccessTokenProvider({ children }) {
   );
 
   const profileImagePath = (index) => {
-    return `/src/assets/img/${index}.png`;
+    return `/src/assets/img/profile/${index}.png`;
   };
 
   const profile = useMemo(() => {
     return profileImagePath(profileImageIndex);
   }, [profileImageIndex]);
+
+  const clear = () => {
+    setAccessToken("");
+    setRefreshToken("");
+    setEmail("");
+    setNickname("");
+    setProfileImageIndex("");
+    setClassicPt("0");
+    setItemPt("0");
+    setWinNumItem("0");
+    setLoseNumItem("0");
+    setWinNumClassic("0");
+    setLoseNumClassic("0");
+  };
 
   useEffect(() => {
     sessionStorage.setItem("accessToken", accessToken);
@@ -92,6 +106,7 @@ export function AccessTokenProvider({ children }) {
       loseNumClassic,
       setLoseNumClassic,
       profile,
+      clear,
     }),
     [
       accessToken,

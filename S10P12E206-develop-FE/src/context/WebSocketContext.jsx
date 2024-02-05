@@ -26,19 +26,13 @@ export const WebSocketProvider = ({ children }) => {
         console.log("Connected to WebSocket");
 
         // 랭크 게임 매칭 성공 수신
-<<<<<<< HEAD
-        newClient.subscribe("/user/match/" + nickname, (message) => {
-=======
         newClient.subscribe("/api/message/match/" + nickname, (message) => {
->>>>>>> origin/develop-FE-js_02_05
           const newMessage = message.body;
           console.log("Received message:", newMessage);
           // 메시지를 받았을 때 처리 (예: 상태 업데이트)
           setMatch(true);
           setGameId(newMessage);
         });
-<<<<<<< HEAD
-=======
         newClient.subscribe("/api/message/invitations", (message) => {
           console.log("Received message:", message.body);
           alert("알림: " + message.body);
@@ -71,7 +65,6 @@ export const WebSocketProvider = ({ children }) => {
           // 메시지를 받았을 때 처리 (예: 상태 업데이트)
           setReceivedMessages((prevMessages) => [newMessage, ...prevMessages]); // 최신 메시지가 앞에 오도록
         });
->>>>>>> origin/develop-FE-js_02_05
       },
       onDisconnect: () => {
         console.log("Disconnected from WebSocket");
@@ -91,20 +84,6 @@ export const WebSocketProvider = ({ children }) => {
     newClient.activate();
   }, [accessToken.accessToken]);
 
-<<<<<<< HEAD
-  // 현재 접속 중인 유저 정보를 요청하는 함수
-  // const currentUsers = () => {
-  //   if (client && client.connected) {
-  //     const response = client.send("/app/friends");
-  //     return response.data;
-  //   } else {
-  //     console.log("WebSocket is not connected.");
-  //   }
-  // };
-
-  return (
-    <WebSocketContext.Provider value={{ client, match, gameId, setMatch }}>
-=======
   const sendInvitation = () => {
     if (client && isConnected) {
       client.publish({
@@ -137,7 +116,6 @@ export const WebSocketProvider = ({ children }) => {
 
   return (
     <WebSocketContext.Provider value={{ client, match, gameId }}>
->>>>>>> origin/develop-FE-js_02_05
       {children}
     </WebSocketContext.Provider>
   );

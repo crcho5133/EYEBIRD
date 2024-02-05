@@ -11,4 +11,5 @@ export default {
   changePassword: () => `${baseUrl}/api/user/password`,
   deleteUser: () => `${baseUrl}/api/user`,
   getFriendsList: () => `${baseUrl}/api/friend`,
+  getReissue: () => `${baseUrl}/api/auth/reissue`,
 };
