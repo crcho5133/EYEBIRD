@@ -63,7 +63,7 @@ export const WebSocketProvider = ({ children }) => {
   // };
 
   return (
-    <WebSocketContext.Provider value={{ client, match, gameId }}>
+    <WebSocketContext.Provider value={{ client, match, gameId, setMatch }}>
       {children}
     </WebSocketContext.Provider>
   );

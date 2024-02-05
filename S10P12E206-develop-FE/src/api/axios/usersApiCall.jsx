@@ -100,17 +100,18 @@ const usersApiCall = () => {
         }
       );
     } catch (error) {
-      alert(error.response.data.errorMessage);
+      console.log(error);
+      alert(error.response?.data?.errorMessage);
     }
   };
 
-  const changeNickname = async (newNickName) => {
+  const changeNickname = async (nickname) => {
     const url = usersUrl.changeNickname();
     try {
       const response = await axios.patch(
         url,
         {
-          newNickName,
+          nickname,
         },
         {
           headers: { Authorization: `Bearer ${accessToken.accessToken}` },

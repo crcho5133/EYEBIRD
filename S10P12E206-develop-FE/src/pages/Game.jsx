@@ -312,7 +312,7 @@ const Game = () => {
         <GamePlay publisher={publisher} subscriber={subscriber} {...gameProps} />
       )}
       {!isLoading && gameState === "gameResult" && (
-        <GameResult myLose={myLose} opponentLose={opponentLose} />
+        <GameResult myLose={myLose} opponentLose={opponentLose} leaveSession={leaveSession} />
       )}
     </>
   );
