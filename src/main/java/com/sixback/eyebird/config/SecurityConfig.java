@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .headers(header -> header.frameOptions(options -> options.sameOrigin()))
                 .addFilterBefore(new JwtAuthFilter(jwtTokenUtil, userDetailsServiceImpl, redisTemplate), UsernamePasswordAuthenticationFilter.class) // jwtAuthFilter를 UsernamePasswordAuthenticationFilter 이전에 실행
                 .authorizeHttpRequests(auth -> auth.requestMatchers(AUTH_WHITELIST).permitAll() // 접근 허용
-                        .requestMatchers(toH2Console()).permitAll() // h2 database 사용을 위해
+                        //.requestMatchers(toH2Console()).permitAll() // h2 database 사용을 위해
                         .anyRequest().authenticated() // 이외의 endpoint 들은 인증 요구
                 );
 
