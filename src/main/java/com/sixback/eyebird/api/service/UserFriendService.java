@@ -40,7 +40,7 @@ public class UserFriendService {
     }
 
     // 유저가 가진 아이디로 친구 불러오기
-    public List<UserReqDto> findFriend(String userEmail) {
+    public List<UserReqDto> findFriend(String userEmail, int page) {
         System.out.println(userEmail);
         User user = userRepository.findUserByEmail(userEmail).orElseThrow(() -> new RuntimeException("유저를 찾지 못했습니다."));
         System.out.println("test");
@@ -63,9 +63,20 @@ public class UserFriendService {
             }
         }
 
+        friends.sort((f1,f2)->f1.getNickname().compareTo(f2.getNickname()));
 
         System.out.println(friends);
 
+        int pageindex = (page-1)*10;
+        int pageend = pageindex + 10;
+        if(pageindex + 10 >= friendList.size())
+            pageend = friendList.size();
+
+
+        if(pageindex > friends.size())
+            friends = new ArrayList<>();
+        else
+            friends = friends.subList(pageindex,pageend);
         return friends;
     }
 

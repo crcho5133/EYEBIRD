@@ -35,12 +35,12 @@ public class UserFriendController {
         String userTo = reqFriend.get("userTo");
         userFriendService.deleteFriendShip(userTo, curUserEmail);
     }
-    
+
     // 유저가 가진 아이디로 친구 불러오기
-    @GetMapping()
-    public List<UserReqDto> findFriend(Authentication authentication){
+    @GetMapping("/{page}")
+    public List<UserReqDto> findFriend(@PathVariable int page,  Authentication authentication){
         String curUserEmail = authentication.getName();
 
-        return userFriendService.findFriend(curUserEmail);
+        return userFriendService.findFriend(curUserEmail, page);
     }
 }
