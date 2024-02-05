@@ -6,7 +6,7 @@ import axios from "axios";
 // 게임 매칭 화면(일반 / 랭크 case로 구분)
 import GameLoading from "../components/game/GameLoading";
 import GamePlay from "../components/game/GamePlay";
-// import GameResult from "./GameResult";
+import GameResult from "../components/game/GameResult";
 import LoadingSpinner from "../assets/img/loading/loading.gif";
 
 const APPLICATION_SERVER_URL = "http://localhost:8080/";
@@ -79,6 +79,14 @@ const Game = () => {
       }, 3000);
     }
   }, [publisher, subscriber]);
+
+  useEffect(() => {
+    if (myLose || opponentLose) {
+      setTimeout(() => {
+        setGameState("gameResult");
+      }, 1000);
+    }
+  }, [myLose, opponentLose]);
 
   // useEffect 훅
   useEffect(() => {
@@ -303,7 +311,9 @@ const Game = () => {
       {!isLoading && gameState === "gamePlay" && (
         <GamePlay publisher={publisher} subscriber={subscriber} {...gameProps} />
       )}
-      {!isLoading && gameState === "gameResult" && <GameResult /* 필요한 props */ />}
+      {!isLoading && gameState === "gameResult" && (
+        <GameResult myLose={myLose} opponentLose={opponentLose} />
+      )}
     </>
   );
 };
