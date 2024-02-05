@@ -4,6 +4,7 @@ import SignupFormModal from "@/components/modal/SignupFormModal";
 import LoginFormModal from "@/components/modal/LoginFormModal";
 import DescriptionModal from "@/components/modal/DescriptionModal";
 import useShowRodal from "@/hooks/useShowRodal";
+import bbb from "../assets/img/bbb.png";
 
 const Home = () => {
   const isSignupModalVisible = useShowRodal();
@@ -16,8 +17,7 @@ const Home = () => {
       <LobbyBtn text="로그인" onClick={isLoginModalVisible.showRodal} className="mr-4" />
       <LobbyBtn text="게임설명" onClick={isDescriptionModalVisible.showRodal} />
       <p> 테스트 </p>
-      <img src="../assets/img/bbb.jpg" alt="bbb" />
-      <img src="@/assets/img/aaa.jpg" alt="aaa" />
+      <img src={bbb} alt="bbb" />
       <SignupFormModal
         visible={isSignupModalVisible.value}
         onClose={isSignupModalVisible.hideRodal}
