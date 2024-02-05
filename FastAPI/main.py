@@ -73,3 +73,4 @@ async def websocket_endpoint(websocket: WebSocket):
                 #     await websocket.send_text(str(left_EAR) + " " + str(right_EAR) + " " + "눈 감김 감지 안 됨")
                 # else:
                 #     await websocket.send_text("xxx")
+                
