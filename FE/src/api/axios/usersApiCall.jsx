@@ -43,6 +43,7 @@ const usersApiCall = () => {
       } else if (response.data.check === true) {
         setIsNicknameValid(false);
       }
+      console.log(response)
     } catch (error) {
       console.log(error);
     }
@@ -116,7 +117,6 @@ const usersApiCall = () => {
           headers: { Authorization: `Bearer ${accessToken.accessToken}` },
         }
       );
-      console.log(response)
     } catch (error) {
       alert(error.response.data.errorMessage);
     }

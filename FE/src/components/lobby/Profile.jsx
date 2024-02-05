@@ -57,6 +57,7 @@ const Profile = () => {
             <>
               <button
                 onClick={() => {
+                  console.log("tetsetsetsetset")
                   useUsersApiCall.checkNicknameDuplicate(nickname.value, nickname.setIsValid);
                   nickname.setHasChecked(true);
                 }}
