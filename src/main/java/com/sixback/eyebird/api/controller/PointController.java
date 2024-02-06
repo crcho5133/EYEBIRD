@@ -15,6 +15,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.sixback.eyebird.api.dto.PointReqDto;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +80,7 @@ public class PointController {
     }
 
     // 랭크 게임의 매칭 요청이 왔을 때
+    @Transactional
     @MessageMapping("/matching")
     public void matching(MatchingReqDto matchingReqDto) throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
         String reqUserEmail = matchingReqDto.getEmail();
