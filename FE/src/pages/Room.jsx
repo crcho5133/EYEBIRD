@@ -24,7 +24,12 @@ const Room = () => {
   // const location = useLocation();
   const navigate = useNavigate();
   const location = useLocation();
-  const { roomName, password, hastoken } = location.state;
+  // const { roomName, password, hastoken } = location.state;
+  const { roomName, password, hastoken } = location.state ?? {
+    roomName: "",
+    password: "",
+    hastoken: "",
+  };
 
   // const roomName = location.state.roomName;
   const token = sessionStorage.getItem("accessToken");

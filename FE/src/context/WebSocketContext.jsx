@@ -64,7 +64,7 @@ export const WebSocketProvider = ({ children }) => {
         newClient.publish({ destination: "/message/users" });
 
         // 메시지를 받을 대상 토픽 구독
-        newClient.subscribe("/message/private-" + nickname, (message) => {
+        newClient.subscribe("/message/private-" + sessionStorage.getItem("email"), (message) => {
           const newMessage = JSON.parse(message.body);
           console.log("Received message:", newMessage);
           // 메시지를 받았을 때 처리 (예: 상태 업데이트)

@@ -14,7 +14,7 @@ const InviteModal = ({ visible, onClose }) => {
   const { client } = useWebSocket(); // Get the WebSocket client
   const location = useLocation();
   const [showQRCode, setShowQRCode] = useState(false); // Add this line
-  const baseUrl = "localhost:5173/";
+  const homeUrl = "localhost:5173";
 
   useEffect(() => {
     // 친구 목록을 가져오는 API 호출
@@ -49,7 +49,7 @@ const InviteModal = ({ visible, onClose }) => {
 
   const handleCopyClipBoard = async () => {
     try {
-      await navigator.clipboard.writeText(`${baseUrl}${location.pathname}`);
+      await navigator.clipboard.writeText(`${homeUrl}${location.pathname}`);
       alert("클립보드에 링크가 복사되었어요.");
     } catch (err) {
       console.log(err);
@@ -108,12 +108,12 @@ const InviteModal = ({ visible, onClose }) => {
           <div className="flex flex-col">
             <button
               className="button-container"
-              onClick={() => handleCopyClipBoard(`${baseUrl}${location.pathname}`)}
+              onClick={() => handleCopyClipBoard(`${homeUrl}${location.pathname}`)}
             >
               링크 복사하기
             </button>
             <button onClick={handleGenerateQRCode}>QR코드 생성하기</button>
-            {showQRCode && <QRCode value={`${baseUrl}${location.pathname}`} />}{" "}
+            {showQRCode && <QRCode value={`${homeUrl}${location.pathname}`} />}{" "}
             {/* Add this line */}
           </div>
         )}
