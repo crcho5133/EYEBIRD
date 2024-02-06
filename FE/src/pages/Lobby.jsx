@@ -3,7 +3,6 @@ import LobbyBtn from "@/components/lobby/LobbyBtn";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
 import MyInfo from "@/components/lobby/MyInfo";
 import useShowComponent from "@/hooks/useShowComponent";
-import profile from "../assets/img/bird_weard_pirate-hat.png"; // 프로필 사진 파일 경로
 import cup_gold from "../assets/img/cup_gold.png";
 import my_info from "../assets/img/my_info.png";
 import { useNavigate, useLocation, Routes, Route, Outlet } from "react-router-dom";

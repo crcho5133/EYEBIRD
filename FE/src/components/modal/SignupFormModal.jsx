@@ -48,7 +48,7 @@ const SignupFormModal = ({ visible, onClose }) => {
       await useUsersApiCall.checkEmailDuplicate(email.value, email.setIsValid);
       email.setHasChecked(true);
     } catch (error) {
-      alert(error);
+      alert(error.response?.data?.errorMessage);
     }
   };
 
@@ -58,7 +58,7 @@ const SignupFormModal = ({ visible, onClose }) => {
       await useUsersApiCall.checkNicknameDuplicate(nickname.value, nickname.setIsValid);
       nickname.setHasChecked(true);
     } catch (error) {
-      alert(error);
+      alert(error.response?.data?.errorMessage);
     }
   };
 

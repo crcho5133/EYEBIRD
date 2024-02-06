@@ -37,7 +37,59 @@ const lobbyApiCall = () => {
     }
   };
 
-  return { getFriendsList, getRankingList, searchUsers };
+  const addFriend = async (userTo) => {
+    const addFriendUrl = lobbyUrl.addFriend();
+    try {
+      const response = await privateAxios.post(addFriendUrl, {
+        userTo,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const getFriendRequestList = async () => {
+    const getFriendRequestListUrl = lobbyUrl.getFriendRequestList();
+    try {
+      const response = await privateAxios.get(getFriendRequestListUrl);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const acceptFriendRequest = async (userFrom) => {
+    const acceptFriendRequestUrl = lobbyUrl.acceptFriendRequest();
+    try {
+      const response = await privateAxios.post(acceptFriendRequestUrl, {
+        userFrom,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const rejectFriendRequest = async (messageId) => {
+    const rejectFriendRequestUrl = `${lobbyUrl.rejectFriendRequest()}/${messageId}`;
+    try {
+      const response = await privateAxios.delete(rejectFriendRequestUrl);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  return {
+    getFriendsList,
+    getRankingList,
+    searchUsers,
+    addFriend,
+    acceptFriendRequest,
+    getFriendRequestList,
+    rejectFriendRequest,
+  };
 };
 
 export default lobbyApiCall;
