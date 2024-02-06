@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const GameResult = ({
   myLose,
@@ -25,7 +25,7 @@ const GameResult = ({
   setRematch,
 }) => {
   const [resultState, setResultState] = useState("phase1");
-  const navigate = useNavigate();
+  const [progress, setProgress] = useState(100); // 진행 바 상태
 
   useEffect(() => {
     // rematchRequest나 rematchResponse가 변경될 때 phase2로 설정
@@ -34,20 +34,41 @@ const GameResult = ({
     }
   }, [rematchRequest, rematchResponse]);
 
-  useEffect(() => {
-    let timer;
-    // resultState가 phase1이나 phase2일 때만 3초 타이머 설정
-    if (resultState === "phase1" || resultState === "phase2") {
-      timer = setTimeout(() => {
-        if (resultState !== "phase3") {
-          setResultState("phase3");
-        }
-      }, 3000);
-    }
+  // useEffect(() => {
+  //   let timer;
+  //   // resultState가 phase1이나 phase2일 때만 3초 타이머 설정
+  //   if (resultState === "phase1" || resultState === "phase2") {
+  //     timer = setTimeout(() => {
+  //       if (resultState !== "phase3") {
+  //         setResultState("phase3");
+  //       }
+  //     }, 3000);
+  //   }
 
-    return () => {
-      clearTimeout(timer);
-    };
+  //   return () => {
+  //     clearTimeout(timer);
+  //   };
+  // }, [resultState]);
+
+  useEffect(() => {
+    if (resultState === "phase1" || resultState === "phase2") {
+      setProgress(100); // phase1 또는 phase2로 진입할 때 진행 바를 다시 채웁니다.
+      const interval = setInterval(() => {
+        setProgress((prevProgress) => (prevProgress > 0 ? prevProgress - 100 / (4000 / 10) : 0));
+      }, 10); // 매 10밀리초마다 진행 바 감소
+
+      // 3초 후에 자동으로 phase3로 설정
+      const timeout = setTimeout(() => {
+        setResultState("phase3");
+        clearInterval(interval); // 타이머 정지
+        setProgress(0); // 진행 바를 0으로 설정
+      }, 4000);
+
+      return () => {
+        clearTimeout(timeout);
+        clearInterval(interval);
+      };
+    }
   }, [resultState]);
 
   useEffect(() => {
@@ -70,9 +91,9 @@ const GameResult = ({
 
   return (
     <>
-      <div className="h-screen flex justify-center items-center text-center">
+      <div className="h-screen flex justify-center items-center text-center text-lg">
         <div className="flex-col">
-          <h1>결과 창</h1>
+          <div>결과 창</div>
           <div>나</div>
           <div className={`text-2xl ${myWin ? "text-green-600" : "text-red-600"}`}>
             {myWin ? "승리" : "패배"}
@@ -82,17 +103,43 @@ const GameResult = ({
           <div className={`text-2xl ${myWin ? "text-red-600" : "text-green-600"}`}>
             {myWin ? "패배" : "승리"}
           </div>
+          {resultState !== "phase3" && (
+            <div className="flex justify-center m-4">
+              <div className="w-44 bg-gray-200 h-4">
+                <div
+                  className="bg-blue-500 h-full"
+                  style={{
+                    width: `${progress}%`,
+                  }}
+                ></div>
+              </div>
+            </div>
+          )}
           {resultState === "phase1" && myWin && <div>상대방에게 재도전 의사를 묻고 있습니다</div>}
           {resultState === "phase1" && !myWin && (
             <div>
               재도전하시겠습니까?
-              <button onClick={() => sendRematch()}>네</button>
+              <div>
+                <button
+                  className="mt-2 bg-green-400 hover:bg-green-600 text-white py-2 px-4 rounded"
+                  onClick={() => sendRematch()}
+                >
+                  네
+                </button>
+              </div>
             </div>
           )}
           {resultState === "phase2" && myWin && (
             <div>
-              상대방이 재도전을 요청하였습니다. 수락하시겠습니까?
-              <button onClick={() => acceptRematch()}>네</button>
+              상대방이 재도전을 요청하였습니다<div>수락하시겠습니까?</div>
+              <div>
+                <button
+                  className="mt-2 bg-green-400 hover:bg-green-600 text-white py-2 px-4 rounded"
+                  onClick={() => acceptRematch()}
+                >
+                  네
+                </button>
+              </div>
             </div>
           )}
           {resultState === "phase2" && !myWin && (
@@ -100,23 +147,16 @@ const GameResult = ({
           )}
 
           {resultState === "phase3" && (
-            <Link
-              to="/lobby"
-              className="btn btn-large btn-danger bg-red-600"
-              onClick={() => leaveSession()}
-            >
-              로비로 가기
-            </Link>
+            <div className="m-4">
+              <Link
+                to="/lobby"
+                className="bg-red-400 hover:bg-red-600 text-white py-2 px-4 rounded"
+                onClick={() => leaveSession()}
+              >
+                로비로 가기
+              </Link>
+            </div>
           )}
-
-          {/* <button
-            onClick={async () => {
-              await leaveSession();
-              navigate(-1);
-            }}
-          >
-            로비로 가기
-          </button> */}
         </div>
       </div>
     </>
