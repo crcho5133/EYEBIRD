@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="597e4843-9a87-40e9-9b4c-2ea29c03d5a3" name="Changes" comment="" />
+    <list default="true" id="597e4843-9a87-40e9-9b4c-2ea29c03d5a3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/BE/su.md" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,9 +23,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2bwIhHL4oYSLIe1BjGZOBRtzBGV" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -39,9 +41,9 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "Spring Boot.EyebirdApplication.executor": "Run",
-    "git-widget-placeholder": "develop-BE",
+    "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/SSAFY/Desktop/axv/S10P12E206",
+    "last_opened_file_path": "C:/Users/SSAFY/Desktop/proj2",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -74,6 +76,7 @@
       <option name="presentableId" value="Default" />
       <updated>1707119832208</updated>
       <workItem from="1707119833236" duration="3692000" />
+      <workItem from="1707203128162" duration="21000" />
     </task>
     <servers />
   </component>
