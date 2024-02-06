@@ -12,7 +12,7 @@ import lombok.Setter;
 @Table(name = "user_friend")
 @Getter
 @Setter
-public class UserFriend  {
+public class UserFriend extends BaseTime {
     @Id
     @GeneratedValue
     private Long id;

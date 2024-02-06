@@ -1,6 +1,7 @@
 package com.sixback.eyebird.db.entity;
 
 
+import com.sixback.eyebird.api.dto.MessageResDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,4 +34,5 @@ public class GameResult extends BaseTime{
         this.userWinner = userWinner;
         this.userLoser = userLoser;
     }
+
 }

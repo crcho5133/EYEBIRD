@@ -149,6 +149,13 @@ public class UserService {
         return user.getNickname();
     }
 
+    // 유저의 닉네임으로부터 이메일 가져오기
+    public String getEmailFromNickname(String nickname) {
+        User user = userRepository.findUserByNickname(nickname).orElseThrow(() -> new IllegalArgumentException("닉네임을 지닌 유저가 존재하지 않습니다"));
+
+        return user.getEmail();
+    }
+
 
 
 }

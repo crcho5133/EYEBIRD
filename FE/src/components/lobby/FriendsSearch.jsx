@@ -7,7 +7,7 @@ const FriendsSearch = () => {
   const [keyword, setKeyword] = useState("");
   const [friends, setFriends] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(1);
+  const [itemsPerPage] = useState(5);
   const indexOfLastFriend = currentPage * itemsPerPage;
   const indexOfFirstFriend = indexOfLastFriend - itemsPerPage;
   const currentFriends = friends.slice(indexOfFirstFriend, indexOfLastFriend);

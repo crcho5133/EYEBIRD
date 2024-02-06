@@ -9,18 +9,25 @@ const RankingModal = ({ visible, onClose }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [mode, setMode] = useState("classic");
   const [rankings, setRankings] = useState([]);
+  const [total, setTotal] = useState(0);
+  const itemsPerPageAfterFirstPage = 10; // 2페이지부터의 아이템 수
+  const firstPageItemCount = 3; // 1페이지의 아이템 수
   const useLobbyApiCall = lobbyApiCall();
   const useProfile = changeProfileImage();
+  const adjustedTotalItemsCount = total + (itemsPerPageAfterFirstPage - firstPageItemCount);
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  const getRankings = async (mode, currentPage) => {
+  const getRankings = async (mode, page) => {
     try {
-      const data = await useLobbyApiCall.getRankingList(mode, currentPage);
-      setRankings(data);
+      const itemsPerPage = page === 1 ? firstPageItemCount : itemsPerPageAfterFirstPage;
+      const data = await useLobbyApiCall.getRankingList(mode, page, itemsPerPage);
+      setRankings(data.rankList);
+      setTotal(data.total);
     } catch (error) {
-      alert(error);
+      alert(error.response?.data?.errorMessage);
     }
   };
 
@@ -41,13 +48,7 @@ const RankingModal = ({ visible, onClose }) => {
 
   return (
     <>
-      <Rodal
-        visible={visible}
-        onClose={() => {
-          onClose();
-        }}
-        customStyles={{ width: "80%", height: "auto" }}
-      >
+      <Rodal visible={visible} onClose={onClose} customStyles={{ width: "80%", height: "auto" }}>
         <div className="flex justify-center space-x-4 my-4">
           <ToggleButton modeType="classic" label="클래식" />
           <ToggleButton modeType="item" label="아이템" />
@@ -69,15 +70,13 @@ const RankingModal = ({ visible, onClose }) => {
                   <td className="border px-4 py-2">{item.nickname}</td>
                   <td className="border px-4 py-2">{item.point}</td>
                   <td className="border px-4 py-2">
-                    {index < 3 ? (
+                    {currentPage === 1 && index < 3 ? (
                       <img
                         src={useProfile.profileImagePath(item.profileImg)}
                         alt="Profile"
                         className="h-10 w-10 rounded-full"
                       />
-                    ) : (
-                      ""
-                    )}
+                    ) : null}
                   </td>
                 </tr>
               ))}
@@ -86,7 +85,8 @@ const RankingModal = ({ visible, onClose }) => {
         </div>
         <Pagination
           activePage={currentPage}
-          totalItemsCount={rankings.length}
+          itemsCountPerPage={itemsPerPageAfterFirstPage}
+          totalItemsCount={adjustedTotalItemsCount}
           pageRangeDisplayed={5}
           onChange={handlePageChange}
           itemClass="page-item"
