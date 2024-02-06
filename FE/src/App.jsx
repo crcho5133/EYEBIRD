@@ -28,10 +28,10 @@ function App() {
                   <Route element={<PrivateRoute requireAuth={true} />}>
                     <Route path="/lobby/*" element={<Lobby />} />
                   </Route>
-                  <Route element={<PrivateRoute requireAuth={false} />}>
+                  <Route element={<PrivateRoute requireAuth={true} />}>
                     <Route path="/room/:sessionId" element={<Room />} />
                   </Route>
-                  <Route element={<PrivateRoute requireAuth={false} />}>
+                  <Route element={<PrivateRoute requireAuth={true} />}>
                     <Route path="/game/:sessionId" element={<Game />} />
                   </Route>
 
