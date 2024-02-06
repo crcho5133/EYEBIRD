@@ -1,51 +1,51 @@
-import axios from "axios";
 import usersUrl from "@/api/url/usersUrl";
 import { useNavigate } from "react-router-dom";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
 import { useWebSocket } from "@/context/WebSocketContext";
+import useAxiosConfig from "@/hooks/useAxiosConfig";
+import axios from "axios";
 
 const usersApiCall = () => {
   const navigate = useNavigate();
   const accessToken = useAccessTokenState();
   const webSocket = useWebSocket();
+  const privateAxios = useAxiosConfig().privateAxios;
 
   const signup = async (profileImage, email, password, nickname) => {
     const body = { profileImage, email, password, nickname };
     try {
-      const response = await axios.post(usersUrl.signUp(), body);
+      const response = await privateAxios.post(usersUrl.signUp(), body);
       await login(email, password, accessToken.accessToken);
     } catch (error) {
-      console.log(error);
-      alert(error.response.data.errorMessage);
+      alert(error.response?.data?.errorMessage);
     }
   };
-  
+
   const checkEmailDuplicate = async (email, setIsEmailValid) => {
     const url = usersUrl.checkEmailDuplicate() + "?email=" + email;
     try {
-      const response = await axios.get(url);
+      const response = await privateAxios.get(url);
       if (response.data.check === false) {
         setIsEmailValid(true);
       } else if (response.data.check === true) {
         setIsEmailValid(false);
       }
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 
   const checkNicknameDuplicate = async (nickname, setIsNicknameValid) => {
     const url = usersUrl.checkNicknameDuplicate() + "?nickname=" + nickname;
     try {
-      const response = await axios.get(url);
+      const response = await privateAxios.get(url);
       if (response.data.check === false) {
         setIsNicknameValid(true);
       } else if (response.data.check === true) {
         setIsNicknameValid(false);
       }
-      console.log(response)
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 
@@ -59,10 +59,16 @@ const usersApiCall = () => {
       accessToken.setEmail(response.data.email);
       accessToken.setNickname(response.data.nickname);
       accessToken.setProfileImageIndex(response.data.profileImage);
+      accessToken.setClassicPt(response.data.classicPt);
+      accessToken.setItemPt(response.data.itemPt);
+      accessToken.setWinNumItem(response.data.winNumItem);
+      accessToken.setLoseNumItem(response.data.loseNumItem);
+      accessToken.setWinNumClassic(response.data.winNumClassic);
+      accessToken.setLoseNumClassic(response.data.loseNumClassic);
       navigate("/lobby");
     } catch (error) {
       console.log(error);
-      alert(error.response.data.errorMessage);
+      alert(error.response?.data?.errorMessage);
     }
   };
 
@@ -75,50 +81,37 @@ const usersApiCall = () => {
     };
 
     try {
-      await axios.post(url, body);
+      await privateAxios.post(url, body);
       webSocket.client.deactivate();
-      accessToken.setAccessToken("");
-      accessToken.setRefreshToken("");
       alert("로그아웃 되었습니다.");
-
+      accessToken.clear();
       navigate("/");
     } catch (error) {
       console.log(error);
-      alert(error.response.data.errorMessage);
+      alert(error.response?.data?.errorMessage);
     }
   };
 
-  const changeProfileImage = async (newIndex) => {
+  const changeProfileImage = async (profileImage) => {
     const url = usersUrl.changeProfileImage();
     try {
-      const response = await axios.patch(
-        url,
-        {
-          newIndex,
-        },
-        {
-          headers: { Authorization: `Bearer ${accessToken.accessToken}` },
-        }
-      );
+      const response = await privateAxios.patch(url, {
+        profileImage,
+      });
     } catch (error) {
-      alert(error.response.data.errorMessage);
+      alert(error.response);
     }
   };
 
-  const changeNickname = async (newNickName) => {
+  const changeNickname = async (nickname) => {
     const url = usersUrl.changeNickname();
     try {
-      const response = await axios.patch(
-        url,
-        {
-          newNickName,
-        },
-        {
-          headers: { Authorization: `Bearer ${accessToken.accessToken}` },
-        }
-      );
+      const response = await privateAxios.patch(url, {
+        nickname,
+      });
     } catch (error) {
-      alert(error.response.data.errorMessage);
+      console.log(error);
+      alert(error.response?.data?.errorMessage);
     }
   };
 
@@ -126,38 +119,26 @@ const usersApiCall = () => {
     const url = usersUrl.changePassword();
 
     try {
-      const response = await axios.patch(
-        url,
-        {
-          currentPassword,
-          newPassword,
-        },
-        {
-          headers: { Authorization: `Bearer ${accessToken.accessToken}` },
-        }
-      );
-      navigate("/lobby");
+      const response = await privateAxios.patch(url, {
+        currentPassword,
+        newPassword,
+      });
+      alert("비밀번호가 수정 되었습니다");
+      logout();
     } catch (error) {
-      alert(error.response.data.errorMessage);
+      alert(error.response?.data?.errorMessage);
     }
   };
 
   const deleteUser = async (password) => {
     const url = usersUrl.deleteUser();
     try {
-      const response = await axios.patch(
-        url,
-        { password },
-        {
-          headers: { Authorization: `Bearer ${accessToken.accessToken}` },
-        }
-      );
-      sessionStorage.clear();
-      accessToken.accessToken("");
+      const response = await privateAxios.patch(url, { password });
       alert("회원이 탈퇴 되었습니다.");
+      accessToken.clear();
       navigate("/");
     } catch (error) {
-      alert(error.response.data.errorMessage);
+      alert(error.response?.data?.errorMessage);
     }
   };
 

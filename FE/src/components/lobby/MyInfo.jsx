@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Profile from "@/components/lobby/Profile";
 import PasswordChange from "@/components/lobby/PasswordChange";
 import DeleteUser from "@/components/lobby/DeleteUser";
-import MyFriends from "@/components/lobby/MyFriends";
+import FriendsManagement from "@/components/lobby/FriendsManagement";
 
 const MyInfo = ({ visible, onClose }) => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -12,7 +12,7 @@ const MyInfo = ({ visible, onClose }) => {
       case "profile":
         return <Profile />;
       case "friends":
-        return <MyFriends />;
+        return <FriendsManagement />;
       case "changeInfo":
         return <PasswordChange />;
       case "deleteUser":

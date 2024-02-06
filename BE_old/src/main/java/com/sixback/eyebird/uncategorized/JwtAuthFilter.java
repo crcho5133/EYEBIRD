@@ -1,5 +1,6 @@
 package com.sixback.eyebird.uncategorized;
 
+import ch.qos.logback.core.CoreConstants;
 import com.sixback.eyebird.util.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,7 +30,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       // JWT가 헤더에 있다면
       if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
           String token = authorizationHeader.substring(7);
-
+          log.info(token);
           // access token가 유효하다면
           if (jwtTokenUtil.validateToken(token)) {
 

@@ -8,7 +8,6 @@ import { AccessTokenProvider } from "@/context/AccessTokenContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PrivateRoute from "@/privateRoute/PrivateRoute";
-
 import { WebSocketProvider } from "@/context/WebSocketContext";
 import { VideoWebSocketProvider } from "./context/VideoWebSocketContext";
 

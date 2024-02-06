@@ -20,7 +20,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi publicApiRoom() {
         return GroupedOpenApi.builder()
-                .group("room")
+                .group("eyebird-room")
                 .pathsToMatch("/api/room/**")
                 .build();
     }
@@ -28,7 +28,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi publicApiUser() {
         return GroupedOpenApi.builder()
-                .group("user")
+                .group("eyebird-user")
                 .pathsToMatch("/api/user/**")
                 .build();
     }
@@ -36,7 +36,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi publicApiAuth() {
         return GroupedOpenApi.builder()
-                .group("auth")
+                .group("eyebird-auth")
                 .pathsToMatch("/api/auth/**")
                 .build();
     }
@@ -44,8 +44,16 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi publicApiPoint() {
         return GroupedOpenApi.builder()
-                .group("point")
+                .group("eyebird-point")
                 .pathsToMatch("/api/point/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi publicApiFriend() {
+        return GroupedOpenApi.builder()
+                .group("eyebird-friend")
+                .pathsToMatch("/api/friend/**")
                 .build();
     }
 

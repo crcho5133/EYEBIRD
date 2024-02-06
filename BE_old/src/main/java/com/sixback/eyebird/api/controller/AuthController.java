@@ -53,10 +53,7 @@ public class AuthController {
 
 
     }
-    @GetMapping("/qqq")
-    public String qqq() {
-        return "TEST!!!!~~~";
-    }
+
 
 
 }

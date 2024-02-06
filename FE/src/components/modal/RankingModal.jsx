@@ -11,7 +11,6 @@ const RankingModal = ({ visible, onClose }) => {
   const [rankings, setRankings] = useState([]);
   const useLobbyApiCall = lobbyApiCall();
   const useProfile = changeProfileImage();
-
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -29,7 +28,7 @@ const RankingModal = ({ visible, onClose }) => {
     if (visible) {
       getRankings(mode, currentPage);
     }
-  }, [visible, mode]);
+  }, [visible, mode, currentPage]);
 
   const ToggleButton = ({ modeType, label }) => (
     <button

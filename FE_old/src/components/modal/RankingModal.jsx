@@ -1,22 +1,35 @@
 import Rodal from "rodal";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Pagination from "react-js-pagination";
 import lobbyApiCall from "@/api/axios/lobbyApiCall";
 import "rodal/lib/rodal.css";
+import changeProfileImage from "@/utils/changeProfileImage";
 
 const RankingModal = ({ visible, onClose }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [mode, setMode] = useState("classic");
-  const itemsCountPerPage = 5;
+  const [rankings, setRankings] = useState([]);
+  const useLobbyApiCall = lobbyApiCall();
+  const useProfile = changeProfileImage();
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-  const useLobbyApiCall = lobbyApiCall();
 
-  const indexOfLastItem = currentPage * itemsCountPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsCountPerPage;
-  const rankings = useLobbyApiCall.getRankingList(mode);
-  const currentItems = rankings.slice(indexOfFirstItem, indexOfLastItem);
+  const getRankings = async (mode, currentPage) => {
+    try {
+      const data = await useLobbyApiCall.getRankingList(mode, currentPage);
+      setRankings(data);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  useEffect(() => {
+    if (visible) {
+      getRankings(mode, currentPage);
+    }
+  }, [visible, mode]);
 
   const ToggleButton = ({ modeType, label }) => (
     <button
@@ -51,19 +64,15 @@ const RankingModal = ({ visible, onClose }) => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((item, index) => (
+              {rankings.map((item, index) => (
                 <tr key={item.nickname}>
-                  <td className="border px-4 py-2">
-                    {(currentPage - 1) * itemsCountPerPage + index + 1}
-                  </td>
+                  <td className="border px-4 py-2">{item.rank}</td>
                   <td className="border px-4 py-2">{item.nickname}</td>
-                  <td className="border px-4 py-2">
-                    {mode === "classic" ? item.classic_pt : item.item_pt}
-                  </td>
+                  <td className="border px-4 py-2">{item.point}</td>
                   <td className="border px-4 py-2">
                     {index < 3 ? (
                       <img
-                        src={`/path/to/profile/${item.profileImg}.jpg`}
+                        src={useProfile.profileImagePath(item.profileImg)}
                         alt="Profile"
                         className="h-10 w-10 rounded-full"
                       />
@@ -78,7 +87,6 @@ const RankingModal = ({ visible, onClose }) => {
         </div>
         <Pagination
           activePage={currentPage}
-          itemsCountPerPage={itemsCountPerPage}
           totalItemsCount={rankings.length}
           pageRangeDisplayed={5}
           onChange={handlePageChange}

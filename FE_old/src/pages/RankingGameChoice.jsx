@@ -7,17 +7,18 @@ import { useWebSocket } from "../context/WebSocketContext";
 import { useEffect, useState } from "react";
 
 const RankingGameChoice = () => {
-  const { client, match, gameId } = useWebSocket();
+  const { client, match, gameId, setMatch } = useWebSocket();
   const [gameType, setGameType] = useState("");
 
   const navigate = useNavigate();
-  const nickname = sessionStorage.getItem("nickname");
+  const email = sessionStorage.getItem("email");
 
   useEffect(() => {
     if (match && gameId) {
+      setMatch(false);
       navigate(`/game/${gameId}`, { state: { gameType } });
     }
-  });
+  }, [match, gameId]);
 
   const startMatch = (isItem) => {
     if (client) {
@@ -25,8 +26,8 @@ const RankingGameChoice = () => {
         destination: "/stomp/matching",
         body: JSON.stringify({
           // Your JSON data here
-          item: isItem,
-          email: nickname,
+          ifItem: isItem,
+          email: email,
         }),
       });
       console.log("Invitation sent");

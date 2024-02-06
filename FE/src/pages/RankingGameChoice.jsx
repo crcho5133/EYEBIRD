@@ -5,9 +5,10 @@ import old_paper from "@/assets/img/old_paper.png";
 import { useNavigate } from "react-router-dom";
 import { useWebSocket } from "../context/WebSocketContext";
 import { useEffect, useState } from "react";
+import { toast, Slide, Bounce } from "react-toastify";
 
 const RankingGameChoice = () => {
-  const { client, match, gameId, setMatch } = useWebSocket();
+  const { client, match, gameId, setMatch, opponentInfo } = useWebSocket();
   const [gameType, setGameType] = useState("");
 
   const navigate = useNavigate();
@@ -15,12 +16,22 @@ const RankingGameChoice = () => {
 
   useEffect(() => {
     if (match && gameId) {
-      setMatch(false);
-      navigate(`/game/${gameId}`, { state: { gameType } });
+      // setMatch(false);
+      // navigate(`/game/${gameId}`, { state: { gameType, opponentInfo } });
+      toast.dismiss(); // Pending 알림이 있다면 닫기
+      toast.success("매칭에 성공하였습니다", {
+        autoClose: 2000, // 2초 동안 표시
+        onClose: () => {
+          // 알림이 닫힌 후 실행할 로직
+          setMatch(false); // 매칭 상태 초기화
+          navigate(`/game/${gameId}`, { state: { gameType, opponentInfo } }); // 페이지 이동
+        },
+      });
     }
   }, [match, gameId]);
 
   const startMatch = (isItem) => {
+    toast.info("매칭 찾는 중...", { autoClose: false, position: "top-center", theme: "colored" });
     if (client) {
       client.publish({
         destination: "/stomp/matching",

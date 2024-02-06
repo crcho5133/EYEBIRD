@@ -4,8 +4,9 @@ import { OpenVidu } from "openvidu-browser";
 import { toast, Slide, Bounce } from "react-toastify";
 import axios from "axios";
 // 게임 매칭 화면(일반 / 랭크 case로 구분)
+import GameLoading from "../components/game/GameLoading";
 import GamePlay from "../components/game/GamePlay";
-// import GameResult from "./GameResult";
+import GameResult from "../components/game/GameResult";
 import LoadingSpinner from "../assets/img/loading/loading.gif";
 
 const APPLICATION_SERVER_URL = "https://i10e206.p.ssafy.io/";
@@ -37,8 +38,12 @@ const Game = () => {
   const [publisher, setPublisher] = useState(undefined);
   const [subscriber, setSubscriber] = useState(undefined);
 
+  // 게임 준비완료 상태
   const [ready, setReady] = useState(false);
   const [opponentReady, setOpponentReady] = useState(false);
+  // 패배 상태
+  const [myLose, setMyLose] = useState(false);
+  const [opponentLose, setOpponentLose] = useState(false);
 
   // 이 변수 switch camera 전용 변수? 확인하기
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
@@ -55,12 +60,33 @@ const Game = () => {
     if (mySessionId && myUserName) {
       setIsLoading(true);
       joinSession();
-      setTimeout(() => {
-        setIsLoading(false);
-        setGameState("gamePlay");
-      }, 1000);
+      // setTimeout(() => {
+      //   setIsLoading(false);
+      //   setGameState("gameLoading");
+      //   setTimeout(() => {
+      //     setGameState("gamePlay");
+      //   }, 3000); // "gameLoading" 후 3초 뒤에 "gamePlay"로 변경
+      // }, 2000);
     }
   }, [mySessionId, myUserName]);
+
+  useEffect(() => {
+    if (publisher && subscriber) {
+      setIsLoading(false);
+      setGameState("gameLoading");
+      setTimeout(() => {
+        setGameState("gamePlay");
+      }, 3000);
+    }
+  }, [publisher, subscriber]);
+
+  useEffect(() => {
+    if (myLose || opponentLose) {
+      setTimeout(() => {
+        setGameState("gameResult");
+      }, 1000);
+    }
+  }, [myLose, opponentLose]);
 
   // useEffect 훅
   useEffect(() => {
@@ -138,6 +164,14 @@ const Game = () => {
     });
   };
 
+  const sendLose = () => {
+    console.log("패배한사람: " + myUserName);
+    session.signal({
+      data: myUserName,
+      type: "lose",
+    });
+  };
+
   // // 새 사용자가 세션에 접속할 때 팀 정보 요청 신호 보내기
   // const requestTeamInfo = () => {
   //   session.signal({
@@ -166,6 +200,16 @@ const Game = () => {
       const username = event.data;
       if (username !== myUserName) {
         setOpponentReady(true);
+      }
+    });
+
+    mySession.on("signal:lose", (event) => {
+      const username = event.data;
+      console.log(username);
+      if (username === myUserName) {
+        setMyLose(true);
+      } else if (username !== myUserName) {
+        setOpponentLose(true);
       }
     });
 
@@ -241,12 +285,14 @@ const Game = () => {
     return response.data; // The token
   };
 
-  const readyProps = {
+  const gameProps = {
     ready,
     setReady,
     opponentReady,
-    setOpponentReady,
     sendReady,
+    sendLose,
+    myLose,
+    opponentLose,
   };
 
   // 라우팅 구성
@@ -259,17 +305,15 @@ const Game = () => {
           </div>
         </div>
       )}
-      {/* {!isLoading && gameState === "gameLoading" && (
-        <GameLoading
-          toggleCamera={toggleCamera}
-          toggleMic={toggleMic}
-          leaveSession={leaveSession}
-        />
-      )} */}
-      {!isLoading && gameState === "gamePlay" && (
-        <GamePlay publisher={publisher} subscriber={subscriber} {...readyProps} />
+      {!isLoading && gameState === "gameLoading" && (
+        <GameLoading publisher={publisher} subscriber={subscriber} />
       )}
-      {!isLoading && gameState === "gameResult" && <GameResult /* 필요한 props */ />}
+      {!isLoading && gameState === "gamePlay" && (
+        <GamePlay publisher={publisher} subscriber={subscriber} {...gameProps} />
+      )}
+      {!isLoading && gameState === "gameResult" && (
+        <GameResult myLose={myLose} opponentLose={opponentLose} leaveSession={leaveSession} />
+      )}
     </>
   );
 };

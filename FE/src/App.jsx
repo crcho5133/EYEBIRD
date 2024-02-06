@@ -25,22 +25,15 @@ function App() {
                     <Route path="/" element={<Home />} />
                   </Route>
 
-                  <Route path="/lobby/*" element={<Lobby />} />
-
-                  <Route path="/room/:sessionId" element={<Room />} />
-                  <Route path="/game/:sessionId" element={<Game />} />
-
-                  {/* <Route element={<PrivateRoute requireAuth={true} />}>
-                <Route path="/rankingGame" element={<RankingGameChoice />} />
-              </Route>
-
-              <Route element={<PrivateRoute requireAuth={true} />}>
-                <Route path="/normalGame" element={<NormalGameChoice />} />
-              </Route>
-
-              <Route element={<PrivateRoute requireAuth={true} />}>
-                <Route path="/normalGame/roomSearch" element={<RoomSearch />} />
-              </Route> */}
+                  <Route element={<PrivateRoute requireAuth={true} />}>
+                    <Route path="/lobby/*" element={<Lobby />} />
+                  </Route>
+                  <Route element={<PrivateRoute requireAuth={true} />}>
+                    <Route path="/room/:sessionId" element={<Room />} />
+                  </Route>
+                  <Route element={<PrivateRoute requireAuth={true} />}>
+                    <Route path="/game/:sessionId" element={<Game />} />
+                  </Route>
                 </Routes>
               </WebMobileLayout>
             </VideoWebSocketProvider>

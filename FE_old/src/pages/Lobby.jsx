@@ -22,6 +22,7 @@ const Lobby = () => {
   const isBtnVisible = useShowComponent();
   const location = useLocation();
   const isMainLobby = location.pathname === "/lobby";
+  const myInfo = useAccessTokenState();
 
   const logout = (event) => {
     event.preventDefault();
@@ -73,7 +74,6 @@ const Lobby = () => {
       {isMainLobby && (
         <div>
           {!isBtnVisible.value && <LobbyBtn text="로그아웃" onClick={logout} />}
-          {/* {!isBtnVisible.value && <LobbyIconBtn text="내 정보" onClick={onClick} />} */}
           {isMyInfoVisible.value && <MyInfo onClose={onCloseMyInfo} />}
           <RankingModal visible={isRankingVisible.value} onClose={onCloseRanking} />
           {!isBtnVisible.value && (
@@ -85,7 +85,7 @@ const Lobby = () => {
                   {/* 프로필 사진 */}
                   <div className="item">
                     <img
-                      src={profile}
+                      src={myInfo.profile}
                       alt="Profile"
                       className="object-contain h-full ml-4"
                       style={{

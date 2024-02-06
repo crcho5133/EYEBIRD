@@ -10,14 +10,14 @@ export const WebSocketProvider = ({ children }) => {
   const [match, setMatch] = useState(false);
   const [gameId, setGameId] = useState(undefined);
   const accessToken = useAccessTokenState();
-  const nickname = sessionStorage.getItem("nickname");
+  const email = sessionStorage.getItem("email");
 
   useEffect(() => {
     if (!accessToken.accessToken) return;
     const newClient = new Client({
       webSocketFactory: () => new SockJS("https://i10e206.p.ssafy.io/api/ws"),
       connectHeaders: {
-        Authorization: o`Bearer ${accessToken.accessToken}`,
+        Authorization: `Bearer ${accessToken.accessToken}`,
       },
       beforeConnect: () => {
         console.log("Connecting to WebSocket");
@@ -26,12 +26,14 @@ export const WebSocketProvider = ({ children }) => {
         console.log("Connected to WebSocket");
 
         // 랭크 게임 매칭 성공 수신
-        newClient.subscribe("/user/match/" + nickname, (message) => {
+        newClient.subscribe("/user/match/" + email, (message) => {
           const newMessage = message.body;
           console.log("Received message:", newMessage);
+          const messageObject = JSON.parse(newMessage);
+          console.log(messageObject);
           // 메시지를 받았을 때 처리 (예: 상태 업데이트)
           setMatch(true);
-          setGameId(newMessage);
+          setGameId(messageObject.openviduSessionId);
         });
       },
       onDisconnect: () => {
@@ -63,7 +65,7 @@ export const WebSocketProvider = ({ children }) => {
   // };
 
   return (
-    <WebSocketContext.Provider value={{ client, match, gameId }}>
+    <WebSocketContext.Provider value={{ client, match, gameId, setMatch }}>
       {children}
     </WebSocketContext.Provider>
   );

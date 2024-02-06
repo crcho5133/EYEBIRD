@@ -15,7 +15,6 @@ const useAxiosConfig = () => {
     (config) => {
       if (accessToken.accessToken) {
         config.headers["Authorization"] = `Bearer ${accessToken.accessToken}`;
-        // config.headers["Content-Type"] = "application/json";
       }
       return config;
     },
@@ -41,7 +40,8 @@ const useAxiosConfig = () => {
           accessToken.setRefreshToken(response.data.refreshToken);
 
           const originalRequest = error.config;
-          originalRequest.headers.Authorization = `Bearer ${accessToken.accessToken}`;
+          originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`;
+
           return axios(originalRequest);
         } catch (refreshError) {
           navigate("/");

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useMemo, useEffect } from "react";
+import changeProfileImage from "@/utils/changeProfileImage";
 
 export const AccessTokenContext = createContext({
   accessToken: "",
@@ -34,13 +35,28 @@ export function AccessTokenProvider({ children }) {
     sessionStorage.getItem("loseNumClassic") || "0"
   );
 
-  const profileImagePath = (index) => {
-    return `/src/assets/img/${index}.png`;
-  };
+  const [profile, setProfile] = useState(sessionStorage.getItem("profile") || "");
 
-  const profile = useMemo(() => {
-    return profileImagePath(profileImageIndex);
+  useEffect(() => {
+    if (profileImageIndex) {
+      return setProfile(changeProfileImage().profileImagePath(profileImageIndex));
+    }
   }, [profileImageIndex]);
+
+  const clear = () => {
+    setAccessToken("");
+    setRefreshToken("");
+    setEmail("");
+    setNickname("");
+    setProfileImageIndex("");
+    setProfile("");
+    setClassicPt("0");
+    setItemPt("0");
+    setWinNumItem("0");
+    setLoseNumItem("0");
+    setWinNumClassic("0");
+    setLoseNumClassic("0");
+  };
 
   useEffect(() => {
     sessionStorage.setItem("accessToken", accessToken);
@@ -48,6 +64,7 @@ export function AccessTokenProvider({ children }) {
     sessionStorage.setItem("email", email);
     sessionStorage.setItem("nickname", nickname);
     sessionStorage.setItem("profileImageIndex", profileImageIndex);
+    sessionStorage.setItem("profile", profile);
     sessionStorage.setItem("classicPt", classicPt);
     sessionStorage.setItem("itemPt", itemPt);
     sessionStorage.setItem("winNumItem", winNumItem);
@@ -60,6 +77,7 @@ export function AccessTokenProvider({ children }) {
     email,
     nickname,
     profileImageIndex,
+    profile,
     classicPt,
     winNumItem,
     loseNumItem,
@@ -79,6 +97,7 @@ export function AccessTokenProvider({ children }) {
       setNickname,
       profileImageIndex,
       setProfileImageIndex,
+      profile,
       classicPt,
       setClassicPt,
       itemPt,
@@ -91,7 +110,8 @@ export function AccessTokenProvider({ children }) {
       setWinNumClassic,
       loseNumClassic,
       setLoseNumClassic,
-      profile,
+
+      clear,
     }),
     [
       accessToken,
@@ -99,13 +119,13 @@ export function AccessTokenProvider({ children }) {
       email,
       nickname,
       profileImageIndex,
+      profile,
       classicPt,
       itemPt,
       winNumItem,
       loseNumItem,
       winNumClassic,
       loseNumClassic,
-      profile,
     ]
   );
 
