@@ -24,8 +24,8 @@ const GameResult = ({ myLose, opponentLose, leaveSession }) => {
             {opponentLose ? "패배" : "승리"}
           </div>
           <button
-            onClick={() => {
-              leaveSession();
+            onClick={async () => {
+              await leaveSession();
               navigate(-1);
             }}
           >

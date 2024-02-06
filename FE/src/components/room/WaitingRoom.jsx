@@ -7,6 +7,7 @@ import AudioControlModal from "../modal/AudioControlModal";
 import ChatModal from "../modal/ChatModal";
 import InviteModal from "../modal/InviteModal";
 const WaitingRoom = ({
+  roomName,
   publisher,
   subscribers,
   mySessionId,
@@ -89,7 +90,7 @@ const WaitingRoom = ({
   return (
     <div className="waiting-room h-screen">
       <div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div className="flex justify-between">
           <button
             className="btn btn-large btn-danger bg-red-600"
             id="buttonLeaveSession"
@@ -110,7 +111,7 @@ const WaitingRoom = ({
           </button>
         </div>
         <div className="text-center">
-          <h2>대기방: {mySessionId}</h2>
+          <h2>방제: {roomName}</h2>
         </div>
       </div>
       <div className="flex justify-between h-5/6">

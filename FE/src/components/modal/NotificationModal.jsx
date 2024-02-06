@@ -1,3 +1,5 @@
+// NotificationModal.jsx
+
 import { useState, useEffect } from "react";
 import Rodal from "rodal"; // Rodal import
 import "rodal/lib/rodal.css"; // Rodal CSS
@@ -6,11 +8,10 @@ import { useWebSocket } from "../../context/WebSocketContext"; // Import useWebS
 const NotificationModal = ({ visible, onClose }) => {
   const [activeTab, setActiveTab] = useState("invitation");
   const [invitations, setInvitations] = useState(["초대 메시지 1", "초대 메시지 2"]); // 초대 메시지 배열
-  const [messages, setMessages] = useState([]); // 쪽지 메시지 배열
   const [recipient, setRecipient] = useState(""); // 메시지를 받을 사람
   const [messageContent, setMessageContent] = useState(""); // 보낼 메시지 내용
   const [showMessageModal, setShowMessageModal] = useState(false); // 메시지 보내기 모달 표시 여부
-  const { client } = useWebSocket(); // Get the WebSocket client
+  const { client, messages } = useWebSocket(); // Get the WebSocket client
 
   // useEffect(() => {
   //
@@ -19,8 +20,8 @@ const NotificationModal = ({ visible, onClose }) => {
 
   const handleAccept = (index) => {
     // 수락 버튼 클릭 시 수행하는 함수
-    if (client && client.connected) {
-      client.publish({
+    if (newclient && newclient.connected) {
+      newclient.publish({
         destination: "/app/invite/accept",
         body: JSON.stringify({ invitationId: invitations[index].id }),
       });
@@ -32,8 +33,8 @@ const NotificationModal = ({ visible, onClose }) => {
 
   const handleReject = (index) => {
     // 거절 버튼 클릭 시 수행하는 함수
-    if (client && client.connected) {
-      client.publish({
+    if (newclient && newclient.connected) {
+      newclient.publish({
         destination: "/app/invite/reject",
         body: JSON.stringify({ invitationId: invitations[index].id }),
       });
@@ -43,17 +44,41 @@ const NotificationModal = ({ visible, onClose }) => {
     }
   };
 
-  const sendMessage = () => {
-    if (client && client.connected && recipient) {
-      client.publish({
-        destination: "/app/private-message",
-        headers: { userId: recipient },
-        body: messageContent,
-      });
-      console.log("Message sent");
-      setShowMessageModal(false); // 메시지 전송 후 메시지 보내기 모달 닫기
-    } else {
-      console.log("WebSocket connection is not active or recipient is not specified");
+  const sendMessage = async () => {
+    if (client && recipient) {
+      try {
+        const response = await client.publish({
+          destination: "/app/private-message",
+          headers: { userId: recipient },
+          body: messageContent,
+        });
+        console.log("Message sent");
+        console.log(response);
+        console.log(messageContent);
+        setShowMessageModal(false); // 메시지 전송 후 메시지 보내기 모달 닫기
+      } catch (error) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message === "User does not exist"
+        ) {
+          alert("존재하지 않는 사용자입니다.");
+        } else {
+          console.log("WebSocket connection is not active or recipient is not specified");
+        }
+      }
+    }
+  };
+
+  const deleteMessage = async (messageId) => {
+    try {
+      const response = await axios.delete(`/api/message/${messageId}`);
+      if (response.status === 200) {
+        console.log("Message deleted successfully");
+        // TODO: 메세지 목록 새로고침
+      }
+    } catch (error) {
+      console.error("Failed to delete message", error);
     }
   };
 
@@ -68,7 +93,7 @@ const NotificationModal = ({ visible, onClose }) => {
         closeMaskOnClick={false}
       >
         <div className="p-5">
-          <h1 className="text-2xl mb-5">알림</h1>
+          <h1 className="text-2xl mb-5 bg-gray-800">알림</h1>
           <div className="flex justify-between mb-5">
             <button
               onClick={() => setActiveTab("invitation")}
@@ -134,7 +159,7 @@ const NotificationModal = ({ visible, onClose }) => {
         closeMaskOnClick={false}
       >
         <div className="p-5">
-          <h1 className="text-2xl mb-5">메시지 보내기</h1>
+          <h1 className="text-2xl mb-5  bg-gray-800">메시지 보내기</h1>
           <input
             type="text"
             placeholder="받는 사람"

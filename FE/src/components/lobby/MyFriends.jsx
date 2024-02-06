@@ -1,52 +1,39 @@
-import React, { useState } from "react";
+import Rodal from "rodal";
+import React, { useState, useEffect } from "react";
 import Pagination from "react-js-pagination";
 import lobbyApiCall from "@/api/axios/lobbyApiCall";
+import "rodal/lib/rodal.css";
 
-const MyComponent = () => {
+const MyFriends = ({ visible, onClose }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsCountPerPage = 5;
+  const [friends, setFriends] = useState([]);
+  const useLobbyApiCall = lobbyApiCall();
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-  const useLobbyApiCall = lobbyApiCall();
-  const friends = useLobbyApiCall.getFriendsList();
 
-  // 현재 접속중인 친구 요청
-  // const webSocket = useWebSocket();
-  // const currentUsers = webSocket.currentUsers();
+  const getFriends = async (currentPage) => {
+    try {
+      const data = await useLobbyApiCall.getFriendsList(currentPage);
+      setFriends(data);
+    } catch (error) {
+      alert(error);
+    }
+  };
 
-  const indexOfLastItem = currentPage * itemsCountPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsCountPerPage;
-  const currentItems = friends.slice(indexOfFirstItem, indexOfLastItem);
+  useEffect(() => {
+    if (visible) {
+      getFriends(currentPage);
+    }
+  }, [visible]);
 
   return (
     <>
-      <div>
-        <table className="min-w-full table-auto border-collapse border border-gray-200">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="border px-4 py-2">닉네임</th>
-              <th className="border px-4 py-2">점수(클래식/아이템)</th>
-              <th className="border px-4 py-2">접속현황</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentItems.map((friend) => (
-              <tr key={friend.nickname}>
-                <td className="border px-4 py-2">{friend.nickname}</td>
-                <td className="border px-4 py-2">
-                  {friend.classic_pt} / {friend.item_pt}
-                </td>
-                <td className="border px-4 py-2">접속 현황 정보</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <div>{friends}</div>
       <Pagination
         activePage={currentPage}
-        itemsCountPerPage={itemsCountPerPage}
-        totalItemsCount={friends.length} // 실제 아이템 수에 맞춰서 총 아이템 수를 수정
+        totalItemsCount={friends.length}
         pageRangeDisplayed={5}
         onChange={handlePageChange}
         itemClass="page-item"
@@ -60,4 +47,4 @@ const MyComponent = () => {
   );
 };
 
-export default MyComponent;
+export default MyFriends;
