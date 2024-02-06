@@ -18,7 +18,7 @@ const GameResult = ({ myLose, opponentLose, leaveSession }) => {
           <div className={`text-2xl ${myLose ? "text-red-600" : "text-green-600"}`}>
             {myLose ? "패배" : "승리"}
           </div>
-          <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+          <div>ㅡㅡㅡㅡㅡㅡㅡ ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
           <div>상대</div>
           <div className={`text-2xl ${opponentLose ? "text-red-600" : "text-green-600"}`}>
             {opponentLose ? "패배" : "승리"}
