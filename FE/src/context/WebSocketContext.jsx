@@ -10,6 +10,7 @@ export const WebSocketProvider = ({ children }) => {
   const [match, setMatch] = useState(false);
   const [gameId, setGameId] = useState(undefined);
   const [opponentInfo, setOpponentInfo] = useState(undefined);
+  const [messages, setMessages] = useState([]);
   const accessToken = useAccessTokenState();
   // const email = sessionStorage.getItem("email");
 
@@ -37,7 +38,40 @@ export const WebSocketProvider = ({ children }) => {
           setMatch(true);
           setGameId(messageObject.openviduSessionId);
         });
+        newClient.subscribe("/message/invitations", (message) => {
+          console.log("Received message:", message.body);
+          alert("알림: " + message.body);
+        });
+
+        newClient.subscribe("/message/alerts", (message) => {
+          alert("알림: " + message.body);
+        });
+
+        // 메시지를 받을 대상 토픽 구독
+        newClient.subscribe("/user/private-message", (message) => {
+          const newMessage = JSON.parse(message.body);
+          console.log("Received message:", newMessage);
+          // 메시지를 받았을 때 처리 (예: 상태 업데이트)
+          setMessages((prevMessages) => [newMessage, ...prevMessages]); // 최신 메시지가 앞에 오도록
+        });
+
+        // 사용자 목록 주제 구독
+        newClient.subscribe("/message/users", (message) => {
+          setUsers(JSON.parse(message.body)); // 사용자 목록 업데이트
+        });
+
+        // 웹소켓 연결 후 사용자 목록 요청
+        newClient.publish({ destination: "/message/users" });
+
+        // 메시지를 받을 대상 토픽 구독
+        newClient.subscribe("/message/private-" + nickname, (message) => {
+          const newMessage = JSON.parse(message.body);
+          console.log("Received message:", newMessage);
+          // 메시지를 받았을 때 처리 (예: 상태 업데이트)
+          setReceivedMessages((prevMessages) => [newMessage, ...prevMessages]); // 최신 메시지가 앞에 오도록
+        });
       },
+
       onDisconnect: () => {
         console.log("Disconnected from WebSocket");
       },
@@ -67,7 +101,7 @@ export const WebSocketProvider = ({ children }) => {
   // };
 
   return (
-    <WebSocketContext.Provider value={{ client, match, gameId, setMatch, opponentInfo }}>
+    <WebSocketContext.Provider value={{ client, match, gameId, setMatch, opponentInfo, messages }}>
       {children}
     </WebSocketContext.Provider>
   );

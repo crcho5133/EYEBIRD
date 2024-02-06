@@ -90,7 +90,7 @@ const WaitingRoom = ({
   return (
     <div className="waiting-room h-screen">
       <div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div className="flex justify-between">
           <button
             className="btn btn-large btn-danger bg-red-600"
             id="buttonLeaveSession"
