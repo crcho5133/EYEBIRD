@@ -5,10 +5,11 @@ import com.sixback.eyebird.db.entity.Point;
 import com.sixback.eyebird.db.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.List;
 
-
+@Getter
 public class SearchUserResDto {
     @NotBlank
     private String nickname;

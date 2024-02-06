@@ -18,11 +18,11 @@ public class Message extends BaseTime {
     private boolean ifRead; // 메세지가 읽혔는 지
 
     @ManyToOne
-    @JoinColumn(name="user_from")
+    @JoinColumn(name="user_from_id")
     private User userFrom;
 
     @ManyToOne
-    @JoinColumn(name = "user_to")
+    @JoinColumn(name = "user_to_id")
     private User userTo;
 
     @Builder
