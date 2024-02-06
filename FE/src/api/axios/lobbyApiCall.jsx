@@ -27,7 +27,17 @@ const lobbyApiCall = () => {
     }
   };
 
-  return { getFriendsList, getRankingList };
+  const searchUsers = async (keyword) => {
+    const searchUsersUrl = `${lobbyUrl.searchUsers()}?searchWord=${keyword}`;
+    try {
+      const response = await privateAxios.get(searchUsersUrl);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  return { getFriendsList, getRankingList, searchUsers };
 };
 
 export default lobbyApiCall;
