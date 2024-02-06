@@ -1,6 +1,7 @@
 package com.sixback.eyebird.api.service;
 
 import com.sixback.eyebird.api.dto.RoomDto;
+import com.sixback.eyebird.util.Sha256Convert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -46,7 +47,7 @@ public class RoomService {
         //못만드는 경우2 : 방 이름 중복
         if(rooms.size()>0)
         for (RoomDto check : rooms) {
-            if (room.getRoomName().equals(check.getRoomName()) || check.getRoomId().equals(room.getRoomId())) {
+            if (room.getRoomName().equals(check.getRoomName())) {
                 return -1;
             }
         }
@@ -63,7 +64,7 @@ public class RoomService {
             room = (RoomDto) redisTemplate.opsForValue().get("room_" + id);
         }
         //비밀번호 clear
-        room.setPassword();
+        room.setPassword(0);
         return room;
     }
 
