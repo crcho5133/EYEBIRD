@@ -2,10 +2,12 @@ package com.sixback.eyebird.api.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sixback.eyebird.api.dto.FriendAcceptReqDto;
 import com.sixback.eyebird.api.dto.MessageReqDto;
 import com.sixback.eyebird.api.dto.MessageResDto;
 import com.sixback.eyebird.api.service.MessageService;
 import com.sixback.eyebird.api.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -46,9 +48,13 @@ public class MessageController {
     // 메세지 보내기(Websocket)
     @MessageMapping("/private")
     public void sendMessage(MessageReqDto messageReqDto, Authentication authentication) throws JsonProcessingException {
-        // 메세지의 발신자의 이메일과 수신자의 닉네임
-        String userFromNickname = userService.getNicknameFromEmail(authentication.getName());
+        // 메세지의 발신자의 이메일과 닉네임
+        String userFromEmail = authentication.getName();
+        String userFromNickname = userService.getNicknameFromEmail(userFromEmail);
+
+        // 메세지의 수신자의 닉네임과 이메일
         String userToNickname = messageReqDto.getUserToNickname();
+        String userToEmail = userService.getEmailFromNickname(userToNickname);
 
         int msgType = messageReqDto.getMsgType();
         String msgText = messageReqDto.getMsgText();
@@ -57,9 +63,11 @@ public class MessageController {
         MessageResDto messageResDto = MessageResDto.builder().msgType(msgType).msgText(msgText).userFromNickname(userFromNickname)
                 .build();
         String jsonMessageResDto = objectMapper.writeValueAsString(messageResDto);
-        messagingTemplate.convertAndSend("/user/private/" + userToNickname, jsonMessageResDto);
 
-        // TODO DB에 메세지 저장
+        // 수신자의 url
+        messagingTemplate.convertAndSend("/user/private/" + userToEmail, jsonMessageResDto);
+
+        // 송신한 메세지 저장
         messageService.saveMessage(messageReqDto, userFromNickname);
 
     }
@@ -73,7 +81,22 @@ public class MessageController {
         return ResponseEntity.ok().build();
     }
 
-    // 친구 추가 수락
+    @PostMapping("/friend")
+    public ResponseEntity<Void> acceptFriendRequest(@RequestBody @Valid FriendAcceptReqDto friendAcceptReqDto, Authentication authentication) {
+        String userFromNickname = friendAcceptReqDto.getUserFrom();
+        String userToEmail = authentication.getName();
+
+        // 친구 요청 메세지를 삭제한다
+        messageService.acceptFriend(userFromNickname, userToEmail);
+
+        // webSocket으로 상대방에게 친구 수락이 되었음을 알려준다
+        String userFromEmail = userService.getEmailFromNickname(userFromNickname);
+        String userToNickname = userService.getNicknameFromEmail(userToEmail);
+        messagingTemplate.convertAndSend("/user/private/" + userFromEmail, userToNickname + "님이 친구 요청을 수락했습니다");
+
+        return ResponseEntity.ok().build();
+
+    }
 
 
 }
