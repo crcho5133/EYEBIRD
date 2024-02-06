@@ -13,7 +13,7 @@ import LoadingSpinner from "../assets/img/loading/loading.gif";
 const APPLICATION_SERVER_URL = "http://localhost:8080/";
 
 const Game = () => {
-  // usePreventBrowserControl();
+  usePreventBrowserControl();
   // 사용자 닉네임, 방 세션 할당은 백엔드랑 통신할 때 수정하기
   // let { sessionId } = useParams();
   const { sessionId: gameId } = useParams();
