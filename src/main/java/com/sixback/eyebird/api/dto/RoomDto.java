@@ -12,6 +12,7 @@ public class RoomDto {
     private String roomId;          // 방의 고유 식별자 room_ + roomId 형식으로 key 제작
     private String roomName;        // 방의 제목
     private boolean item;           // 아이템전 여부
+    private boolean hasPassword;
                                     // Rombok에서 isItem Getter를 만들기 때문에 Redis에 item으로 저장되는 버그가 있어서 Dto를 item으로 변경함.
     private int maxCapacity;        // 최대 인원수
     private int currentCapacity;    // 현재 인원수
@@ -42,6 +43,9 @@ public class RoomDto {
 
     public void setPassword(int newPassword){
         this.password = newPassword;
+    }
+    public void setHasPassword(boolean has){
+        this.hasPassword = has;
     }
 }
 

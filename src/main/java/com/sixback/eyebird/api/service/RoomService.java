@@ -52,6 +52,7 @@ public class RoomService {
             }
         }
 
+
         // 방 생성 가능 : 방 저장하고 true 리턴
         redisTemplate.opsForValue().set("room_" + room.getRoomId(), room);
         return 1;
@@ -88,6 +89,8 @@ public class RoomService {
             // 아이템전 여부 확인하고 추가
             if (room.isItem() == item)
                 rooms.add(room);
+
+            room.setPassword(0);
         }
         return rooms;
     }
