@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 // import Rodal from "rodal";
 // import "rodal/lib/rodal.css";
 import UserVideoComponent from "./UserVideoComponent";
@@ -91,7 +91,14 @@ const WaitingRoom = ({
     <div className="waiting-room h-screen">
       <div>
         <div className="flex justify-between">
-          <button
+          <Link
+            to="/lobby"
+            className="btn btn-large btn-danger bg-red-600"
+            onClick={() => leaveSession()}
+          >
+            방 나가기
+          </Link>
+          {/* <button
             className="btn btn-large btn-danger bg-red-600"
             id="buttonLeaveSession"
             onClick={() => {
@@ -100,7 +107,7 @@ const WaitingRoom = ({
             }}
           >
             방 나가기
-          </button>
+          </button> */}
 
           <button
             className="btn btn-large btn-primary bg-green-600"

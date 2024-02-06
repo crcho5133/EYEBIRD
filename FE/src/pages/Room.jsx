@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { OpenVidu } from "openvidu-browser";
 import { toast, Slide, Bounce } from "react-toastify";
+import { usePreventGoBackRoom } from "../hooks/usePreventGoBackRoom";
 import axios from "axios";
 import WaitingRoom from "../components/room/WaitingRoom";
 // 게임 매칭 화면(일반 / 랭크 case로 구분)
@@ -18,6 +19,7 @@ import LoadingSpinner from "../assets/img/loading/loading.gif";
 const APPLICATION_SERVER_URL = "http://localhost:8080/";
 
 const Room = () => {
+  usePreventGoBackRoom();
   // 사용자 닉네임, 방 세션 할당은 백엔드랑 통신할 때 수정하기
   // let { sessionId } = useParams();
   const { sessionId: roomId } = useParams();
@@ -25,11 +27,14 @@ const Room = () => {
   const navigate = useNavigate();
   const location = useLocation();
   // const { roomName, password, hastoken } = location.state;
-  const { roomName, password, hastoken } = location.state ?? {
-    roomName: "",
-    password: "",
-    hastoken: "",
-  };
+  // const { roomName, password, hastoken } = location.state ?? {
+  //   roomName: "",
+  //   password: "",
+  //   hastoken: "",
+  // };
+  const roomName = location.state?.roomName ?? "";
+  const password = location.state?.password ?? "";
+  const hastoken = location.state?.hastoken ?? "";
 
   // const roomName = location.state.roomName;
   const token = sessionStorage.getItem("accessToken");
