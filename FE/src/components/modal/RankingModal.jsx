@@ -3,35 +3,33 @@ import React, { useState, useEffect } from "react";
 import Pagination from "react-js-pagination";
 import lobbyApiCall from "@/api/axios/lobbyApiCall";
 import "rodal/lib/rodal.css";
+import changeProfileImage from "@/utils/changeProfileImage";
 
 const RankingModal = ({ visible, onClose }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [mode, setMode] = useState("classic");
-  const itemsCountPerPage = 5;
+  const [rankings, setRankings] = useState([]);
+  const useLobbyApiCall = lobbyApiCall();
+  const useProfile = changeProfileImage();
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-  const useLobbyApiCall = lobbyApiCall();
-  const [rankings, setRankings] = useState([]);
 
-  const indexOfLastItem = currentPage * itemsCountPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsCountPerPage;
+  const getRankings = async (mode, currentPage) => {
+    try {
+      const data = await useLobbyApiCall.getRankingList(mode, currentPage);
+      setRankings(data);
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   useEffect(() => {
-    const getRankings = async () => {
-      try {
-        const data = await useLobbyApiCall.getRankingList(mode);
-        setRankings(data);
-      } catch (error) {
-        // alert(error);
-      }
-    };
+    if (visible) {
+      getRankings(mode, currentPage);
+    }
+  }, [visible, mode, currentPage]);
 
-    getRankings();
-  }, [visible, mode]);
-
-  const currentItems =
-    rankings.length === 0 ? [] : rankings.slice(indexOfFirstItem, indexOfLastItem);
   const ToggleButton = ({ modeType, label }) => (
     <button
       className={`px-4 py-2 ${mode === modeType ? "bg-blue-500 text-white" : "bg-white text-blue-500"} border border-blue-500 rounded-lg`}
@@ -65,17 +63,15 @@ const RankingModal = ({ visible, onClose }) => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((item, index) => (
+              {rankings.map((item, index) => (
                 <tr key={item.nickname}>
-                  <td className="border px-4 py-2">
-                    {(currentPage - 1) * itemsCountPerPage + index + 1}
-                  </td>
+                  <td className="border px-4 py-2">{item.rank}</td>
                   <td className="border px-4 py-2">{item.nickname}</td>
                   <td className="border px-4 py-2">{item.point}</td>
                   <td className="border px-4 py-2">
                     {index < 3 ? (
                       <img
-                        src={`/src/assets/img/profile/${item.profileImg}.PNG`}
+                        src={useProfile.profileImagePath(item.profileImg)}
                         alt="Profile"
                         className="h-10 w-10 rounded-full"
                       />
@@ -90,7 +86,6 @@ const RankingModal = ({ visible, onClose }) => {
         </div>
         <Pagination
           activePage={currentPage}
-          itemsCountPerPage={itemsCountPerPage}
           totalItemsCount={rankings.length}
           pageRangeDisplayed={5}
           onChange={handlePageChange}

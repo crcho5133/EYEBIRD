@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function useShowComponent() {
+const useShowComponent = () => {
   const [value, setValue] = useState(false);
 
   const showComponent = () => {
@@ -16,6 +16,6 @@ function useShowComponent() {
     showComponent,
     hideComponent,
   };
-}
+};
 
 export default useShowComponent;

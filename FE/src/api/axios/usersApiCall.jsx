@@ -65,7 +65,6 @@ const usersApiCall = () => {
       accessToken.setLoseNumItem(response.data.loseNumItem);
       accessToken.setWinNumClassic(response.data.winNumClassic);
       accessToken.setLoseNumClassic(response.data.loseNumClassic);
-
       navigate("/lobby");
     } catch (error) {
       console.log(error);
