@@ -54,9 +54,7 @@ public class PointService {
         log.info(signupUser.getEmail() + "의 기본 점수가 DB에 저장되었습니다");
     }
 
-
-    // 상위 유저 리스트 Redis -> Front
-    public List<PointDto> getTopPoint(boolean item, int page) {
+    List<PointDto> rankList(boolean item){
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(List.class));
         List<PointDto> points = new ArrayList<>();
         String pattern = "classicRank";
@@ -68,6 +66,17 @@ public class PointService {
             // 리스트로 저장했기 때문에 리스트로 받아야 한다.
             points = (List<PointDto>) redisTemplate.opsForValue().get(pattern);
         }
+        return points;
+    }
+
+    public Integer getListSize(boolean item){
+        return rankList(item).size();
+    }
+
+
+    // 상위 유저 리스트 Redis -> Front
+    public List<PointDto> getTopPoint(boolean item, int page) {
+        List<PointDto> points = rankList(item);
 
         if (page == 1) {
             if (points.size() > 3)

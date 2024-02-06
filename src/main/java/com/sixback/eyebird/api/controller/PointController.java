@@ -57,17 +57,22 @@ public class PointController {
     //받아오기
     @GetMapping("/rank/item/{page}")
     @Operation(summary = "아이템 랭크 받아오기", description = "redis에서 item rank 받아오기")
-    public List<PointDto> listTopItemPoint(@PathVariable int page) {
+    public ResponseEntity<Map<String, Object>> getRankList(@PathVariable int page){
+        Map<String, Object> response = new HashMap<>();
         List<PointDto> test = pointService.getTopPoint(true, page);
-        System.out.println(test);
-        return test;
+        response.put("total", pointService.getListSize(true));
+        response.put("rankList", test);
+        return  new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/rank/classic/{page}")
     @Operation(summary = "클래식 랭크 받아오기", description = "redis에서 classic rank 받아오기")
-    public List<PointDto> listTopClassicPoint(@PathVariable int page) {
-        return pointService.getTopPoint(false, page);
-
+    public ResponseEntity<Map<String, Object>> listTopClassicPoint(@PathVariable int page) {
+        Map<String, Object> response = new HashMap<>();
+        List<PointDto> test = pointService.getTopPoint(false, page);
+        response.put("total", pointService.getListSize(false));
+        response.put("rankList", test);
+        return  new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // 랭크 게임의 매칭 요청이 왔을 때
