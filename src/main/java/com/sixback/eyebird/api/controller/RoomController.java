@@ -53,8 +53,9 @@ public class RoomController {
     public ResponseEntity<CreateRoomResDto> createRoom(@RequestBody RequestRoomDto reqRoom) throws OpenViduJavaClientException, OpenViduHttpException {
         // Issue : 토큰은 나중에 새로 주면 쓰기
         //System.out.println(reqRoom);
-        RoomDto room = new RoomDto(Sha256Convert.getInstance().ShaEncoder(reqRoom.getRoomName()), reqRoom.getRoomName(), reqRoom.isItem(), reqRoom.getMaxCapacity(), 0, reqRoom.getPassword(), 0);
+        RoomDto room = new RoomDto(Sha256Convert.getInstance().ShaEncoder(reqRoom.getRoomName()), reqRoom.getRoomName(), reqRoom.isItem(), reqRoom.getPassword()!=0?true:false,reqRoom.getMaxCapacity(), 0, reqRoom.getPassword(), 0);
         log.info(room.getRoomId());
+
         int result = roomService.createRoom(room);
 
         HashMap<Integer, String> message = new HashMap<>();
@@ -204,6 +205,7 @@ public class RoomController {
 
     public EnterRoomResDto enterOpenVidu(String sessionId, Map<String, Object> params)throws OpenViduJavaClientException, OpenViduHttpException{
         OpenVidu openvidu = openViduManager.getOpenvidu();
+        log.info("들어온 세션 : " + sessionId);
         Session session = openvidu.getActiveSession(sessionId);
         if (session == null) {
             throw new RuntimeException("방 입장: sessionId를 지닌 session이 존재하지 않습니다");
