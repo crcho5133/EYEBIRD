@@ -110,7 +110,6 @@ public class UserController {
     @GetMapping("/search")
     public ResponseEntity<List<SearchUserResDto>> searchUsers(@RequestParam("searchWord") String searchWord) {
         List<SearchUserResDto> searchUserResDtoList = userService.searchUsers(searchWord);
-
         return ResponseEntity.ok(searchUserResDtoList);
 
     }
