@@ -2,6 +2,7 @@ package com.sixback.eyebird.api.service;
 
 import com.sixback.eyebird.api.dto.MessageReqDto;
 import com.sixback.eyebird.api.dto.MessageResDto;
+import com.sixback.eyebird.db.entity.GameResult;
 import com.sixback.eyebird.db.entity.Message;
 import com.sixback.eyebird.db.entity.User;
 import com.sixback.eyebird.db.repository.MessageRepository;
