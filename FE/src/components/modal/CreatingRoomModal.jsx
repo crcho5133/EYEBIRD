@@ -62,7 +62,7 @@ const CreatingRoomModal = ({ visible, onClose }) => {
           // 방 생성에 성공하면 모달을 닫고, 필요한 경우 추가 작업을 수행
           onClose();
           // 방으로 이동
-          navigate(`/room/${data.sessionId}`, { state: { roomName } });
+          navigate(`/room/${data.sessionId}`, { state: { roomName, password } });
         }
       } catch (error) {
         console.log(error);

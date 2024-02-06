@@ -23,6 +23,8 @@ const Room = () => {
   const { sessionId: roomId } = useParams();
   // const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { roomName, password, hastoken } = location.state;
 
   // const roomName = location.state.roomName;
   const token = sessionStorage.getItem("accessToken");
@@ -503,15 +505,22 @@ const Room = () => {
   }, []);
 
   const getToken2 = async () => {
-    const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/room/enter",
-      { roomId: roomId },
-      {
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-      }
-    );
-    console.log(response);
-    return response.data.connectionToken; // The token
+    if (hastoken) {
+      return hastoken;
+    }
+    try {
+      const response = await axios.post(
+        APPLICATION_SERVER_URL + "api/room/enter",
+        { roomId: roomId, password: password },
+        {
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        }
+      );
+      console.log(response);
+      return response.data.connectionToken; // The token
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // const getToken = useCallback(async () => {
@@ -556,6 +565,7 @@ const Room = () => {
       )}
       {!isLoading && gameState === "waitingRoom" && (
         <WaitingRoom
+          roomName={roomName}
           publisher={publisher}
           subscribers={subscribers}
           mySessionId={mySessionId}
