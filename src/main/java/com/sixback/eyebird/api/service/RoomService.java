@@ -187,9 +187,7 @@ public class RoomService {
 
         // 모든 룸 정보 받아오기
         List<RoomDto> rlist;
-        rlist = roomList(true);
-        if(isItem)
-            rlist = roomList(false);
+        rlist = roomList(isItem);
 
         for(int i = 0; i<rlist.size(); i++){
             // 해당 방이 가득 차 있으면 입장 불가.

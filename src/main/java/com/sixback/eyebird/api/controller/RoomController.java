@@ -167,8 +167,8 @@ public class RoomController {
     // 빈 방에 아무데나 입장 신청 -> 블랙리스트 제외
     // 아이템 빠른 입장
     @Operation(summary = "빠른 입장", description = "블랙리스트/방 인원수 초과 시 입장 불가")
-    @PostMapping("/quick/item")
-    public ResponseEntity<EnterRoomResDto> quickEnterItemRoom(@RequestBody(required = false) Map<String, Object> params, Authentication authentication)
+    @GetMapping("/quick/item")
+    public ResponseEntity<String> quickEnterItemRoom(@RequestBody(required = false) Map<String, Object> params, Authentication authentication)
             throws OpenViduJavaClientException, OpenViduHttpException {
         String curUserEmail = authentication.getName();
 
@@ -178,7 +178,7 @@ public class RoomController {
         System.out.println(sessionId);
 
         if (result != "fail") {
-            return ResponseEntity.ok(enterOpenVidu(sessionId, params));
+            return ResponseEntity.ok(sessionId);
         }
 
         throw new RuntimeException("방 입장: 방 입장에 실패했습니다");
@@ -186,8 +186,8 @@ public class RoomController {
 
     // 클래식 빠른 입장
     @Operation(summary = "빠른 입장", description = "블랙리스트/방 인원수 초과 시 입장 불가")
-    @PostMapping("/quick/classic")
-    public ResponseEntity<EnterRoomResDto> quickEnterClassicRoom(@RequestBody(required = false) Map<String, Object> params, Authentication authentication)
+    @GetMapping("/quick/classic")
+    public ResponseEntity<String> quickEnterClassicRoom(@RequestBody(required = false) Map<String, Object> params, Authentication authentication)
             throws OpenViduJavaClientException, OpenViduHttpException {
         String curUserEmail = authentication.getName();
 
@@ -197,7 +197,7 @@ public class RoomController {
         System.out.println(sessionId);
 
         if (result != "fail") {
-            return ResponseEntity.ok(enterOpenVidu(sessionId, params));
+            return ResponseEntity.ok(sessionId);
         }
 
         throw new RuntimeException("방 입장: 방 입장에 실패했습니다");
