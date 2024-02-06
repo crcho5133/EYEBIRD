@@ -40,8 +40,8 @@ public class RoomDto {
 
     public void setRoomId(String roomId) {this.roomId = roomId;}
 
-    public void setPassword(){
-        this.password = 0;
+    public void setPassword(int newPassword){
+        this.password = newPassword;
     }
 }
 

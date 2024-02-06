@@ -108,6 +108,8 @@ public class RoomController {
         String sessionId = roomReq.getRoomId();
         RoomDto room = new RoomDto();
         room.setRoomId(sessionId);
+        room.setPassword(roomReq.getPassword());
+
 
         int result = roomService.enterRoom(room, curUserEmail);
         if (result == 1) {
@@ -142,7 +144,7 @@ public class RoomController {
         RoomDto room = new RoomDto();
         room.setRoomId(sessionId);
 
-        int result = roomService.enterRoom(room, curUserEmail);
+        int result = roomService.inviteEnterRoom(room, curUserEmail);
         if (result == 1) {
             return ResponseEntity.ok(enterOpenVidu(sessionId, params));
         }
