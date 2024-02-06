@@ -65,6 +65,7 @@ public class MessageService {
             messageResDtoList.add(m.toMessageResDto());
         }
 
+        log.info("나의 메세지를 모두 가져왔습니다");
         return messageResDtoList;
 
     }
@@ -74,5 +75,27 @@ public class MessageService {
         Message message = messageRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 메세지를 찾을 수 없습니다"));
 
         messageRepository.deleteById(id);
+        log.info("메세지를 삭제했습니다");
     }
+
+    // 친구 요청을 수락
+    public void acceptFriend(String userFromNickname, String userToEmail) {
+
+        User userFrom = userRepository.findUserByNickname(userFromNickname).orElseThrow(() -> new IllegalArgumentException("해당 닉네임을 지닌 유저가 존재하지 않습니다"));
+        User userTo = userRepository.findUserByNickname(userToEmail).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 지닌 유저가 존재하지 않습니다"));
+
+        Long fromId = userFrom.getId();
+        Long toId = userTo.getId();
+
+        // 친구 요청 메세지를 찾는다
+        Message message = messageRepository.findByUserFrom_IdAndUserTo_IdAndMsgType(fromId, toId, 0).orElseThrow(() -> new IllegalArgumentException("친구요청 메세지가 존재하지 않습니다"));
+        Long messageId = message.getMsgId();
+
+        // 친구 요청 메세지 삭제
+        deleteMessage(messageId);
+
+        log.info("친구 요청 수락: 친구 요청 메세지 삭제");
+
+    }
+
 }
