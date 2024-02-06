@@ -50,6 +50,7 @@ pipeline {
                 //     sh 'docker build -t react-app:test .'
                 // }
                 dir('FE') {
+                        sh "rm -rf node_modules package-lock.json"
                         sh "npm install"
                         // Build the project using npm
                         sh "CI=false npm run build"
