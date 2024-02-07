@@ -615,7 +615,7 @@ const Room = () => {
   //   return response.data; // The token
   // };
 
-  // 유틸리티 함수
+  // 유틸리티 함수,
   const isTeamFull = (team) => team.filter((id) => id !== null).length >= 4;
   const isTeamFull2 = (team) => team.filter((id) => id !== null).length >= 8;
 
