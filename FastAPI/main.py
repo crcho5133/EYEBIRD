@@ -12,6 +12,7 @@ mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(
     max_num_faces=1,
     refine_landmarks=True,
+    static_image_mode=True,
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5
 )
@@ -65,11 +66,11 @@ def process_image(data):
                 return (str(left_EAR) + "\n" + str(right_EAR) + "\n" + "눈 감김 감지 안 됨")
 
 
-@app.get("/")
+@app.get("/fastpi")
 async def get():
     return {"message": "Hello World"}
 
-@app.websocket("/ws")
+@app.websocket("/fastapi/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     await websocket.send_text("연결 성공")
