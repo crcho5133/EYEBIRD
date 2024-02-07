@@ -66,20 +66,20 @@ const GamePlay = ({
             <div>
               나<UserVideoComponent streamManager={publisher} gameState={gameState} />
             </div>
-            <div className="text-end">
+            <div className="text-center">
               <button
                 onClick={() => {
                   setReady(true);
                   sendReady();
                 }}
-                className={`m-3 border-2 rounded-xl border-green-500 hover:bg-green-500 ${ready ? "bg-green-500" : ""} text-xl`}
+                className={`m-3 p-2 border-2 rounded-xl border-green-500 hover:bg-green-500 ${ready ? "bg-green-500" : ""} text-xl`}
               >
-                준비 완료
+                준비
               </button>
             </div>
-            <div className="text-end">
+            <div className="text-center">
               <span
-                className={`m-3 border-2 rounded-xl border-green-500 ${opponentReady ? "bg-green-500" : ""} text-xl`}
+                className={`m-3 p-2 border-2 rounded-xl border-green-500 ${opponentReady ? "bg-green-500" : ""} text-xl`}
               >
                 상대방 준비 완료
               </span>

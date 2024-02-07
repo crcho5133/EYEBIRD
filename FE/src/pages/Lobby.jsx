@@ -14,6 +14,8 @@ import useShowRodal from "@/hooks/useShowRodal";
 import RankingGameChoice from "@/pages/RankingGameChoice";
 import NormalGameChoice from "@/pages/NormalGameChoice";
 import RoomSearch from "@/components/lobby/RoomSearch";
+import btn_main from "@/assets/img/btn_main.png";
+import frame from "../assets/img/frame.png";
 
 const Lobby = () => {
   const useUsersApiCall = usersApiCall();
@@ -79,7 +81,7 @@ const Lobby = () => {
           {!isBtnVisible.value && (
             <div>
               <NavBarNoBack />
-              <div className="h-screen flex flex-col items-center">
+              <div className="h-screen flex flex-col items-center space-y-12">
                 {/* 프로필 사진, 랭킹, 내정보 버튼 */}
                 <div className="flex items-center ">
                   {/* 프로필 사진 */}
@@ -94,7 +96,7 @@ const Lobby = () => {
                     />
                   </div>
                   {/* 랭킹, 내정보 버튼 */}
-                  <div className="flex flex-col items-end mr-4 gap-1">
+                  <div className="flex flex-col items-end mr-4 gap-1 space-y-3">
                     <button
                       onClick={onClickRanking}
                       className="mb-4"
@@ -115,20 +117,36 @@ const Lobby = () => {
                   </div>
                 </div>
                 {/* 랭킹전, 일반전 버튼 */}
-                <div className="flex justify-center items-center mt-40">
-                  <button
-                    onClick={handleRankingGameChoiceClick}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                  >
-                    랭킹전
+                <div className="flex justify-center items-center">
+                  <button onClick={handleRankingGameChoiceClick} style={{ position: "relative" }}>
+                    <img src={btn_main} />
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        color: "white",
+                      }}
+                    >
+                      랭킹전
+                    </div>
                   </button>
                 </div>
                 <div className="flex mt-20">
-                  <button
-                    onClick={handleNormalMatchChoiceClick}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                  >
-                    일반전
+                  <button onClick={handleNormalMatchChoiceClick} style={{ position: "relative" }}>
+                    <img src={btn_main} />
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        color: "white",
+                      }}
+                    >
+                      일반전
+                    </div>
                   </button>
                 </div>
               </div>

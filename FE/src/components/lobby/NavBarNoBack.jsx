@@ -5,11 +5,23 @@ import SettingModal from "../modal/SettingModal"; // SettingRodal import
 // import BackMark from "../../assets/img/back_mark.png";
 // import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import MessageModal from "../../components/modal/MessageModal.jsx";
+import MessageIcon from "../../assets/img/messageicon.png";
+
 
 const NavBar = () => {
   const [settingsVisible, setSettingsVisible] = useState(false); // 설정 모달 가시성 state
   const [notificationVisible, setNotificationVisible] = useState(false); // 알림 모달 가시성 state
   // const navigate = useNavigate();
+  const [messageVisible, setMessageVisible] = useState(false);
+
+  const handleMessageOpen = () => {
+    setMessageVisible(true); // 설정 모달 열기
+  };
+
+  const handleMessageClose = () => {
+    setMessageVisible(false); // 설정 모달 닫기
+  };
 
   const handleNotificationOpen = () => {
     setNotificationVisible(true); // 알림 모달 열기
@@ -38,6 +50,9 @@ const NavBar = () => {
         {/* <button onClick={handleBackButtonClick}>
           <img src={BackMark} alt="BackMark" />
         </button> */}
+        <button onClick={handleMessageOpen}>
+          <img src={MessageIcon} />
+        </button>
         <button onClick={handleNotificationOpen}>
           <img src={NotificationIcon} alt="NotificationIcon" />
         </button>
@@ -45,6 +60,8 @@ const NavBar = () => {
           <img src={SettingIcon} alt="SettingIcon" />
         </button>
       </div>
+      {/* 메시지 모달 */}
+      <MessageModal visible={messageVisible} onClose={handleMessageClose} />
       {/* 설정 모달 */}
       <SettingModal visible={settingsVisible} onClose={handleSettingsClose} />
       {/* 알림 모달 */}

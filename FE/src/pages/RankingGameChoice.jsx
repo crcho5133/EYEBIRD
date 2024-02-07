@@ -1,12 +1,13 @@
 // import profile from "../assets/img/bird_weard_pirate-hat.png"; // 프로필 사진 파일 경로
 import NavBar from "@/components/lobby/NavBar";
-import wooden_plate from "@/assets/img/wooden_plate.png";
-import old_paper from "@/assets/img/old_paper.png";
+import post_it_1 from "../assets/img/post_it_1.png";
+import post_it_2 from "../assets/img/post_it_2.png";
+import wooden_board from "@/assets/img/wooden_board.png";
+import subject_board from "@/assets/img/subject_board.png";
 import { useNavigate } from "react-router-dom";
 import { useWebSocket } from "../context/WebSocketContext";
 import { useEffect, useState } from "react";
 import { toast, Slide, Bounce } from "react-toastify";
-
 const RankingGameChoice = () => {
   const { client, match, gameId, setMatch, opponentInfo } = useWebSocket();
   const [gameType, setGameType] = useState("");
@@ -62,52 +63,70 @@ const RankingGameChoice = () => {
   return (
     <>
       {/* <NavBar /> */}
-      <div className="h-screen flex flex-col content-center justify-center">
-        {/* 랭킹전 푯말 */}
-        <div className="mt-20 absolute top-40 w-full flex justify-center">
-          <h1 className="text-center">랭킹전</h1>
+      <div className="h-screen flex flex-col items-center space-y-12">
+        <div></div>
+
+        <div className="flex " style={{ position: "relative", height: "15%", width: "80%" }}>
+          <img src={subject_board} />
+          <div
+            className="object-cover absolute z-5 h-auto"
+            style={{
+              position: "absolute",
+              left: "50%",
+              transform: "translate(-50%)",
+              top: "40%",
+            }}
+          >
+            랭킹전
+          </div>
         </div>
-        {/* 클래식 버튼, 아이템 버튼 */}
-        <div className="flex absolute w-full flex-col mt-4 space-y-24 bottom-40">
-          {/* Background image */}
-          <img
-            src={wooden_plate}
-            alt="WoodenPlate"
-            className="object-cover absolute z-0"
+        <div className="flex-col" style={{ position: "relative", height: "60%", width: "80%" }}>
+          <img src={wooden_board} />
+          <div
+            className="object-cover absolute z-0 h-auto"
             style={{
-              height: "170% ",
-              width: "80%",
-              left: "50%",
               transform: "translateX(-50%)",
-              top: "-10%",
-            }}
-          />
-          <img
-            src={old_paper}
-            alt="OldPaper"
-            className="object-cover absolute z-5 mb-40"
-            style={{
-              height: "155%",
-              width: "80%",
               left: "50%",
-              transform: "translateX(-50%)",
-              top: "-45%",
+              top: "12%",
             }}
-          />
-          <button
-            onClick={handleClassicClick}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full z-10"
           >
-            클래식
-          </button>
-          <button
-            onClick={handleItemClick}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full z-10"
-          >
-            아이템
-          </button>
+            <div className="flex " style={{ position: "relative" }}>
+              <button onClick={handleClassicClick} style={{ position: "relative" }}>
+                <img src={post_it_1} />
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    color: "white",
+                  }}
+                >
+                  랭킹전
+                </div>
+              </button>
+            </div>
+            <div className="flex ">
+              <button onClick={handleItemClick} style={{ position: "relative" }}>
+                <img src={post_it_2} />
+                <div
+                  style={{
+                    position: "absolute",
+
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    color: "white",
+                  }}
+                >
+                  일반전
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+      {/* 랭킹전, 일반전 버튼 */}
     </>
   );
 };

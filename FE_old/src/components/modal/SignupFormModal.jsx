@@ -69,7 +69,7 @@ const SignupFormModal = ({ visible, onClose }) => {
     passwordCheck.clear();
     profileImage.clear();
     ProfileImageIndex.clear();
-    setPasswordsMatch(true);
+    setPasswordsMatch(false);
   };
 
   return (
@@ -80,21 +80,21 @@ const SignupFormModal = ({ visible, onClose }) => {
           clearAllInput();
           onClose();
         }}
-        customStyles={{ width: "70%", height: "45%" }}
+        customStyles={{ width: "90%", height: "auto", maxWidth: "500px" }} // 모달 스타일 조정
       >
         <div className="p-4">
           {profileImage.value ? (
             <img
               src={profileImage.value}
               alt="프로필 이미지"
-              className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full mb-4"
+              className="w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full mb-4" // 이미지 크기 조정
             />
           ) : (
-            <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full bg-gray-200 mb-4"></div>
+            <div className="w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full bg-gray-200 mb-4"></div> // 이미지 플레이스홀더 크기 조정
           )}
           <LobbyBtn
             onClick={isProfileImageModalVisible.showRodal}
-            className="mt-2 py-1 px-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md"
+            className="mt-2 py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md text-sm" // 버튼 크기 및 텍스트 크기 조정
             text="선택"
           />
         </div>
@@ -106,20 +106,21 @@ const SignupFormModal = ({ visible, onClose }) => {
                 type="text"
                 placeholder="이메일"
                 value={email.value}
-                className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" // 입력 필드 크기 조정
                 onChange={(e) => email.onChange(e.target.value)}
               />
               <ModalBtn
                 text="중복확인"
                 onClick={checkEmailDuplicate}
                 disabled={!email.isValid || !email.value}
+                className="text-sm py-2" // 버튼 크기 조정
               />
             </div>
             {!email.isValid && email.hasChecked && (
               <div style={{ color: "green" }}>중복확인이 완료 되었습니다.</div>
             )}
             {email.isValid && email.hasChecked && (
-              <div style={{ color: "red" }}>중복된 아이디가 있습니다.</div>
+              <div style={{ color: "red" }}>중복된 이메일이 있습니다.</div>
             )}
           </div>
 
@@ -129,13 +130,14 @@ const SignupFormModal = ({ visible, onClose }) => {
                 type="text"
                 placeholder="닉네임"
                 value={nickname.value}
-                className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" // 입력 필드 크기 조정
                 onChange={(e) => nickname.onChange(e.target.value)}
               />
               <ModalBtn
                 text="중복확인"
                 onClick={checkNicknameDuplicate}
                 disabled={!nickname.isValid || !nickname.value}
+                className="text-sm py-2" // 버튼 크기 조정
               />
             </div>
             {!nickname.isValid && nickname.hasChecked && (
@@ -146,19 +148,20 @@ const SignupFormModal = ({ visible, onClose }) => {
             )}
           </div>
           <div className="text-xs text-gray-600">
-            ※ 닉네임은 영문자, 숫자, 한글로 이루어진 1~8자 까지 가능합니다
+            ※ 닉네임은 영문자, 숫자, 한글로 이루어진 1~8자까지 가능합니다.
           </div>
 
-          <form>
+          <form className="space-y-2">
             <input
               type="password"
               placeholder="비밀번호"
               value={password.value}
               onChange={passwordHandleChange}
-              className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" // 입력 필드 크기 조정
             />
             <div className="text-xs text-gray-600">
-              ※ 비밀번호는 적어도 하나의 영문자,특수문자, 숫자를 포함하여 6자리 이상이 되어야 합니다
+              ※ 비밀번호는 적어도 하나의 영문자, 특수문자, 숫자를 포함하여 6자리 이상이 되어야
+              합니다.
             </div>
 
             <input
@@ -166,10 +169,10 @@ const SignupFormModal = ({ visible, onClose }) => {
               placeholder="비밀번호 확인"
               value={passwordCheck.value}
               onChange={passwordCheckHandleChange}
-              className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" // 입력 필드 크기 조정
             />
             {!passwordsMatch && passwordCheck.value && (
-              <div className="text-red-500">비밀번호가 일치하지 않습니다</div>
+              <div className="text-red-500">비밀번호가 일치하지 않습니다.</div>
             )}
           </form>
           <ModalBtn
@@ -183,6 +186,7 @@ const SignupFormModal = ({ visible, onClose }) => {
               !password.isValid ||
               !ProfileImageIndex.value
             }
+            className="text-sm py-2" // 버튼 크기 조정
           />
         </div>
       </Rodal>

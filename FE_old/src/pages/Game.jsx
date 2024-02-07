@@ -16,6 +16,8 @@ const Game = () => {
   // let { sessionId } = useParams();
   const { sessionId: gameId } = useParams();
   const location = useLocation();
+  const { gameType, opponentInfo } = location.state;
+  const opponentInfoParsed = JSON.parse(opponentInfo);
   const token = sessionStorage.getItem("accessToken");
 
   const [gameState, setGameState] = useState("entrance");
@@ -306,7 +308,12 @@ const Game = () => {
         </div>
       )}
       {!isLoading && gameState === "gameLoading" && (
-        <GameLoading publisher={publisher} subscriber={subscriber} />
+        <GameLoading
+          publisher={publisher}
+          subscriber={subscriber}
+          gameType={gameType}
+          opponentInfoParsed={opponentInfoParsed}
+        />
       )}
       {!isLoading && gameState === "gamePlay" && (
         <GamePlay publisher={publisher} subscriber={subscriber} {...gameProps} />
