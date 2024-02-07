@@ -6,7 +6,7 @@ import "rodal/lib/rodal.css"; // Rodal CSS
 import { useWebSocket } from "../../context/WebSocketContext"; // Import useWebSocket
 
 const NotificationModal = ({ visible, onClose }) => {
-  const [activeTab, setActiveTab] = useState("invitation");
+  // const [activeTab, setActiveTab] = useState("invitation");
   const [invitations, setInvitations] = useState(["초대 메시지 1", "초대 메시지 2"]); // 초대 메시지 배열
   const [recipient, setRecipient] = useState(""); // 메시지를 받을 사람
   const [messageContent, setMessageContent] = useState(""); // 보낼 메시지 내용
@@ -44,43 +44,43 @@ const NotificationModal = ({ visible, onClose }) => {
     }
   };
 
-  const sendMessage = async () => {
-    if (client && recipient) {
-      try {
-        const response = await client.publish({
-          destination: "/app/private-message",
-          headers: { userId: recipient },
-          body: messageContent,
-        });
-        console.log("Message sent");
-        console.log(response);
-        console.log(messageContent);
-        setShowMessageModal(false); // 메시지 전송 후 메시지 보내기 모달 닫기
-      } catch (error) {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message === "User does not exist"
-        ) {
-          alert("존재하지 않는 사용자입니다.");
-        } else {
-          console.log("WebSocket connection is not active or recipient is not specified");
-        }
-      }
-    }
-  };
+  // const sendMessage = async () => {
+  //   if (client && recipient) {
+  //     try {
+  //       const response = await client.publish({
+  //         destination: "/app/private-message",
+  //         headers: { userId: recipient },
+  //         body: messageContent,
+  //       });
+  //       console.log("Message sent");
+  //       console.log(response);
+  //       console.log(messageContent);
+  //       setShowMessageModal(false); // 메시지 전송 후 메시지 보내기 모달 닫기
+  //     } catch (error) {
+  //       if (
+  //         error.response &&
+  //         error.response.data &&
+  //         error.response.data.message === "User does not exist"
+  //       ) {
+  //         alert("존재하지 않는 사용자입니다.");
+  //       } else {
+  //         console.log("WebSocket connection is not active or recipient is not specified");
+  //       }
+  //     }
+  //   }
+  // };
 
-  const deleteMessage = async (messageId) => {
-    try {
-      const response = await axios.delete(`/api/message/${messageId}`);
-      if (response.status === 200) {
-        console.log("Message deleted successfully");
-        // TODO: 메세지 목록 새로고침
-      }
-    } catch (error) {
-      console.error("Failed to delete message", error);
-    }
-  };
+  // const deleteMessage = async (messageId) => {
+  //   try {
+  //     const response = await axios.delete(`/api/message/${messageId}`);
+  //     if (response.status === 200) {
+  //       console.log("Message deleted successfully");
+  //       // TODO: 메세지 목록 새로고침
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to delete message", error);
+  //   }
+  // };
 
   return (
     <>
@@ -99,40 +99,40 @@ const NotificationModal = ({ visible, onClose }) => {
               onClick={() => setActiveTab("invitation")}
               className="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-full"
             >
-              초대함
+              `` 초대함
             </button>
-            <button
+            {/* <button
               onClick={() => setActiveTab("message")}
               className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-full"
             >
               쪽지함
-            </button>
+            </button> */}
           </div>
-          {activeTab === "invitation" && (
-            <div className="border border-blue-500 rounded-lg p-5 mb-5">
-              {invitations.map((invitation, index) => (
-                <div
-                  key={index}
-                  className="flex justify-between items-center py-2 border-b border-blue-500"
+          {/* {activeTab === "invitation" && ( */}
+          <div className="border border-blue-500 rounded-lg p-5 mb-5">
+            {invitations.map((invitation, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-center py-2 border-b border-blue-500"
+              >
+                <span className="flex-grow mr-2">{invitation}</span>
+                <button
+                  onClick={() => handleAccept(index)}
+                  className="px-2 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-full"
                 >
-                  <span className="flex-grow mr-2">{invitation}</span>
-                  <button
-                    onClick={() => handleAccept(index)}
-                    className="px-2 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-full"
-                  >
-                    수락
-                  </button>
-                  <button
-                    onClick={() => handleReject(index)}
-                    className="px-2 py-1 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-full"
-                  >
-                    거절
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-          {activeTab === "message" && (
+                  수락
+                </button>
+                <button
+                  onClick={() => handleReject(index)}
+                  className="px-2 py-1 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-full"
+                >
+                  거절
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* {activeTab === "message" && (
             <>
               <div className="border border-blue-500 rounded-lg p-5 mb-5">
                 {messages.map((message, index) => (
@@ -148,10 +148,10 @@ const NotificationModal = ({ visible, onClose }) => {
                 메시지 보내기
               </button>
             </>
-          )}
+          )} */}
         </div>
       </Rodal>
-      <Rodal
+      {/* <Rodal
         className="bg-gray-800 text-white rounded-lg"
         visible={showMessageModal}
         onClose={() => setShowMessageModal(false)}
@@ -179,7 +179,7 @@ const NotificationModal = ({ visible, onClose }) => {
             전송
           </button>
         </div>
-      </Rodal>
+      </Rodal> */}
     </>
   );
 };

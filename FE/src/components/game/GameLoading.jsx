@@ -18,6 +18,8 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
   const opponentWinNumItem = opponentInfoParsed.winNumItem;
   const myLoseNumItem = sessionStorage.getItem("loseNumItem");
   const opponentLoseNumItem = opponentInfoParsed.loseNumItem;
+  // const expectedWinPt = opponentInfoParsed.expectedWinPt;
+  // const expectedLosePt = opponentInfoParsed.expectedLosePt;
 
   return (
     <>
