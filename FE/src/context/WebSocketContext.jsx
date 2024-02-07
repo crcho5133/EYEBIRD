@@ -1,8 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Client } from "@stomp/stompjs";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
-import axios from "axios";
-import { baseUrl } from "@/api/url/baseUrl";
 import SockJS from "sockjs-client";
 
 const WebSocketContext = createContext();
@@ -77,7 +75,7 @@ export const WebSocketProvider = ({ children }) => {
       onDisconnect: () => {
         console.log("Disconnected from WebSocket");
       },
-      onWebSocketClose: async (closeEvent) => {
+      onWebSocketClose: (closeEvent) => {
         console.log("WebSocket closed", closeEvent);
       },
       onWebSocketError: (error) => {
