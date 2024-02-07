@@ -13,7 +13,7 @@ export default function OpenViduVideoComponent({ streamManager, readyState }) {
     <>
       {readyState && (
         <div className="flex justify-end">
-          <div className="absolute text-sm text-green-500 bg-green-200 rounded-lg">준비완료</div>
+          <div className="absolute text-sm text-green-500 bg-green-200 rounded">준비완료</div>
         </div>
       )}
       <video autoPlay={true} ref={videoRef} />

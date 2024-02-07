@@ -12,7 +12,7 @@ export const VideoWebSocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (!accessToken.accessToken) return;
-    const ws = new WebSocket("wss://i10e206.p.ssafy.io/fastapi/ws");
+    const ws = new WebSocket("ws://localhost:8000/fastapi/ws");
     console.log(ws);
     ws.onmessage = (event) => {
       // 서버로부터 메시지 수신 시 처리
