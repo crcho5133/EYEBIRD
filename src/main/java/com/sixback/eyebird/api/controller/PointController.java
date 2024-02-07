@@ -31,7 +31,6 @@ public class PointController {
         pointService.update(pointReqDto, curUserEmail);
 
         return ResponseEntity.ok().build();
-
     }
 
 

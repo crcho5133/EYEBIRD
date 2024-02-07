@@ -38,13 +38,13 @@ public class RoomController {
     @Operation(summary = "아이템방 리스트 조회", description = "아이템방 리스트 조회")
     @GetMapping("/item")
     public List<RoomDto> itemRoomList() {
-        return roomService.roomList(true);
+        return roomService.getRoomList(true);
     }
 
     @Operation(summary = "클래식방 리스트 조회", description = "클래식방 리스트 조회")
     @GetMapping("/classic")
     public List<RoomDto> classicRoomList() {
-        return roomService.roomList(false);
+        return roomService.getRoomList(false);
     }
 
     // 방 생성
@@ -53,7 +53,7 @@ public class RoomController {
     public ResponseEntity<CreateRoomResDto> createRoom(@RequestBody RequestRoomDto reqRoom) throws OpenViduJavaClientException, OpenViduHttpException {
         // Issue : 토큰은 나중에 새로 주면 쓰기
         //System.out.println(reqRoom);
-        RoomDto room = new RoomDto(Sha256Convert.getInstance().ShaEncoder(reqRoom.getRoomName()), reqRoom.getRoomName(), reqRoom.isItem(), reqRoom.getPassword()!=0?true:false,reqRoom.getMaxCapacity(), 0, reqRoom.getPassword(), 0);
+        RoomDto room = new RoomDto(Sha256Convert.getInstance().ShaEncoder(reqRoom.getRoomName()), reqRoom.getRoomName(), reqRoom.isItem(), reqRoom.getPassword()!=0?true:false, false, reqRoom.getMaxCapacity(), 0, reqRoom.getPassword(), 0);
         log.info(room.getRoomId());
 
         int result = roomService.createRoom(room);
@@ -135,6 +135,7 @@ public class RoomController {
 
         throw new RuntimeException(msg);
     }
+
 
     @Operation(summary = "방 초대", description = "방 존재와 풀방 여부만 체크하고 프리패스")
     @PostMapping("/invite")
@@ -220,4 +221,15 @@ public class RoomController {
         return enterRoomResDto;
     }
 
+
+    @Operation(summary = "방 상태 변경")
+    @PatchMapping()
+    public ResponseEntity<RoomDto> changeStatus(@RequestBody RoomDto room){ // id와 status만 받을 예정
+        room = roomService.changeStatus(room);
+        if(room.getRoomId()!=null)
+        return ResponseEntity.ok(room);
+
+        throw new RuntimeException("상태를 변경하지 못했습니다.");
+    }
 }
+
