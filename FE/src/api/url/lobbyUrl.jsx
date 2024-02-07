@@ -4,17 +4,16 @@ export default {
   getRankingList: () => `${baseUrl}/api/point/rank`,
   searchUsers: () => `${baseUrl}/api/user/search`,
 
-  //친구관련 API 재확인 필요
+  //웹소켓 메시지 매핑 (친구추가 버튼 눌렀을 때 가는 Url)
+  addFriendRequest: () => `${baseUrl}/api/message/private`,
 
-  //(이상함) addFriend는 친구를 dB에 추가하는 로직임 -> 현재 profileModal의 친구추가 버튼 클릭 시 발생하는 요청
-  addFriend: () => `${baseUrl}/api/friend`,
+  //친구 수락을 눌렀을 때 보내야 하는 api 2가지 (두개 합쳐준다고 함)
+  addFriend: () => `${baseUrl}/api/friend`, //친구관계 등록
+  acceptFriendRequest: () => `${baseUrl}/api/message/friend`, //친구 메시지 삭제 및 상대방 친구 수락 알림
 
-  //acceptFriendRequest는 친구 요청 창에서 수락 눌렀을 때 발생하는 요청(위에꺼랑 뭐가 이상함 확인 필요)
-  acceptFriendRequest: () => `${baseUrl}/api/message/friend`,
-
-  //(임의 생성)친구 요청 메시지 받아오는 url (명세에 없음 확인 필요함)
+  //친구 요청 메시지 받아오는 url (명세에 생성해준다고 하심)
   getFriendRequestList: () => `${baseUrl}/api/message`,
 
-  //(확인 필요)친구 요청 메시지 거절하는 url
-  rejectFriendRequest: () => `${baseUrl}/api/message`,
+  //친구 요청 메시지 거절하는 url
+  rejectFriendRequest: (messageId) => `${baseUrl}/api/message/${messageId}`,
 };

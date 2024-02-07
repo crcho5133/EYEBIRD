@@ -2,10 +2,12 @@ import lobbyUrl from "@/api/url/lobbyUrl";
 import userUrl from "@/api/url/usersUrl";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
 import useAxiosConfig from "@/hooks/useAxiosConfig";
+import { useWebSocket } from "@/context/VideoWebSocketContext";
 
 const lobbyApiCall = () => {
   const accessToken = useAccessTokenState();
   const privateAxios = useAxiosConfig().privateAxios;
+  const { client } = useWebSocket();
 
   const getFriendsList = async (pageNum) => {
     const getFriendsUrl = `${userUrl.getFriendsList()}/${pageNum}`;
@@ -37,11 +39,11 @@ const lobbyApiCall = () => {
     }
   };
 
-  const addFriend = async (userTo) => {
+  const addFriendRequest = async (email) => {
     const addFriendUrl = lobbyUrl.addFriend();
     try {
-      const response = await privateAxios.post(addFriendUrl, {
-        userTo,
+      const response = await client.publish(addFriendUrl, {
+        email,
       });
       return response.data;
     } catch (error) {
@@ -72,7 +74,7 @@ const lobbyApiCall = () => {
   };
 
   const rejectFriendRequest = async (messageId) => {
-    const rejectFriendRequestUrl = `${lobbyUrl.rejectFriendRequest()}/${messageId}`;
+    const rejectFriendRequestUrl = `${lobbyUrl.rejectFriendRequest(messageId)}`;
     try {
       const response = await privateAxios.delete(rejectFriendRequestUrl);
       return response.data;
@@ -85,7 +87,6 @@ const lobbyApiCall = () => {
     getFriendsList,
     getRankingList,
     searchUsers,
-    addFriend,
     acceptFriendRequest,
     getFriendRequestList,
     rejectFriendRequest,
