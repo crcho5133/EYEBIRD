@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,12 +46,12 @@ public class RoomService {
         if (count > 30) return 0;
 
         //못만드는 경우2 : 방 이름 중복
-        if(rooms.size()>0)
-        for (RoomDto check : rooms) {
-            if (room.getRoomName().equals(check.getRoomName())) {
-                return -1;
+        if (rooms.size() > 0)
+            for (RoomDto check : rooms) {
+                if (room.getRoomName().equals(check.getRoomName())) {
+                    return -1;
+                }
             }
-        }
 
 
         // 방 생성 가능 : 방 저장하고 true 리턴
@@ -68,10 +69,9 @@ public class RoomService {
         room.setPassword(0);
         return room;
     }
-
     // Redis에서 room으로 시작하는 key값을 검색합니다.
     // RoomId 받아오기 때문에 String
-    public List<RoomDto> roomList(boolean item) {
+    public List<RoomDto> getRoomList(boolean item) {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(RoomDto.class));
         List<RoomDto> rooms = new ArrayList<>();
         String pattern = "room*";
@@ -87,10 +87,11 @@ public class RoomService {
                 room = (RoomDto) redisTemplate.opsForValue().get(key);
 
             // 아이템전 여부 확인하고 추가
-            if (room.isItem() == item)
+            if (room.isItem() == item&&!room.isStatus()){
                 rooms.add(room);
 
-            room.setPassword(0);
+                room.setPassword(0);
+            }
         }
         return rooms;
     }
@@ -98,14 +99,13 @@ public class RoomService {
     //방 들어가기
 
     /**
-     * 
      * @param room
      * @param userEmail
-     * @return   1 : 성공
-     *           0 : 방 없음
-     *          -1 : 인원 초과
-     *          -2 : 비번 틀림
-     *          -3 : 블랙리스트
+     * @return 1 : 성공
+     * 0 : 방 없음
+     * -1 : 인원 초과
+     * -2 : 비번 틀림
+     * -3 : 블랙리스트
      */
     public int enterRoom(RoomDto room, String userEmail) {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(RoomDto.class));
@@ -137,7 +137,7 @@ public class RoomService {
         // 블랙리스트 블락
         ArrayList<String> blacklist = blackListService.blacklist(room.getRoomId());
 
-        if(blacklist.size()>0){
+        if (blacklist.size() > 0) {
             for (int i = 0; i < blacklist.size(); i++) {
                 if (userEmail.equals(blacklist.get(i))) {
                     return -3;
@@ -180,32 +180,32 @@ public class RoomService {
         return 1;
     }
 
-    public String quickEnterRoom(boolean isItem, String email){
+    public String quickEnterRoom(boolean isItem, String email) {
         // 1. 방 목록 불러오기
         // 2. 블랙리스트 확인
         // 3. 입장
 
         // 모든 룸 정보 받아오기
         List<RoomDto> rlist;
-        rlist = roomList(isItem);
+        rlist = getRoomList(isItem);
 
-        for(int i = 0; i<rlist.size(); i++){
+        for (int i = 0; i < rlist.size(); i++) {
             // 해당 방이 가득 차 있으면 입장 불가.
             if(rlist.get(i).getCurrentCapacity() >= rlist.get(i).getMaxCapacity()) continue;
 
             // 비밀 번호가 있으면 입장 불가
-            if(rlist.get(i).getPassword() != 0) continue;
+            if (rlist.get(i).getPassword() != 0) continue;
 
             // 해당 방에 블랙리스트면 입장 불가
             ArrayList<String> blacklist = blackListService.blacklist(rlist.get(i).getRoomId());
             boolean blist = false;
-            for(int j = 0; j< blacklist.size(); i++){
-                if(email.equals(blacklist.get(j))) {
+            for (int j = 0; j < blacklist.size(); i++) {
+                if (email.equals(blacklist.get(j))) {
                     blist = true;
                     break;
                 }
             }
-            if (blist)continue;
+            if (blist) continue;
 
 
             RoomDto room = rlist.get(i);
@@ -239,12 +239,27 @@ public class RoomService {
         redisTemplate.opsForValue().set("room_" + room.getRoomId(), room);
 
         // 2. 유저가 없으면 방 삭제
-        if (room.getCurrentCapacity() < 1){
+        if (room.getCurrentCapacity() < 1) {
             redisTemplate.delete("room_" + key);
             blackListService.deleteBlackList(room.getRoomId());
         }
         return true;
 
+    }
+
+    //방 상태 변경
+    public RoomDto changeStatus(RoomDto room){
+        // status 저장
+        boolean status = room.isStatus();
+        room = findRoom(room.getRoomId());
+
+        // 변경할 status로 변경
+        room.setStatus(status);
+
+        // 다시 저장
+        redisTemplate.opsForValue().set("room_" + room.getRoomId(), room);
+
+        return room;
     }
 
 }
