@@ -26,8 +26,6 @@ public class UserFriend extends BaseTime {
     @JoinColumn(name = "user_to_id")
     private User userTo;
 
-    // TODO createdAt, updatedAt
-
     @Override
     public String toString() {
         return "UserFriend{" +
