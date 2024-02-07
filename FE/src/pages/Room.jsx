@@ -5,9 +5,9 @@ import { toast, Slide, Bounce } from "react-toastify";
 import { usePreventGoBackRoom } from "../hooks/usePreventGoBackRoom";
 import axios from "axios";
 import WaitingRoom from "../components/room/WaitingRoom";
-// 게임 매칭 화면(일반 / 랭크 case로 구분)
-// import GamePlay from "./GamePlay";
-// import GameResult from "./GameResult";
+// import NormalGameLoading from "../components/room/NormalGameLoading";
+// import NormalGamePlay from "../components/room/NormalGamePlay";
+// import NormalGameResult from "../components/room/NormalGameResult";
 import MicON from "../assets/img/room/MicOn.png";
 import MicOFF from "../assets/img/room/MicOff.png";
 import CameraON from "../assets/img/room/CameraOn.png";
@@ -41,6 +41,8 @@ const Room = () => {
 
   const [gameState, setGameState] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [participantsReady, setParticipantsReady] = useState({});
 
   // 상태 전환 함수
   const changeGameState = (newState) => {
@@ -83,6 +85,7 @@ const Room = () => {
   const teamARef = useRef(teamA);
   const teamBRef = useRef(teamB);
   const teamWRef = useRef(teamW);
+  const participantsReadyRef = useRef(participantsReady);
   // OpenVidu 라이브러리 사용
   const OV = useRef(new OpenVidu());
   // 로그 에러만 출력
@@ -96,7 +99,8 @@ const Room = () => {
     teamARef.current = teamA;
     teamBRef.current = teamB;
     teamWRef.current = teamW;
-  }, [myTeam, myStreamId, session, teamA, teamB, teamW]);
+    participantsReadyRef.current = participantsReady;
+  }, [myTeam, myStreamId, session, teamA, teamB, teamW, participantsReady]);
 
   useEffect(() => {
     if (mySessionId && myUserName) {
@@ -123,7 +127,7 @@ const Room = () => {
             videoSource: undefined,
             publishAudio: true,
             publishVideo: true,
-            resolution: "640x480",
+            resolution: "400x400",
             frameRate: 30,
             insertMode: "APPEND",
             mirror: false,
@@ -148,6 +152,10 @@ const Room = () => {
           setCurrentVideoDevice(currentVideoDevice);
           // 방 입장 시 대기열에 배치
           handleSelectTeam(publisher.stream.streamId, "W");
+          session.signal({
+            data: JSON.stringify({ userName: myUserName, ready: false }),
+            type: "ready",
+          });
         } catch (error) {
           console.log("There was an error connecting to the session:", error.code, error.message);
         }
@@ -216,6 +224,16 @@ const Room = () => {
     });
 
     setCurrentMessage("");
+  };
+
+  // 준비 상태 전송
+  const sendReady = () => {
+    const newReadyState = !ready;
+    setReady(newReadyState);
+    session.signal({
+      data: JSON.stringify({ userName: myUserName, ready: newReadyState }),
+      type: "ready",
+    });
   };
 
   const chatProps = {
@@ -304,6 +322,11 @@ const Room = () => {
       data: "", // 필요한 경우 추가 데이터 전송
       type: "team-info-request",
     });
+
+    session.signal({
+      data: "",
+      type: "ready-info-request",
+    });
   };
 
   const joinSession = useCallback(() => {
@@ -331,6 +354,31 @@ const Room = () => {
       } else if (receivedMessage.mode === myTeamRef.current) {
         setTeamChatMessages((prevMessages) => [...prevMessages, receivedMessage]);
       }
+    });
+
+    mySession.on("signal:ready", (event) => {
+      console.log("준비상태 수신:" + event.data);
+      const { userName, ready } = JSON.parse(event.data);
+      setParticipantsReady((prev) => ({ ...prev, [userName]: ready }));
+    });
+
+    mySession.on("signal:ready-info-request", (event) => {
+      const currentUser = JSON.parse(mySession.connection.data).clientData;
+      const newUser = JSON.parse(event.from.data).clientData;
+      if (currentUser !== newUser) {
+        console.log("ok");
+        console.log(participantsReadyRef.current);
+        sessionRef.current.signal({
+          data: JSON.stringify(participantsReadyRef.current),
+          type: "ready-info-response",
+        });
+      }
+    });
+
+    mySession.on("signal:ready-info-response", (event) => {
+      console.log(event);
+      const participantsReady = JSON.parse(event.data);
+      setParticipantsReady(participantsReady);
     });
 
     // 팀 선택 수신
@@ -454,6 +502,14 @@ const Room = () => {
   const deleteSubscriber = useCallback((streamManager) => {
     // 제거할 스트림 ID 추출
     const streamIdToRemove = streamManager.stream.streamId;
+
+    // 준비완료 객체에서 제거
+    const leavingUserName = JSON.parse(streamManager.stream.connection.data).clientData;
+    setParticipantsReady((prevParticipantsReady) => {
+      const updatedParticipantsReady = { ...prevParticipantsReady };
+      delete updatedParticipantsReady[leavingUserName];
+      return updatedParticipantsReady;
+    });
 
     setSubscribers((prevSubscribers) => {
       const index = prevSubscribers.indexOf(streamManager);
@@ -600,6 +656,9 @@ const Room = () => {
           Chat={Chat}
           Sound={Sound}
           {...chatProps}
+          ready={ready}
+          sendReady={sendReady}
+          participantsReady={participantsReady}
         />
       )}
       {!isLoading && gameState === "gamePlay" && <GamePlay /* 필요한 props */ />}

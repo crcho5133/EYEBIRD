@@ -40,6 +40,9 @@ const WaitingRoom = ({
   setCurrentMessage,
   sendChatMessage,
   setChatMode,
+  ready,
+  sendReady,
+  participantsReady,
 }) => {
   const [isChatModalVisible, setIsChatModalVisible] = useState(false);
   const [isAudioModalVisible, setIsAudioModalVisible] = useState(false);
@@ -122,82 +125,109 @@ const WaitingRoom = ({
         </div>
       </div>
       <div className="flex justify-between h-5/6">
-        <div id="teamA-container" className="border-4 border-sky-500 m-2 w-2/6">
-          <div className="border-2 border-sky-500 m-1 text-center">
+        <div
+          id="teamA-container"
+          className="grid grid-rows-[auto_1fr_auto] border-4 border-sky-500 m-2 h-full w-2/5"
+        >
+          <div className="text-center text-xs bg-sky-200 p-2">
             A 팀 : {teamA.filter((id) => id !== null).length} / 4 명
           </div>
-          {teamA.map((streamId, idx) => {
-            const streamManager =
-              streamId === publisher?.stream.streamId
-                ? publisher
-                : subscribers.find((sub) => sub.stream.streamId === streamId);
-            return streamManager ? (
-              <UserVideoComponent
-                key={streamId}
-                streamManager={streamManager}
-                streamId={streamId}
-                clientStreamId={myStreamId}
-                color={"border-sky-500"}
-              />
-            ) : (
-              <div key={idx} className="border-t-4 border-sky-500 h-32"></div>
-            );
-          })}
-          <div id="team-selection-buttons" className="text-center h-32 border-t-4 border-sky-500">
+          <div className="grid grid-rows-4 gap-1 overflow-hidden">
+            {teamA.map((streamId, idx) => (
+              <div key={idx} className="w-full h-full border-sky-500">
+                {streamId ? (
+                  <UserVideoComponent
+                    streamManager={
+                      streamId === publisher?.stream.streamId
+                        ? publisher
+                        : subscribers.find((sub) => sub.stream.streamId === streamId)
+                    }
+                    streamId={streamId}
+                    clientStreamId={myStreamId}
+                    color="border-sky-500"
+                    participantsReady={participantsReady}
+                  />
+                ) : (
+                  <div className="flex justify-center items-center bg-gray-200">비디오 슬롯</div>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="text-center bg-sky-200 p-2">
             <button
               onClick={() => handleSelectTeam(publisher.stream.streamId, "A")}
-              className={`rounded-md w-20 m-1 ${isTeamFull(teamA) ? "bg-gray-400 hover:bg-gray-400" : "bg-sky-300 hover:bg-sky-700"}`}
+              className={`rounded-md w-full ${isTeamFull(teamA) ? "bg-gray-400" : "bg-sky-300 hover:bg-sky-700"}`}
               disabled={isTeamFull(teamA)}
             >
               A팀 선택
             </button>
           </div>
         </div>
-        <div className="flex w-2/6">
-          <div id="team-selection-buttons" className="border-4 border-green-500 m-2">
-            <div className="border-2 border-green-500 m-1 text-center">
-              <button onClick={() => handleSelectTeam(publisher.stream.streamId, "W")}>
-                대기열 {teamW.filter((id) => id !== null).length} / 8 명
-              </button>
-            </div>
-            {teamW.map((streamId) => {
+        <div
+          id="waiting-area-container"
+          className="flex flex-col border-4 border-green-500 mt-2 h-full w-3/12"
+        >
+          <div className="text-center text-xs bg-green-200 p-2">
+            <div>대기열</div> <div>{teamW.filter((id) => id !== null).length} / 8 명</div>
+          </div>
+          <div className="flex-grow grid gap-1 overflow-hidden p-2 items-center">
+            {teamW.map((streamId, idx) => {
               const streamManager =
                 streamId === publisher?.stream.streamId
                   ? publisher
                   : subscribers.find((sub) => sub.stream.streamId === streamId);
               return streamManager ? (
-                <div key={streamId} className="border-2 border-green-500 m-1 text-center">
+                <div key={idx} className="border-2 border-green-500 m-1 text-center text-sm">
                   {JSON.parse(streamManager.stream.connection.data).clientData}
                 </div>
-              ) : null;
+              ) : (
+                <div key={idx} className="border-2 border-gray-500 m-1 text-center text-sm">
+                  빈자리
+                </div>
+              );
             })}
           </div>
+          <div className="text-center bg-green-200 p-2">
+            <button
+              onClick={() => handleSelectTeam(publisher.stream.streamId, "W")}
+              className="rounded-md w-full bg-green-300 hover:bg-green-700"
+            >
+              대기열 선택
+            </button>
+          </div>
         </div>
-        <div id="teamB-container" className="border-4 border-red-500 m-2 w-2/6">
-          <div className="border-2 border-red-500 m-1 text-center">
+        <div
+          id="teamB-container"
+          className="grid grid-rows-[auto_1fr_auto] border-4 border-red-500 m-2 h-full w-2/5"
+        >
+          <div className="text-center text-xs bg-red-200 p-2">
             B 팀 : {teamB.filter((id) => id !== null).length} / 4 명
           </div>
-          {teamB.map((streamId, idx) => {
-            const streamManager =
-              streamId === publisher?.stream.streamId
-                ? publisher
-                : subscribers.find((sub) => sub.stream.streamId === streamId);
-            return streamManager ? (
-              <UserVideoComponent
-                key={streamId}
-                streamManager={streamManager}
-                streamId={streamId}
-                clientStreamId={myStreamId}
-                color={"border-red-500"}
-              />
-            ) : (
-              <div key={idx} className="border-t-4 border-red-500 h-32"></div>
-            );
-          })}
-          <div id="team-selection-buttons" className="text-center h-32 border-t-4 border-red-500">
+          <div className="grid grid-rows-4 gap-1 overflow-hidden">
+            {teamB.map((streamId, idx) => (
+              <div key={idx} className="aspect-w-16 aspect-h-9 border border-red-500">
+                {streamId ? (
+                  <UserVideoComponent
+                    streamManager={
+                      streamId === publisher?.stream.streamId
+                        ? publisher
+                        : subscribers.find((sub) => sub.stream.streamId === streamId)
+                    }
+                    streamId={streamId}
+                    clientStreamId={myStreamId}
+                    color="border-red-500"
+                    participantsReady={participantsReady}
+                  />
+                ) : (
+                  <div className="flex justify-center items-center bg-gray-200">비디오 슬롯</div>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="text-center bg-red-200 p-2">
             <button
               onClick={() => handleSelectTeam(publisher.stream.streamId, "B")}
-              className={`rounded-md w-20 m-1 ${isTeamFull(teamB) ? "bg-gray-400 hover:bg-gray-400" : "bg-red-300 hover:bg-red-700"}`}
+              className={`rounded-md w-full ${isTeamFull(teamA) ? "bg-gray-400" : "bg-red-300 hover:bg-red-700"}`}
               disabled={isTeamFull(teamB)}
             >
               B팀 선택
@@ -205,41 +235,6 @@ const WaitingRoom = ({
           </div>
         </div>
       </div>
-      {/* <div className="flex">
-        <div id="team-selection-buttons" className="border-4 border-green-500 m-4">
-          <div className="border-2 border-green-500 m-1 text-center">
-            <button onClick={() => handleSelectTeam(publisher.stream.streamId, "W")}>
-              대기열 {teamW.filter((id) => id !== null).length} / 8 명
-            </button>
-          </div>
-          {teamW.map((streamId) => {
-            const streamManager =
-              streamId === publisher?.stream.streamId
-                ? publisher
-                : subscribers.find((sub) => sub.stream.streamId === streamId);
-            return streamManager ? (
-              <div key={streamId} className="border-2 border-green-500 m-1 text-center">
-                {JSON.parse(streamManager.stream.connection.data).clientData}
-              </div>
-            ) : null;
-          })}
-        </div>
-      </div> */}
-      {/* <input
-            className="btn btn-large btn-danger float-right mt-5 bg-blue-600"
-            type="button"
-            value="테스트"
-            onClick={() => {
-              console.log(myTeam);
-              console.log(teamA);
-              console.log(teamB);
-              console.log(teamW);
-              console.log(myStreamId);
-              console.log(myUserName);
-              console.log(mySessionId);
-              console.log(subscribers);
-            }}
-          /> */}
       <div>
         <div className="flex">
           <img
@@ -294,9 +289,21 @@ const WaitingRoom = ({
             myTeam={myTeam}
             myUserName={myUserName}
           />
-          <div className="mr-1 flex justify-center items-center border-4 border-orange-700 bg-green-400">
-            게임 시작
+          <div
+            className={`mr-1 flex justify-center items-center border-4 border-orange-700 ${ready ? "bg-green-400" : ""} `}
+            onClick={() => {
+              sendReady();
+            }}
+          >
+            준비 완료
           </div>
+          {/* <button
+            onClick={() => {
+              console.log(participantsReady);
+            }}
+          >
+            check
+          </button> */}
         </div>
       </div>
       {/* 설정 모달 */}
