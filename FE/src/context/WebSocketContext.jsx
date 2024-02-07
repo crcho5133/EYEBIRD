@@ -15,25 +15,17 @@ export const WebSocketProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const accessToken = useAccessTokenState();
   const [isConnected, setIsConnected] = useState(false);
-  // const email = sessionStorage.getItem("email");
 
   const token = sessionStorage.getItem("accessToken");
   const refreshTokenAndReconnect = async () => {
-    // if (isConnected) {
-    //   console.log("Already connected. No need to reconnect.");
-    //   return; // 이미 연결된 경우 재연결 시도 중단
-    // }
     try {
-      console.log("refreshToken", accessToken.accessToken);
       const response = await axios.post(baseUrl + "/api/auth/reissue", {
         grantType: "Bearer",
         accessToken: accessToken.accessToken,
         refreshToken: accessToken.refreshToken,
       });
-      // accessToken.setAccessToken(response.data.accessToken);
-      // accessToken.setRefreshToken(response.data.refreshToken);
-      console.log("tettestestsetest");
-      connectWebSocket(response.data.accessToken); // 갱신된 토큰으로 웹소켓 연결 재시도
+      accessToken.setAccessToken(response.data.accessToken);
+      accessToken.setRefreshToken(response.data.refreshToken);
     } catch (error) {
       console.error("토큰 갱신 또는 웹소켓 재연결 중 오류 발생", error);
     }
@@ -48,6 +40,9 @@ export const WebSocketProvider = ({ children }) => {
       beforeConnect: () => {
         console.log("Connecting to WebSocket");
       },
+
+      reconnectDelay: 0,
+
       onConnect: () => {
         console.log("Connected to WebSocket");
         setIsConnected(true);
@@ -101,7 +96,6 @@ export const WebSocketProvider = ({ children }) => {
         console.log("Disconnected from WebSocket");
       },
       onWebSocketClose: (closeEvent) => {
-        console.log("WebSocket closed", closeEvent);
         refreshTokenAndReconnect();
       },
       onWebSocketError: (error) => {

@@ -4,10 +4,10 @@ import changeProfileImage from "@/utils/changeProfileImage";
 import lobbyApiCall from "@/api/axios/lobbyApiCall";
 
 const ProfileModal = ({ visible, user, onClose }) => {
-  const addFriend = lobbyApiCall();
-  const handleAddFriend = (email) => {
+  const requestFriend = lobbyApiCall();
+  const handleRequestFriend = (email) => {
     try {
-      addFriend.addFriend(email);
+      requestFriend.addFriend(email);
     } catch (error) {
       alert(error.response?.data?.errorMessage);
     }
@@ -50,7 +50,7 @@ const ProfileModal = ({ visible, user, onClose }) => {
         <div className="mt-4">
           <button
             onClick={() => {
-              handleAddFriend(user?.email);
+              handleRequestFriend(user?.email);
             }}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg"
           >
