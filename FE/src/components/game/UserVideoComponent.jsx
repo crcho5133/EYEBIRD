@@ -239,7 +239,7 @@ export default function UserVideoComponent({
       };
 
       // 초당 30회 이미지 전송
-      const intervalId = setInterval(sendFrame, 1000 / 30);
+      const intervalId = setInterval(sendFrame, 1000 / 15);
 
       // 컴포넌트가 언마운트될 때 인터벌을 정리합니다.
       return () => clearInterval(intervalId);
