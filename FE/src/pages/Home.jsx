@@ -4,8 +4,8 @@ import SignupFormModal from "@/components/modal/SignupFormModal";
 import LoginFormModal from "@/components/modal/LoginFormModal";
 import DescriptionModal from "@/components/modal/DescriptionModal";
 import useShowRodal from "@/hooks/useShowRodal";
-import mainbirds from '@/assets/img/mainbirds.png'
-import question_mark from '@/assets/img/question_mark.png'
+import mainbirds from "@/assets/img/mainbirds.png";
+import question_mark from "@/assets/img/question_mark.png";
 
 const Home = () => {
   const isSignupModalVisible = useShowRodal();
@@ -18,7 +18,7 @@ const Home = () => {
         <p className="text-center">단숨에 끝나는 승부</p>
         <p className="text-center">눈 깜빡할 새</p>
       </div>
-      <img src={mainbirds}  />
+      <img src={mainbirds} />
       <div className="w-full flex justify-between items-center px-4">
         <div></div>
         <button onClick={isDescriptionModalVisible.showRodal}>
@@ -38,6 +38,6 @@ const Home = () => {
       />
     </div>
   );
-  }
-  
+};
+
 export default Home;

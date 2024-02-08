@@ -45,7 +45,11 @@ const RoomSearch = () => {
       setIsPasswordModalOpen(true);
     } else {
       // 방이 비밀번호로 보호되어 있지 않으면 바로 입장
+<<<<<<< HEAD
       navigate(`/room/${room.roomId}`, { state: { roomName: room.roomName, password } });
+=======
+      navigate(`/room/${room.roomId}`, { state: { roomName, password } });
+>>>>>>> origin/jonggil-realrealfinal
     }
   };
 
@@ -149,8 +153,13 @@ const RoomSearch = () => {
               key={room.roomName}
               className="border p-2 mb-2"
               onClick={() => {
+<<<<<<< HEAD
                 setRoomName(room.roomName);
                 handleRoomDoubleClick(room);
+=======
+                handleRoomDoubleClick(room);
+                setRoomName(room.roomName);
+>>>>>>> origin/jonggil-realrealfinal
               }}
             >
               <div className="flex justify-between">

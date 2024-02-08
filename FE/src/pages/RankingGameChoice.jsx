@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useWebSocket } from "../context/WebSocketContext";
 import { useEffect, useState } from "react";
 import { toast, Slide, Bounce } from "react-toastify";
+
 const RankingGameChoice = () => {
   const { client, match, gameId, setMatch, opponentInfo } = useWebSocket();
   const [gameType, setGameType] = useState("");
