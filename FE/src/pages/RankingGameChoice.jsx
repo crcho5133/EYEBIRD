@@ -11,6 +11,7 @@ import { toast, Slide, Bounce } from "react-toastify";
 const RankingGameChoice = () => {
   const { client, match, gameId, setMatch, opponentInfo } = useWebSocket();
   const [gameType, setGameType] = useState("");
+  const [point, setPoint] = useState("");
 
   const navigate = useNavigate();
   const email = sessionStorage.getItem("email");
@@ -40,6 +41,7 @@ const RankingGameChoice = () => {
           // Your JSON data here
           ifItem: isItem,
           email: email,
+          point: point,
         }),
       });
       console.log("Invitation sent");
@@ -51,12 +53,14 @@ const RankingGameChoice = () => {
   const handleClassicClick = () => {
     // 클래식 버튼 클릭 시 수행하는 함수를 여기에 작성하세요.
     setGameType("classic");
+    setPoint(sessionStorage.getItem("classicPt"));
     startMatch(false);
   };
 
   const handleItemClick = () => {
     // 아이템 버튼 클릭 시 수행하는 함수를 여기에 작성하세요.
     setGameType("item");
+    setPoint(sessionStorage.getItem("itemPt"));
     startMatch(true);
   };
 
