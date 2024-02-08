@@ -1,11 +1,14 @@
 // import profile from "../assets/img/bird_weard_pirate-hat.png"; // 프로필 사진 파일 경로
+import { QuickClassicUrl, QuickItemUrl } from "../api/url/RoomSearchUrl";
 import CreatingRoomModal from "@/components/modal/CreatingRoomModal";
 import { useNavigate } from "react-router-dom";
-import wooden_plate from "@/assets/img/wooden_plate.png";
+import subject_board from "../assets/img/subject_board.png";
+import wooden_board from "../assets/img/wooden_board.png";
 import { useState } from "react";
-import { QuickClassicUrl, QuickItemUrl } from "../api/url/RoomSearchUrl";
-import old_paper from "@/assets/img/old_paper.png";
-import NavBar from "@/components/lobby/NavBar";
+import post_it_4 from "../assets/img/post_it_4.png";
+import post_it_5 from "../assets/img/post_it_5.png";
+import post_it_6 from "../assets/img/post_it_6.png";
+import post_it_7 from "../assets/img/post_it_7.png";
 import axios from "axios";
 
 const NormalGameChoice = () => {
@@ -49,58 +52,143 @@ const NormalGameChoice = () => {
 
   return (
     <>
-      <div className="h-screen flex flex-col content-center justify-center space-y-12">
-        <div className=" flex justify-center">
-          <h1 className="text-center z-10">일반전</h1>
+      <div className="h-screen flex flex-col items-center space-y-12">
+        <div></div>
+        <div
+          className="flex justify-center items-center"
+          style={{
+            position: "relative",
+            height: "15%",
+            width: "70%",
+            backgroundImage: `url(${subject_board})`,
+            backgroundSize: "100% 100%",
+            backgroundPosition: "center",
+          }}
+        >
+          {/* <img src={subject_board} /> */}
+          <div
+            className="object-cover absolute h-auto font-bold ];
+            text-stone-100 w-full text-center"
+            style={{
+              fontSize: "300%",
+              position: "absolute",
+              // left: "50%",
+              // transform: "translate(-30%,-50%)",
+              // top: "50%",
+              textShadow: "5px 5px 4px rgba(0,0,0,0.5)", // 텍스트 주위에 테두리 효과 추가
+              letterSpacing: "10px", // 글자 사이의 간격을 2px로 지정
+            }}
+          >
+            일반전
+          </div>
         </div>
-        <div className="flex flex-col mt-4 space-y-8 gap-7">
-          <img
-            src={wooden_plate}
-            alt="WoodenPlate"
-            className="object-cover absolute z-0 h-auto"
+        <div
+          className="flex-col justify-center items-center"
+          style={{ position: "relative", height: "50%", width: "80%" }}
+        >
+          <img src={wooden_board} />
+          <div
+            className="object-cover absolute z-0 w-4/5 h-4/5"
             style={{
-              width: "30%",
-              left: "50%",
               transform: "translateX(-50%)",
-              top: "32%",
-            }}
-          />
-          <img
-            src={old_paper}
-            alt="OldPaper"
-            className="object-cover absolute z-5 mb-40 h-auto"
-            style={{
-              width: "30%",
               left: "50%",
-              transform: "translateX(-50%)",
-              top: "28%",
+              top: "5%",
             }}
-          />
-          <div className="flex flex-col items-center space-y-4">
-            <button
-              onClick={handleFastClassicClick}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full z-10"
-            >
-              바로입장 클래식
-            </button>
-            <button
-              onClick={handleFastItemClick}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full  z-10"
-            >
-              바로입장 아이템
-            </button>
-            <button
-              onClick={handleCreatingRoomOpen}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full  z-10"
-            >
-              방만들기
-            </button>
-            <button
-              onClick={handleRoomSearchClick}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full z-10"
-            >
-              방찾기
-            </button>
+          >
+            <div className="flex  " style={{ position: "relative" }}>
+              <div className="flex flex-col space-y-4">
+                <div className="flex flex-row">
+                  <button
+                    onClick={handleFastClassicClick}
+                    style={{ position: "relative" }}
+                    className=" text-white font-bold z-10"
+                  >
+                    <img src={post_it_4} />
+                    <div
+                      className="font-bold w-full"
+                      style={{
+                        fontSize: "120%",
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        color: "white",
+                        textShadow: "5px 5px 4px rgba(0,0,0,0.5)", // 텍스트 주위에 테두리 효과 추가
+                      }}
+                    >
+                      <p>바로입장</p>
+                      <p>클래식</p>
+                    </div>
+                  </button>
+                  <button
+                    onClick={handleFastItemClick}
+                    style={{ position: "relative" }}
+                    className=" text-white font-bold z-10"
+                  >
+                    <img src={post_it_5} />
+                    <div
+                      className="font-bold w-full"
+                      style={{
+                        fontSize: "120%",
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        color: "white",
+                        textShadow: "5px 5px 4px rgba(0,0,0,0.5)", // 텍스트 주위에 테두리 효과 추가
+                      }}
+                    >
+                      <p>바로입장</p>
+                      <p>아이템</p>
+                    </div>
+                  </button>
+                </div>
+                <div className="flex flex-row gap-3">
+                  <button
+                    onClick={handleCreatingRoomOpen}
+                    style={{ position: "relative" }}
+                    className=" text-white font-bold z-10"
+                  >
+                    <img src={post_it_6} />
+                    <div
+                      className="font-bold w-full"
+                      style={{
+                        fontSize: "120%",
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        color: "white",
+                        textShadow: "5px 5px 4px rgba(0,0,0,0.5)", // 텍스트 주위에 테두리 효과 추가
+                      }}
+                    >
+                      방만들기
+                    </div>
+                  </button>
+                  <button
+                    onClick={handleRoomSearchClick}
+                    style={{ position: "relative" }}
+                    className=" text-white font-bold z-10"
+                  >
+                    <img src={post_it_7} />
+                    <div
+                      className="font-bold w-full"
+                      style={{
+                        fontSize: "120%",
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        color: "white",
+                        textShadow: "5px 5px 4px rgba(0,0,0,0.5)", // 텍스트 주위에 테두리 효과 추가
+                      }}
+                    >
+                      방찾기
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <CreatingRoomModal visible={creatingRoomVisible} onClose={handleCreatingRoomClose} />

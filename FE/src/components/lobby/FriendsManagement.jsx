@@ -15,7 +15,7 @@ const FriendManagement = () => {
       case "MyFriends":
         return <MyFriends visible={activeComponent === "MyFriends"} />;
       case "FriendsRequest":
-        return <FriendsRequest />;
+        return <FriendsRequest visible={activeComponent === "FriendsRequest"} />;
       case "FriendsSearch":
         return <FriendsSearch />;
       default:

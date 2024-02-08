@@ -43,6 +43,7 @@ const WaitingRoom = ({
   ready,
   sendReady,
   participantsReady,
+  setGameState,
 }) => {
   const [isChatModalVisible, setIsChatModalVisible] = useState(false);
   const [isAudioModalVisible, setIsAudioModalVisible] = useState(false);
@@ -91,8 +92,8 @@ const WaitingRoom = ({
   }, [teamA, teamB, myTeam, selectedAudioOption]);
 
   return (
-    <div className="waiting-room h-screen">
-      <div>
+    <div className="waiting-room h-screen flex flex-col">
+      <div className="h-2/3">
         <div className="flex justify-between">
           <Link
             to="/lobby"
@@ -101,17 +102,6 @@ const WaitingRoom = ({
           >
             방 나가기
           </Link>
-          {/* <button
-            className="btn btn-large btn-danger bg-red-600"
-            id="buttonLeaveSession"
-            onClick={() => {
-              leaveSession();
-              navigate(-1);
-            }}
-          >
-            방 나가기
-          </button> */}
-
           <button
             className="btn btn-large btn-primary bg-green-600"
             id="buttonInviteModal"
@@ -127,7 +117,7 @@ const WaitingRoom = ({
       <div className="flex justify-between h-5/6">
         <div
           id="teamA-container"
-          className="grid grid-rows-[auto_1fr_auto] border-4 border-sky-500 m-2 h-full w-2/5"
+          className="grid grid-rows-[auto_1fr_auto] border-4 border-sky-500 bg-sky-300 m-2 h-full w-2/5"
         >
           <div className="text-center text-xs bg-sky-200 p-2">
             A 팀 : {teamA.filter((id) => id !== null).length} / 4 명
@@ -148,7 +138,7 @@ const WaitingRoom = ({
                     participantsReady={participantsReady}
                   />
                 ) : (
-                  <div className="flex justify-center items-center bg-gray-200">비디오 슬롯</div>
+                  <div className="flex justify-center items-center bg-gray-200">빈자리</div>
                 )}
               </div>
             ))}
@@ -165,7 +155,7 @@ const WaitingRoom = ({
         </div>
         <div
           id="waiting-area-container"
-          className="flex flex-col border-4 border-green-500 mt-2 h-full w-3/12"
+          className="flex flex-col border-4 border-green-500 bg-green-300 mt-2 h-full w-3/12"
         >
           <div className="text-center text-xs bg-green-200 p-2">
             <div>대기열</div> <div>{teamW.filter((id) => id !== null).length} / 8 명</div>
@@ -198,7 +188,7 @@ const WaitingRoom = ({
         </div>
         <div
           id="teamB-container"
-          className="grid grid-rows-[auto_1fr_auto] border-4 border-red-500 m-2 h-full w-2/5"
+          className="grid grid-rows-[auto_1fr_auto] border-4 border-red-500 bg-red-300 m-2 h-full w-2/5"
         >
           <div className="text-center text-xs bg-red-200 p-2">
             B 팀 : {teamB.filter((id) => id !== null).length} / 4 명
@@ -219,7 +209,7 @@ const WaitingRoom = ({
                     participantsReady={participantsReady}
                   />
                 ) : (
-                  <div className="flex justify-center items-center bg-gray-200">비디오 슬롯</div>
+                  <div className="flex justify-center items-center bg-gray-200">빈자리</div>
                 )}
               </div>
             ))}
@@ -235,26 +225,26 @@ const WaitingRoom = ({
           </div>
         </div>
       </div>
-      <div>
-        <div className="flex">
+      <div className="flex items-center justify-center h-full w-full">
+        <div className="flex items-center justify-center w-full">
           <img
-            className="w-[45px] h-[45px] mx-3"
+            className="w-[45px] h-[45px] mx-4 bg-indigo-500 rounded-full"
             src={cameraOn ? CameraON : CameraOFF}
             onClick={toggleCamera}
           />
           <img
-            className="w-[45px] h-[45px] mx-3"
+            className="w-[45px] h-[45px] mx-4 bg-indigo-500 rounded-full"
             src={micOn ? MicON : MicOFF}
             onClick={toggleMic}
           />
 
           <button
             onClick={() => setIsAudioModalVisible(true)}
-            className="mx-1"
+            className="flex items-center justify-center"
             disabled={myTeam === "W"}
           >
             <img
-              className={`w-[45px] h-[45px] mx-5 ${myTeam === "W" ? "bg-red-500" : "bg-green-500"}`}
+              className={`w-[45px] h-[45px] mx-4 rounded ${myTeam === "W" ? "bg-red-500" : "bg-indigo-500"}`}
               src={Sound}
             />
           </button>
@@ -270,8 +260,11 @@ const WaitingRoom = ({
             teamB={teamB}
           />
 
-          <button onClick={() => setIsChatModalVisible(true)} className="mx-1">
-            <img className="w-[40px] h-[40px] mx-5" src={Chat} />
+          <button
+            onClick={() => setIsChatModalVisible(true)}
+            className="flex items-center justify-center"
+          >
+            <img className="w-[40px] h-[40px] mx-4 rounded bg-indigo-500" src={Chat} />
           </button>
 
           <ChatModal
@@ -289,14 +282,35 @@ const WaitingRoom = ({
             myTeam={myTeam}
             myUserName={myUserName}
           />
-          <div
-            className={`mr-1 flex justify-center items-center border-4 border-orange-700 ${ready ? "bg-green-400" : ""} `}
+          {teamA[0] === myStreamId &&
+          teamA.filter((id) => id !== null).length === teamB.filter((id) => id !== null).length &&
+          Object.values(participantsReady).every((value) => value === true) ? (
+            <div
+              className={`w-[45px] h-[45px] mx-4 flex justify-center items-center border-4 rounded-lg border-indigo-700`}
+              onClick={() => {
+                setGameState("gameLoading");
+              }}
+            >
+              게임시작
+            </div>
+          ) : (
+            <div
+              className={`w-[45px] h-[45px] mx-4 flex justify-center items-center border-4 rounded-lg border-indigo-700 ${ready ? "bg-green-400" : "bg-gray-400"} `}
+              onClick={() => {
+                sendReady();
+              }}
+            >
+              준비
+            </div>
+          )}
+          {/* <div
+            className={`w-[45px] h-[45px] mx-4 flex justify-center items-center border-4 rounded-lg border-indigo-700 ${ready ? "bg-green-400" : "bg-gray-400"} `}
             onClick={() => {
               sendReady();
             }}
           >
-            준비 완료
-          </div>
+            준비
+          </div> */}
           {/* <button
             onClick={() => {
               console.log(participantsReady);

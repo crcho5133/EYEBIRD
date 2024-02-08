@@ -1,8 +1,13 @@
-/** @type {import('tailwindcss').Config} */
-export default {
+// tailwind.config.js
+
+module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        "maplestory-bold": ["MaplestoryOTFBold", "sans-serif"],
+      },
+    },
   },
   plugins: [require("tailwindcss-animated")],
 };

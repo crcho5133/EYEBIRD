@@ -1,7 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import axios from "axios";
 import { Client } from "@stomp/stompjs";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
 import SockJS from "sockjs-client";
+import { baseUrl } from "@/api/url/baseUrl";
 
 const WebSocketContext = createContext();
 
@@ -12,20 +14,43 @@ export const WebSocketProvider = ({ children }) => {
   const [opponentInfo, setOpponentInfo] = useState(undefined);
   const [messages, setMessages] = useState([]);
   const accessToken = useAccessTokenState();
+  const [isConnected, setIsConnected] = useState(false);
   // const email = sessionStorage.getItem("email");
 
-  useEffect(() => {
-    if (!accessToken.accessToken) return;
+  const token = sessionStorage.getItem("accessToken");
+  const refreshTokenAndReconnect = async () => {
+    // if (isConnected) {
+    //   console.log("Already connected. No need to reconnect.");
+    //   return; // 이미 연결된 경우 재연결 시도 중단
+    // }
+    try {
+      console.log("refreshToken", accessToken.accessToken);
+      const response = await axios.post(baseUrl + "/api/auth/reissue", {
+        grantType: "Bearer",
+        accessToken: accessToken.accessToken,
+        refreshToken: accessToken.refreshToken,
+      });
+      // accessToken.setAccessToken(response.data.accessToken);
+      // accessToken.setRefreshToken(response.data.refreshToken);
+      console.log("tettestestsetest");
+      connectWebSocket(response.data.accessToken); // 갱신된 토큰으로 웹소켓 연결 재시도
+    } catch (error) {
+      console.error("토큰 갱신 또는 웹소켓 재연결 중 오류 발생", error);
+    }
+  };
+
+  const connectWebSocket = (token) => {
     const newClient = new Client({
       webSocketFactory: () => new SockJS("https://i10e206.p.ssafy.io/api/ws"),
       connectHeaders: {
-        Authorization: `Bearer ${accessToken.accessToken}`,
+        Authorization: `Bearer ${token}`,
       },
       beforeConnect: () => {
         console.log("Connecting to WebSocket");
       },
       onConnect: () => {
         console.log("Connected to WebSocket");
+        setIsConnected(true);
 
         // 랭크 게임 매칭 성공 수신
         newClient.subscribe("/user/match/" + sessionStorage.getItem("email"), (message) => {
@@ -76,10 +101,16 @@ export const WebSocketProvider = ({ children }) => {
         console.log("Disconnected from WebSocket");
       },
       onWebSocketClose: (closeEvent) => {
-        console.log("WebSocket closed", closeEvent);
+        refreshTokenAndReconnect();
+        // console.log("WebSocket closed", closeEvent);
+        // if (isConnected) {
+        //   setIsConnected(false);
+
+        // }
       },
       onWebSocketError: (error) => {
         console.log("WebSocket error: ", error);
+        // refreshTokenAndReconnect();
       },
 
       heartbeatIncoming: 0,
@@ -88,6 +119,11 @@ export const WebSocketProvider = ({ children }) => {
 
     setClient(newClient);
     newClient.activate();
+  };
+
+  useEffect(() => {
+    if (!accessToken.accessToken) return;
+    connectWebSocket(accessToken.accessToken);
   }, [accessToken.accessToken]);
 
   // 현재 접속 중인 유저 정보를 요청하는 함수
