@@ -3,7 +3,6 @@ import { baseUrl } from "@/api/url/baseUrl";
 export default {
   getRankingList: () => `${baseUrl}/api/point/rank`,
   searchUsers: () => `${baseUrl}/api/user/search`,
-<<<<<<< HEAD
 
   //웹소켓 메시지 매핑 (친구추가 버튼 눌렀을 때 가는 Url)
   addFriendRequest: () => `${baseUrl}/api/message/private`,
@@ -17,6 +16,4 @@ export default {
 
   //친구 요청 메시지 거절하는 url
   rejectFriendRequest: (messageId) => `${baseUrl}/api/message/${messageId}`,
-=======
->>>>>>> origin/develop-FE-js_02_08
 };
