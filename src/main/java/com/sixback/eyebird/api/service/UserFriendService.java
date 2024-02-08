@@ -91,4 +91,11 @@ public class UserFriendService {
         userFriendRepository.delete(userFriend);
 
     }
+
+    // firstUser와 secondUser가 친구인지 확인
+    public boolean alreadyFriend(Long firstUserId, Long secondUserId) {
+        UserFriend userFriend = userFriendRepository.findByUserFromUserTo(firstUserId, secondUserId).orElseThrow(() -> new IllegalArgumentException(""));
+        return false;
+    }
+
 }

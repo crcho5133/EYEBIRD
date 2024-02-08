@@ -7,6 +7,7 @@ import com.sixback.eyebird.api.service.PointService;
 import com.sixback.eyebird.db.repository.UserRepository;
 import com.sixback.eyebird.uncategorized.OpenViduManager;
 import com.sixback.eyebird.db.entity.User;
+import com.sixback.eyebird.util.EloUtil;
 import io.openvidu.java.client.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 @RestController
 @RequestMapping("/api/point")
@@ -38,10 +40,18 @@ public class PointController {
     private final PointService pointService;
 
     // 아이템전 매칭 요청이 들어온 유저들을 담은 queue
-    private final Queue<String> matchingQueueItem = new ConcurrentLinkedQueue<>();
+    //private final Queue<String> matchingQueueItem = new ConcurrentLinkedQueue<>();
     // 클래식전 매칭 요청이 들어온 유저들을 담은 queue
-    private final Queue<String> matchingQueueClassic = new ConcurrentLinkedQueue<>();
+    //private final Queue<String> matchingQueueClassic = new ConcurrentLinkedQueue<>();
 
+    // 아이템전 매칭 요청이 들어온 유저들을 담은 priority queue
+    private final PriorityBlockingQueue<MatchingReqDto> matchingPriorityQueueItem = new PriorityBlockingQueue<>(20, (d1, d2) -> d1.getPoint() - d2.getPoint());
+
+    // 클래식전 매칭 요청이 들어온 유저들을 담은 priority queue
+    private final PriorityBlockingQueue<MatchingReqDto> matchingPriorityQueueClassic = new PriorityBlockingQueue<>(20, (d1, d2) -> d1.getPoint() - d2.getPoint());
+
+
+    // 아이템전 매칭
     private final SimpMessagingTemplate messagingTemplate;
 
     // openvidu 실행을 위해
@@ -50,6 +60,9 @@ public class PointController {
     private final UserRepository userRepository;
 
     private final ObjectMapper objectMapper;
+
+    // elo point 승점 반영
+    private final EloUtil eloUtil;
 
     // 랭크 게임 후 현재 유저의 점수를 변동
     @Operation(summary = "포인트 갱신", description = "Front -> Back -> DB")
@@ -87,17 +100,17 @@ public class PointController {
     @Transactional
     @MessageMapping("/matching")
     public void matching(MatchingReqDto matchingReqDto) throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
-        String reqUserEmail = matchingReqDto.getEmail();
+
         boolean isItem = matchingReqDto.isIfItem();
         log.info(matchingReqDto.toString());
 
         // 아이템전 매칭 요청인 경우
         if (isItem) {
-            matchingQueueItem.add(reqUserEmail);
+            matchingPriorityQueueItem.offer(matchingReqDto);
 
-            if (matchingQueueItem.size() >= 2) {
-                String firstUserEmail = matchingQueueItem.poll();
-                String secondUserEmail = matchingQueueItem.poll();
+            if (matchingPriorityQueueItem.size() >= 2) {
+                String firstUserEmail = matchingPriorityQueueItem.poll().getEmail();
+                String secondUserEmail = matchingPriorityQueueItem.poll().getEmail();
                 User firstUser = userRepository.findUserByEmail(firstUserEmail).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 지닌 유저가 존재하지 않습니다"));
                 User secondUser = userRepository.findUserByEmail(secondUserEmail).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 지닌 유저가 존재하지 않습니다"));
 
@@ -113,15 +126,29 @@ public class PointController {
                 OpenVidu openvidu = openViduManager.getOpenvidu();
                 Session session = openvidu.createSession(properties);
 
+                // firstUser와 secondUser의 현재 점수
+                int firstUserPt = firstUser.getPoint().getItemPt();
+                int secondUserPt = secondUser.getPoint().getItemPt();
+
+                // 첫번째, 두번째 유저의 예상 승점
+                int[] expectedWinPts = eloUtil.getExpectedWinPts(firstUserPt, secondUserPt);
+
+                // 첫번째, 두번째 유저의 예상 패점
+                int[] expectedLosePts = eloUtil.getExpectedLosePts(firstUserPt, secondUserPt);
+
                 // 각 유저 상대방 유저의 정보와 sessionId를 전달
                 OpenviduSessionIdResDto firstUserOpenviduSessionIdResDto = OpenviduSessionIdResDto.builder()
                         .openviduSessionId(session.getSessionId())
                         .user(secondUser)
+                        .expectedWinPt(expectedWinPts[0])
+                        .expectedLosePt(expectedLosePts[0])
                         .build();
 
                 OpenviduSessionIdResDto secondUserOpenviduSessionIdResDto = OpenviduSessionIdResDto.builder()
                         .openviduSessionId(session.getSessionId())
                         .user(firstUser)
+                        .expectedWinPt(expectedWinPts[1])
+                        .expectedLosePt(expectedLosePts[1])
                         .build();
 
                 String jsonFirstUserOpenviduSessionIdResDto = objectMapper.writeValueAsString(firstUserOpenviduSessionIdResDto);
@@ -136,11 +163,11 @@ public class PointController {
 
         // 클래식전 매칭 요청인 경우
         else {
-            matchingQueueClassic.add(reqUserEmail);
+            matchingPriorityQueueClassic.add(matchingReqDto);
 
-            if (matchingQueueClassic.size() >= 2) {
-                String firstUserEmail = matchingQueueClassic.poll();
-                String secondUserEmail = matchingQueueClassic.poll();
+            if (matchingPriorityQueueClassic.size() >= 2) {
+                String firstUserEmail = matchingPriorityQueueClassic.poll().getEmail();
+                String secondUserEmail = matchingPriorityQueueClassic.poll().getEmail();
                 User firstUser = userRepository.findUserByEmail(firstUserEmail).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 지닌 유저가 존재하지 않습니다"));
                 User secondUser = userRepository.findUserByEmail(secondUserEmail).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 지닌 유저가 존재하지 않습니다"));
 
@@ -156,15 +183,29 @@ public class PointController {
                 OpenVidu openvidu = openViduManager.getOpenvidu();
                 Session session = openvidu.createSession(properties);
 
+                // firstUser와 secondUser의 현재 점수
+                int firstUserPt = firstUser.getPoint().getItemPt();
+                int secondUserPt = secondUser.getPoint().getItemPt();
+
+                // 첫번째, 두번째 유저의 예상 승점
+                int[] expectedWinPts = eloUtil.getExpectedWinPts(firstUserPt, secondUserPt);
+
+                // 첫번째, 두번째 유저의 예상 패점
+                int[] expectedLosePts = eloUtil.getExpectedLosePts(firstUserPt, secondUserPt);
+
                 // 각 유저 상대방 유저의 정보와 sessionId를 전달
                 OpenviduSessionIdResDto firstUserOpenviduSessionIdResDto = OpenviduSessionIdResDto.builder()
                         .openviduSessionId(session.getSessionId())
                         .user(secondUser)
+                        .expectedWinPt(expectedWinPts[0])
+                        .expectedLosePt(expectedLosePts[0])
                         .build();
 
                 OpenviduSessionIdResDto secondUserOpenviduSessionIdResDto = OpenviduSessionIdResDto.builder()
                         .openviduSessionId(session.getSessionId())
                         .user(firstUser)
+                        .expectedWinPt(expectedWinPts[0])
+                        .expectedLosePt(expectedLosePts[0])
                         .build();
 
                 String jsonFirstUserOpenviduSessionIdResDto = objectMapper.writeValueAsString(firstUserOpenviduSessionIdResDto);
@@ -172,7 +213,7 @@ public class PointController {
 
 
                 // 각 유저에게 openvidu의 sessionId 전달
-                // TODO sessionId뿐 만 아니라 상대방 유저의 정보또한 돌려준다.
+                // sessionId뿐 만 아니라 상대방 유저의 정보또한 돌려준다.
                 messagingTemplate.convertAndSend("/user/match/"  + firstUserEmail, jsonFirstUserOpenviduSessionIdResDto);
                 messagingTemplate.convertAndSend("/user/match/" + secondUserEmail, jsonSecondUserOpenviduSessionIdResDto);
 
@@ -190,12 +231,39 @@ public class PointController {
         log.info(matchingReqDto.toString());
         // 아이템전 매칭 요청 취소인 경우
         if (isItem) {
-            matchingQueueItem.remove(userEmail);
-        }
+            //  remove
+            List<MatchingReqDto> list = new ArrayList<>();
+            while (!matchingPriorityQueueItem.isEmpty()) {
+                MatchingReqDto polled = matchingPriorityQueueItem.poll();
+
+                if (polled.equals(matchingReqDto)) break;
+
+                list.add(polled);
+
+            }
+
+            for (MatchingReqDto m: list) {
+                matchingPriorityQueueItem.offer(m);
+            }
+
+         }
 
         // 클래식전 매칭 요청 취소인 경우
         else {
-            matchingQueueClassic.remove(userEmail);
+            //  remove
+            List<MatchingReqDto> list = new ArrayList<>();
+            while (!matchingPriorityQueueClassic.isEmpty()) {
+                MatchingReqDto polled = matchingPriorityQueueClassic.poll();
+
+                if (polled.equals(matchingReqDto)) break;
+
+                list.add(polled);
+
+            }
+
+            for (MatchingReqDto m: list) {
+                matchingPriorityQueueClassic.offer(m);
+            }
         }
     }
 
