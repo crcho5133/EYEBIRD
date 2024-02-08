@@ -21,7 +21,7 @@ public class StompErrorHandler extends StompSubProtocolErrorHandler {
             Throwable ex) {
 
         if ("UNAUTHORIZED".equals(ex.getMessage())) {
-            return errorMessage("유효하지 않은 권한입니다.");
+            return errorMessage("유효하지 않은 토큰입니다");
         }
 
         return super.handleClientMessageProcessingError(clientMessage, ex);
