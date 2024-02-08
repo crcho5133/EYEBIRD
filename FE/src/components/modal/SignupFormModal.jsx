@@ -79,17 +79,19 @@ const SignupFormModal = ({ visible, onClose }) => {
       <Rodal
         visible={visible}
         customStyles={{
-          width: "90vw",
-          height: "80vh",
+          width: "80vw",
+          height: "90vh",
+          top: 0,
+          left: 0,
           padding: 0, // 내부 패딩 제거
           background: `url(${backgroundImage}) no-repeat center center`,
-          backgroundSize: "contain", // 배경 이미지가 모달 내부에 맞게 조정
-          maxWidth: "500px",
-          borderRadius: "0", // 모달의 모서리를 둥글게 하지 않음
+          backgroundSize: "contain",
+          // maxWidth: "500px",
+          borderRadius: "0",
           boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-          display: "flex", // Flex를 추가
-          justifyContent: "center", // 중앙 정렬
-          alignItems: "center", // 상하 중앙 정렬
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
         onClose={() => {
           clearAllInput();
@@ -98,6 +100,9 @@ const SignupFormModal = ({ visible, onClose }) => {
       >
         <div
           style={{
+            position: "absolute", // 부모 요소에 상대적인 절대 위치
+            top: "50%", // 부모의 세로 중앙에서 시작
+            transform: "translateY(-50%)",
             width: "70%",
             height: "70%",
             display: "flex",
@@ -108,61 +113,57 @@ const SignupFormModal = ({ visible, onClose }) => {
           }}
           className="flex flex-col"
         >
-          <div
-            className="p-4 flex flex-col justify-center items-center"
-            style={{ marginTop: "20vh" }}
-          >
-            {profileImage.value ? (
-              <div className="border-4 border-gold-500 shadow-lg rounded-full overflow-hidden">
-                <img
-                  src={profileImage.value}
-                  alt="프로필 이미지"
-                  className="w-16 h-16 object-cover"
-                />
-              </div>
-            ) : (
-              <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
-            )}
+          <div className="max-w-full space-y-1" style={{ marginTop: "8vh" }}>
+            <div className="p-4 flex flex-col justify-center items-center max-w-full">
+              {profileImage.value ? (
+                <div className="border-4 border-gold-500 shadow-lg rounded-full overflow-hidden">
+                  <img
+                    src={profileImage.value}
+                    alt="프로필 이미지"
+                    className="w-16 h-16 object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
+              )}
 
-            <LobbyBtn
-              onClick={isProfileImageModalVisible.showRodal}
-              style={{
-                marginTop: "1vh",
-                backgroundImage: `url(${imageSelectBtn})`,
-                backgroundSize: "100% 100%",
-                backgroundPosition: "center",
-                width: "25vw",
-                height: "3vh",
-              }}
-            />
-          </div>
-          <div className="space-y-1">
-            <div className="space-y-1 mx-auto max-w-ls">
-              <div className="flex items-center space-x-2">
-                <label
-                  htmlFor="email"
-                  className="text-sm font-bold"
-                  style={{ width: "15vw", height: "1vh" }}
-                >
-                  이메일 :
-                </label>
-                <input
-                  id="email"
-                  type="text"
-                  value={email.value}
-                  style={{ width: "30vw", height: "1vh" }}
-                  className="px-3 py-2 border-2 border-orange-300 rounded-md focus:outline-none focus:ring focus:ring-orange-500 bg-transparent text-sm shadow"
-                  onChange={(e) => email.onChange(e.target.value)}
-                />
-                <ModalBtn
-                  text="중복확인"
-                  onClick={checkEmailDuplicate}
-                  disabled={!email.isValid || !email.value}
-                  className="text-xs border-2 border-orange-300 rounded-md flex items-center justify-center"
-                  style={{ width: "8vw", height: "5vh" }}
-                />
-              </div>
+              <LobbyBtn
+                onClick={isProfileImageModalVisible.showRodal}
+                style={{
+                  marginTop: "1vh",
+                  backgroundImage: `url(${imageSelectBtn})`,
+                  backgroundSize: "100% 100%",
+                  backgroundPosition: "center",
+                  width: "25vw",
+                  height: "3vh",
+                }}
+              />
             </div>
+            <div className="flex items-center space-x-2">
+              <label
+                htmlFor="email"
+                className="text-sm font-bold"
+                style={{ width: "5vw", height: "1vh" }}
+              >
+                이메일 :
+              </label>
+              <input
+                id="email"
+                type="text"
+                value={email.value}
+                style={{ width: "30vw", height: "1vh" }}
+                className="px-3 py-2 border-2 border-orange-300 rounded-md focus:outline-none focus:ring focus:ring-orange-500 bg-transparent text-sm shadow"
+                onChange={(e) => email.onChange(e.target.value)}
+              />
+              <ModalBtn
+                text="중복확인"
+                onClick={checkEmailDuplicate}
+                disabled={!email.isValid || !email.value}
+                className="text-xs border-2 border-orange-300 rounded-md flex items-center justify-center"
+                style={{ width: "8vw", height: "5vh" }}
+              />
+            </div>
+
             <p className="text-sm text-green-500">
               {!email.isValid && email.hasChecked && (
                 <div style={{ color: "green" }}>중복확인이 완료 되었습니다.</div>
@@ -178,13 +179,12 @@ const SignupFormModal = ({ visible, onClose }) => {
               <label
                 htmlFor="email"
                 className="text-sm font-bold flex-shrink-0"
-                style={{ width: "15vw", height: "1vh" }}
+                style={{ width: "5vw", height: "1vh" }}
               >
                 닉네임 :
               </label>
               <input
                 type="text"
-                placeholder="닉네임"
                 value={nickname.value}
                 style={{ width: "30vw", height: "1vh" }}
                 className="w-5/12 px-3 py-2 border-2 border-orange-300 rounded-md focus:outline-none focus:ring focus:ring-orange-500 bg-transparent text-sm shadow"
@@ -217,7 +217,7 @@ const SignupFormModal = ({ visible, onClose }) => {
                 <label
                   htmlFor="password"
                   className="text-sm font-bold flex-shrink-0"
-                  style={{ width: "20vw", height: "1vh" }}
+                  style={{ width: "5vw", height: "1vh" }}
                 >
                   비밀번호 :
                 </label>
