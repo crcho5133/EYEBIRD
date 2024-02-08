@@ -13,5 +13,5 @@ public class MessageResDto {
     private boolean ifRead;
 
     @NotBlank(message = "메세지의 발신자는 빈 문자열이 아닙니다")
-    private String userFromNickname; // 발신자의 닉네임 //
+    private String userFromNickname; // 발신자의 닉네임
 }

@@ -40,7 +40,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    // TODO 회원수정 - 닉네임
+    // 회원수정 - 닉네임
     @PatchMapping("/nickname")
     public ResponseEntity<Void> updateNickname(@RequestBody @Valid UpdateNicknameReqDto updateNicknameReqDto, Authentication authentication) {
         String email = authentication.getName();
@@ -49,7 +49,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    // TODO 회원수정 - 프로필 이미지
+    // 회원수정 - 프로필 이미지
     @PatchMapping("/profile-image")
     public ResponseEntity<Void> updateProfileImage(@RequestBody @Valid UpdateProfileImageReqDto updateProfileImageReqDto, Authentication authentication) {
         String email = authentication.getName();

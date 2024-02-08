@@ -6,6 +6,7 @@ import com.sixback.eyebird.api.dto.FriendAcceptReqDto;
 import com.sixback.eyebird.api.dto.MessageReqDto;
 import com.sixback.eyebird.api.dto.MessageResDto;
 import com.sixback.eyebird.api.service.MessageService;
+import com.sixback.eyebird.api.service.UserFriendService;
 import com.sixback.eyebird.api.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,16 +26,28 @@ public class MessageController {
     private final ObjectMapper objectMapper;
     private final UserService userService;
     private final MessageService messageService;
+    private final UserFriendService userFriendService;
 
-    //  나의 메세지 모두 가져오기(REST)
-    @GetMapping("")
-    public ResponseEntity<List<MessageResDto>> getMessages(Authentication authentication) {
+    // 나의 친구 요청 메세지 모두 가져오기(REST)
+    @GetMapping("/friendRequest")
+    public ResponseEntity<List<MessageResDto>> getFriendReqMessages(Authentication authentication) {
         String email = authentication.getName();
 
-        // 나에게 온 메세지를 모두 검색
-        List<MessageResDto> myMessages = messageService.getMessages(email);
+        // 나에게 온 친구 요청 메세지를 모두 검색
+        List<MessageResDto> myFriendRequestMessages = messageService.getFriendReqMessages(email);
 
-        return ResponseEntity.ok().body(myMessages);
+        return ResponseEntity.ok().body(myFriendRequestMessages);
+    }
+
+    // 나의 쪽지 모두 가져오기
+    @GetMapping("/text")
+    public ResponseEntity<List<MessageResDto>> getTextMessages(Authentication authentication) {
+        String email = authentication.getName();
+
+        // 나에게 온 쪽지 메세지를 모두 검색
+        List<MessageResDto> myTextMessages = messageService.getTextMessages(email);
+
+        return ResponseEntity.ok().body(myTextMessages);
     }
 
     // 특정 메세지 확인하기(REST)
@@ -53,8 +66,20 @@ public class MessageController {
         String userFromNickname = userService.getNicknameFromEmail(userFromEmail);
 
         // 메세지의 수신자의 닉네임과 이메일
-        String userToNickname = messageReqDto.getUserToNickname();
-        String userToEmail = userService.getEmailFromNickname(userToNickname);
+        String userToEmail = messageReqDto.getUserToEmail();
+        String userToNickname = userService.getNicknameFromEmail(userToEmail);
+
+        // 발신자가 수신자에게 친구추가 메세지를 이전에 보냈는지 확인
+        if (messageService.alreadyFriend(userFromEmail, userToEmail)) {
+            throw new IllegalArgumentException("친구 추가: 이미 친구 추가 요청을 한 유저입니다");
+        }
+
+        Long firstUserId = userService.getUserFromEmail(userFromEmail).getId();
+        Long secondUserId = userService.getUserFromEmail(userToEmail).getId();
+        userFriendService.alreadyFriend(firstUserId, secondUserId);
+
+        // 송신한 메세지 저장
+        messageService.saveMessage(messageReqDto, userFromEmail);
 
         int msgType = messageReqDto.getMsgType();
         String msgText = messageReqDto.getMsgText();
@@ -67,8 +92,10 @@ public class MessageController {
         // 수신자의 url
         messagingTemplate.convertAndSend("/user/private/" + userToEmail, jsonMessageResDto);
 
-        // 송신한 메세지 저장
-        messageService.saveMessage(messageReqDto, userFromNickname);
+
+
+
+
 
     }
 
@@ -81,6 +108,7 @@ public class MessageController {
         return ResponseEntity.ok().build();
     }
 
+    // 친구 요청 메세지 수락
     @PostMapping("/friend")
     public ResponseEntity<Void> acceptFriendRequest(@RequestBody @Valid FriendAcceptReqDto friendAcceptReqDto, Authentication authentication) {
         String userFromNickname = friendAcceptReqDto.getUserFrom();

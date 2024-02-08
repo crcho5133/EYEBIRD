@@ -8,5 +8,5 @@ export default function OpenViduVideoComponent({ streamManager }) {
     }
   }, [streamManager]);
 
-  return <video autoPlay={true} ref={videoRef} />;
+  return <video className="rounded-3xl" autoPlay={true} ref={videoRef} />;
 }

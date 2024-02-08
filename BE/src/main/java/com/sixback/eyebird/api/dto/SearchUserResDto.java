@@ -12,6 +12,8 @@ import java.util.List;
 @Getter
 public class SearchUserResDto {
     @NotBlank
+    private String email;
+    @NotBlank
     private String nickname;
     private int profileImage;
     private int classicPt;
@@ -23,7 +25,7 @@ public class SearchUserResDto {
 
     @Builder
     public SearchUserResDto(User user) {
-
+        this.email = user.getEmail();
         this.nickname = user.getNickname();
         this.profileImage = user.getProfileImage();
 
