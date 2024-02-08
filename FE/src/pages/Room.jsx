@@ -5,9 +5,9 @@ import { toast, Slide, Bounce } from "react-toastify";
 import { usePreventGoBackRoom } from "../hooks/usePreventGoBackRoom";
 import axios from "axios";
 import WaitingRoom from "../components/room/WaitingRoom";
-// import NormalGameLoading from "../components/room/NormalGameLoading";
-// import NormalGamePlay from "../components/room/NormalGamePlay";
-// import NormalGameResult from "../components/room/NormalGameResult";
+import NormalGameLoading from "../components/room/NormalGameLoading";
+import NormalGamePlay from "../components/room/NormalGamePlay";
+import NormalGameResult from "../components/room/NormalGameResult";
 import MicON from "../assets/img/room/MicOn.png";
 import MicOFF from "../assets/img/room/MicOff.png";
 import CameraON from "../assets/img/room/CameraOn.png";
@@ -659,10 +659,12 @@ const Room = () => {
           ready={ready}
           sendReady={sendReady}
           participantsReady={participantsReady}
+          setGameState={setGameState}
         />
       )}
-      {!isLoading && gameState === "gamePlay" && <GamePlay /* 필요한 props */ />}
-      {!isLoading && gameState === "gameResult" && <GameResult /* 필요한 props */ />}
+      {!isLoading && gameState === "gameLoading" && <NormalGameLoading /* 필요한 props */ />}
+      {!isLoading && gameState === "gamePlay" && <NormalGamePlay /* 필요한 props */ />}
+      {!isLoading && gameState === "gameResult" && <NormalGameResult /* 필요한 props */ />}
     </>
   );
 };

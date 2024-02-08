@@ -2,7 +2,6 @@ import axios from "axios";
 import { baseUrl } from "@/api/url/baseUrl";
 import { useNavigate } from "react-router-dom";
 import { useAccessTokenState } from "@/context/AccessTokenContext";
-
 const useAxiosConfig = () => {
   const accessToken = useAccessTokenState();
   const navigate = useNavigate();
@@ -44,6 +43,8 @@ const useAxiosConfig = () => {
 
           return axios(originalRequest);
         } catch (refreshError) {
+          sessionStorage.setItem("accessToken", "");
+          sessionStorage.setItem("refreshToken", "");
           navigate("/");
           return Promise.reject(refreshError);
         }

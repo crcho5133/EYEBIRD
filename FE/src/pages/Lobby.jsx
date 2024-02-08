@@ -81,17 +81,20 @@ const Lobby = () => {
           {!isBtnVisible.value && (
             <div>
               <NavBarNoBack />
+              <div></div>
               <div className="h-screen flex flex-col items-center space-y-12">
+                <div></div>
                 {/* 프로필 사진, 랭킹, 내정보 버튼 */}
-                <div className="flex items-center ">
+                <div className="flex items-center gap-12">
                   {/* 프로필 사진 */}
                   <div className="item">
+                    {/* <img src={frame}/> */}
                     <img
                       src={myInfo.profile}
                       alt="Profile"
-                      className="object-contain h-full ml-4"
+                      className="object-contain h-auto ml-4 "
                       style={{
-                        width: "70%",
+                        width: "250px",
                       }}
                     />
                   </div>
@@ -121,12 +124,15 @@ const Lobby = () => {
                   <button onClick={handleRankingGameChoiceClick} style={{ position: "relative" }}>
                     <img src={btn_main} />
                     <div
+                      className="font-bold"
                       style={{
+                        fontSize: "180%",
                         position: "absolute",
                         top: "50%",
                         left: "50%",
                         transform: "translate(-50%, -50%)",
                         color: "white",
+                        textShadow: "5px 5px 4px rgba(0,0,0,0.5)", // 텍스트 주위에 테두리 효과 추가
                       }}
                     >
                       랭킹전
@@ -137,12 +143,15 @@ const Lobby = () => {
                   <button onClick={handleNormalMatchChoiceClick} style={{ position: "relative" }}>
                     <img src={btn_main} />
                     <div
+                      className="font-bold"
                       style={{
+                        fontSize: "180%",
                         position: "absolute",
                         top: "50%",
                         left: "50%",
                         transform: "translate(-50%, -50%)",
                         color: "white",
+                        textShadow: "5px 5px 4px rgba(0,0,0,0.5)", // 텍스트 주위에 테두리 효과 추가
                       }}
                     >
                       일반전

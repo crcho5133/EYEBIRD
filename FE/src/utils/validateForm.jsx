@@ -1,5 +1,6 @@
 export const validateEmail = (email) => {
-  const re = /\S+@\S+\.\S+/;
+  const re =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
 };
 
@@ -9,6 +10,6 @@ export const validateNickname = (nickname) => {
 };
 
 export const validatePassword = (password) => {
-  const re = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{6,}$/;
+  const re = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*?])[a-zA-Z\d!@#$%^&*?]{6,}$/;
   return re.test(password);
 };
