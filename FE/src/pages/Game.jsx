@@ -53,6 +53,9 @@ const Game = () => {
   const [rematchRequest, setRematchRequest] = useState(false);
   const [rematchResponse, setRematchResponse] = useState(false);
   const [rematch, setRematch] = useState(false);
+  // 게임 승/패 점수
+  const expectedWinPt = opponentInfoParsed.expectedWinPt;
+  const expectedLosePt = opponentInfoParsed.expectedLosePt;
 
   // 이 변수 switch camera 전용 변수? 확인하기
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
@@ -93,8 +96,18 @@ const Game = () => {
     if (myLose || opponentLose) {
       if (myLose && myWin === null) {
         setMyWin(false);
+        if (gameType === "classic") {
+          updatePoint(expectedLosePt, 0);
+        } else {
+          updatePoint(0, expectedLosePt);
+        }
       } else if (opponentLose && myWin === null) {
         setMyWin(true);
+        if (gameType === "classic") {
+          updatePoint(expectedWinPt, 0);
+        } else {
+          updatePoint(0, expectedWinPt);
+        }
       }
       setTimeout(() => {
         setGameState("gameResult");
@@ -290,6 +303,17 @@ const Game = () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [leaveSession]);
+
+  const updatePoint = async (classicPt, itemPt) => {
+    const response = await axios.patch(
+      APPLICATION_SERVER_URL + "api/point",
+      { classicPt: classicPt, itemPt: itemPt },
+      {
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+      }
+    );
+    console.log(response);
+  };
 
   const getToken2 = async () => {
     const response = await axios.post(

@@ -13,8 +13,11 @@ const RankingGameChoice = () => {
   const { client, match, gameId, setMatch, opponentInfo } = useWebSocket();
   const [gameType, setGameType] = useState("");
   const [point, setPoint] = useState("");
+  const [matching, setMatching] = useState(false);
 
   const navigate = useNavigate();
+  const classicPoint = sessionStorage.getItem("classicPt");
+  const itemPoint = sessionStorage.getItem("itemPt");
   const email = sessionStorage.getItem("email");
 
   useEffect(() => {
@@ -35,6 +38,7 @@ const RankingGameChoice = () => {
 
   const startMatch = (isItem) => {
     toast.info("매칭 찾는 중...", { autoClose: false, position: "top-center", theme: "colored" });
+    setMatching(true);
     if (client) {
       client.publish({
         destination: "/stomp/matching",
@@ -42,7 +46,7 @@ const RankingGameChoice = () => {
           // Your JSON data here
           ifItem: isItem,
           email: email,
-          point: point,
+          point: isItem ? itemPoint : classicPoint,
         }),
       });
       console.log("Invitation sent");
@@ -51,18 +55,44 @@ const RankingGameChoice = () => {
     }
   };
 
+  const cancelMatch = (isItem) => {
+    toast.dismiss();
+    setMatching(false);
+    if (client) {
+      client.publish({
+        destination: "/stomp/stomp/matching-cancel",
+        body: JSON.stringify({
+          ifItem: isItem,
+          email: email,
+          point: isItem ? itemPoint : classicPoint,
+        }),
+      });
+      console.log("cancel message sent");
+    } else {
+      console.log("WebSocket connection is not active");
+    }
+  };
+
   const handleClassicClick = () => {
     // 클래식 버튼 클릭 시 수행하는 함수를 여기에 작성하세요.
-    setGameType("classic");
-    setPoint(sessionStorage.getItem("classicPt"));
-    startMatch(false);
+    if (!matching) {
+      setGameType("classic");
+      startMatch(false);
+    } else {
+      setGameType("");
+      cancelMatch(false);
+    }
   };
 
   const handleItemClick = () => {
     // 아이템 버튼 클릭 시 수행하는 함수를 여기에 작성하세요.
-    setGameType("item");
-    setPoint(sessionStorage.getItem("itemPt"));
-    startMatch(true);
+    if (!matching) {
+      setGameType("item");
+      startMatch(true);
+    } else {
+      setGameType("");
+      cancelMatch(true);
+    }
   };
 
   return (
@@ -123,7 +153,7 @@ const RankingGameChoice = () => {
                     textShadow: "5px 5px 4px rgba(0,0,0,0.5)", // 텍스트 주위에 테두리 효과 추가
                   }}
                 >
-                  클래식전
+                  {matching && gameType === "classic" ? "매칭 취소" : "클래식전"}
                 </div>
               </button>
             </div>
@@ -143,7 +173,7 @@ const RankingGameChoice = () => {
                     textShadow: "5px 5px 4px rgba(0,0,0,0.5)", // 텍스트 주위에 테두리 효과 추가
                   }}
                 >
-                  아이템전
+                  {matching && gameType === "item" ? "매칭 취소" : "아이템전"}
                 </div>
               </button>
             </div>
