@@ -9,9 +9,9 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: [], // 정적 파일 목록
       manifest: {
-        name: "React PWA",
+        name: "눈 깜빡할 새",
         short_name: "눈 깜빡할 새",
-        start_url: "/",
+        start_url: "/?fullscreen=true",
         display: "fullscreen",
         theme_color: "#ffffff",
         icons: [
