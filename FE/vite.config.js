@@ -12,7 +12,7 @@ export default defineConfig({
         name: "React PWA",
         short_name: "눈 깜빡할 새",
         start_url: "/",
-        display: "standalone",
+        display: "fullscreen",
         theme_color: "#ffffff",
         icons: [
           {
