@@ -12,6 +12,8 @@ const NormalGamePlay = ({
   setGameState,
   sendLose,
   setWinTeam,
+  itemVisible,
+  useItem,
 }) => {
   const [gamePhase, setGamePhase] = useState(0);
   const [scoreA, setScoreA] = useState(0);
@@ -21,6 +23,8 @@ const NormalGamePlay = ({
   const [inGameState, setInGameState] = useState("waiting");
   const [check, setCheck] = useState(false);
   const [effect, setEffect] = useState("");
+  const [itemCount, setItemCount] = useState(3);
+  const [canUse, setCanUse] = useState(true);
   const maxPhase = teamA.filter((id) => id !== null).length;
 
   useEffect(() => {
@@ -61,31 +65,30 @@ const NormalGamePlay = ({
   }, [gamePhase]);
 
   session.on("signal:lose", (event) => {
-    if (check) {
-      return;
-    }
-    setCheck(true);
-    const loseteam = event.data;
-    console.log(loseteam);
-    if (inGameState === "playing") {
-      if (loseteam === "A") {
-        setEffect("B");
-        setScoreB(scoreB + 1);
-        setTimeout(() => {
-          setEffect("");
-          setInGameState("waiting");
-          setGamePhase(gamePhase + 1);
-          setCheck(false);
-        }, 3000);
-      } else if (loseteam === "B") {
-        setEffect("A");
-        setScoreA(scoreA + 1);
-        setTimeout(() => {
-          setEffect("");
-          setInGameState("waiting");
-          setGamePhase(gamePhase + 1);
-          setCheck(false);
-        }, 3000);
+    if (!check) {
+      setCheck(true);
+      const loseteam = event.data;
+      console.log(loseteam);
+      if (inGameState === "playing" && !effect) {
+        if (loseteam === "A") {
+          setEffect("B");
+          setScoreB(scoreB + 1);
+          setTimeout(() => {
+            setEffect("");
+            setInGameState("waiting");
+            setGamePhase(gamePhase + 1);
+            setCheck(false);
+          }, 3000);
+        } else if (loseteam === "B") {
+          setEffect("A");
+          setScoreA(scoreA + 1);
+          setTimeout(() => {
+            setEffect("");
+            setInGameState("waiting");
+            setGamePhase(gamePhase + 1);
+            setCheck(false);
+          }, 3000);
+        }
       }
     }
   });
@@ -152,6 +155,7 @@ const NormalGamePlay = ({
             )}
             {inGameState === "playing" && (
               <div>
+                {gameType === "classic" ? "" : <div>아이템 사용 가능 횟수 : {itemCount}</div>}
                 <div className="invisible absolute">
                   <GameUserVideoComponent
                     streamManager={publisher}
@@ -160,9 +164,21 @@ const NormalGamePlay = ({
                   />
                 </div>
                 {teamB[gamePhase] === publisher.stream.streamId && (
-                  <div>
+                  <div
+                    onClick={() => {
+                      if (itemCount > 0 && canUse) {
+                        setItemCount(itemCount - 1);
+                        setCanUse(false);
+                        useItem();
+                        setTimeout(() => {
+                          setCanUse(true);
+                        }, 3000);
+                      }
+                    }}
+                  >
                     {effect === "A" && <div className="text-xl">패배</div>}
                     {effect === "B" && <div className="text-xl">승리</div>}
+                    {itemVisible ? <div className="absolute text-3xl">아이템 사용중</div> : ""}
                     <GameVideoComponent
                       streamManager={
                         teamA[gamePhase] === publisher?.stream.streamId
@@ -173,9 +189,21 @@ const NormalGamePlay = ({
                   </div>
                 )}
                 {teamA[gamePhase] === publisher.stream.streamId && (
-                  <div>
+                  <div
+                    onClick={() => {
+                      if (itemCount > 0 && canUse) {
+                        setItemCount(itemCount - 1);
+                        setCanUse(false);
+                        useItem();
+                        setTimeout(() => {
+                          setCanUse(true);
+                        }, 3000);
+                      }
+                    }}
+                  >
                     {effect === "A" && <div className="text-xl">승리</div>}
                     {effect === "B" && <div className="text-xl">패배</div>}
+                    {itemVisible ? <div className="absolute text-3xl">아이템 사용중</div> : ""}
                     <GameVideoComponent
                       streamManager={
                         teamB[gamePhase] === publisher?.stream.streamId

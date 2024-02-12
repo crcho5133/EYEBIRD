@@ -79,6 +79,8 @@ const Room = () => {
   const [teamChatMessages, setTeamChatMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
   const [chatMode, setChatMode] = useState("all");
+  // 아이템 사용
+  const [itemVisible, setItemVisible] = useState(false);
   // 승패
   const [winTeam, setWinTeam] = useState("");
   // 상태 최신화 참조
@@ -346,6 +348,13 @@ const Room = () => {
     });
   };
 
+  const useItem = () => {
+    session.signal({
+      data: myUserName,
+      type: "useitem",
+    });
+  };
+
   const joinSession = useCallback(() => {
     const mySession = OV.current.initSession();
 
@@ -373,7 +382,7 @@ const Room = () => {
       }
     });
 
-    mySession.on("signal:start", () => {
+    mySession.on("signal:start", async () => {
       setGameState("gameLoading");
       setTimeout(() => {
         setGameState("gamePlay");
@@ -480,6 +489,16 @@ const Room = () => {
           }
           return newTeamW;
         });
+      }
+    });
+
+    mySession.on("signal:useitem", (event) => {
+      const username = event.data;
+      if (username !== myUserName) {
+        setItemVisible(true);
+        setTimeout(() => {
+          setItemVisible(false);
+        }, 3000);
       }
     });
 
@@ -708,6 +727,8 @@ const Room = () => {
           setGameState={setGameState}
           sendLose={sendLose}
           setWinTeam={setWinTeam}
+          itemVisible={itemVisible}
+          useItem={useItem}
         />
       )}
       {!isLoading && gameState === "gameResult" && (
