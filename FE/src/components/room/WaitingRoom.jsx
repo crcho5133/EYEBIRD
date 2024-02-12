@@ -44,6 +44,7 @@ const WaitingRoom = ({
   sendReady,
   participantsReady,
   setGameState,
+  sendStart,
 }) => {
   const [isChatModalVisible, setIsChatModalVisible] = useState(false);
   const [isAudioModalVisible, setIsAudioModalVisible] = useState(false);
@@ -124,7 +125,7 @@ const WaitingRoom = ({
           </div>
           <div className="grid grid-rows-4 gap-1 overflow-hidden">
             {teamA.map((streamId, idx) => (
-              <div key={idx} className="w-full h-full border-sky-500">
+              <div key={idx} className="aspect-w-16 aspect-h-9 border border-sky-500">
                 {streamId ? (
                   <UserVideoComponent
                     streamManager={
@@ -182,7 +183,7 @@ const WaitingRoom = ({
               onClick={() => handleSelectTeam(publisher.stream.streamId, "W")}
               className="rounded-md w-full bg-green-300 hover:bg-green-700"
             >
-              대기열 선택
+              대기열<div>선택</div>
             </button>
           </div>
         </div>
@@ -288,7 +289,7 @@ const WaitingRoom = ({
             <div
               className={`w-[45px] h-[45px] mx-4 flex justify-center items-center border-4 rounded-lg border-indigo-700`}
               onClick={() => {
-                setGameState("gameLoading");
+                sendStart();
               }}
             >
               게임시작

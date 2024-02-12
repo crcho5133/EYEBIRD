@@ -236,6 +236,13 @@ const Room = () => {
     });
   };
 
+  const sendStart = () => {
+    session.signal({
+      data: "",
+      type: "start",
+    });
+  };
+
   const chatProps = {
     chatMessages,
     teamChatMessages,
@@ -354,6 +361,10 @@ const Room = () => {
       } else if (receivedMessage.mode === myTeamRef.current) {
         setTeamChatMessages((prevMessages) => [...prevMessages, receivedMessage]);
       }
+    });
+
+    mySession.on("signal:start", () => {
+      setGameState("gameLoading");
     });
 
     mySession.on("signal:ready", (event) => {
@@ -660,6 +671,7 @@ const Room = () => {
           sendReady={sendReady}
           participantsReady={participantsReady}
           setGameState={setGameState}
+          sendStart={sendStart}
         />
       )}
       {!isLoading && gameState === "gameLoading" && <NormalGameLoading /* 필요한 props */ />}

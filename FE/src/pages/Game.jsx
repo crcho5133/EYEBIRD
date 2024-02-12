@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { OpenVidu } from "openvidu-browser";
 import { usePreventBrowserControl } from "../hooks/usePreventBrowserControl";
+import { useAccessTokenState } from "@/context/AccessTokenContext";
 import { toast, Slide, Bounce } from "react-toastify";
 import axios from "axios";
 // 게임 매칭 화면(일반 / 랭크 case로 구분)
@@ -21,6 +22,9 @@ const Game = () => {
   const { gameType, opponentInfo } = location.state;
   const opponentInfoParsed = JSON.parse(opponentInfo);
   const token = sessionStorage.getItem("accessToken");
+  const myClassicPoint = sessionStorage.getItem("classicPt");
+  const myItemPoint = sessionStorage.getItem("itemPt");
+  const myInfo = useAccessTokenState();
 
   const [gameState, setGameState] = useState("entrance");
   const [isLoading, setIsLoading] = useState(false);
@@ -98,15 +102,25 @@ const Game = () => {
         setMyWin(false);
         if (gameType === "classic") {
           updatePoint(expectedLosePt, 0);
+          myInfo.setClassicPt(Number(myInfo.classicPt) + Number(expectedLosePt));
+          myInfo.setLoseNumClassic(Number(myInfo.loseNumClassic) + 1);
         } else {
           updatePoint(0, expectedLosePt);
+          myInfo.setItemPt(Number(myInfo.itemPt) + Number(expectedLosePt));
+          myInfo.setLoseNumItem(Number(myInfo.loseNumItem) + 1);
         }
       } else if (opponentLose && myWin === null) {
         setMyWin(true);
         if (gameType === "classic") {
           updatePoint(expectedWinPt, 0);
+          myInfo.setClassicPt(Number(myInfo.classicPt) + Number(expectedWinPt));
+          myInfo.setWinNumClassic(Number(myInfo.winNumClassic) + 1);
+          updateResult(false, myInfo.nickname, opponentInfoParsed.nickname);
         } else {
           updatePoint(0, expectedWinPt);
+          myInfo.setItemPt(Number(myInfo.itemPt) + Number(expectedWinPt));
+          myInfo.setWinNumItem(Number(myInfo.winNumItem) + 1);
+          updateResult(true, myInfo.nickname, opponentInfoParsed.nickname);
         }
       }
       setTimeout(() => {
@@ -308,6 +322,21 @@ const Game = () => {
     const response = await axios.patch(
       APPLICATION_SERVER_URL + "api/point",
       { classicPt: classicPt, itemPt: itemPt },
+      {
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+      }
+    );
+    console.log(response);
+  };
+
+  const updateResult = async (isItem, winner, loser) => {
+    const response = await axios.post(
+      APPLICATION_SERVER_URL + "api/game-result",
+      {
+        isItem: isItem,
+        userWinnerNickname: winner,
+        userLoserNickname: loser,
+      },
       {
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
       }
