@@ -20,6 +20,7 @@ const GamePlay = ({
   const [time, setTime] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
   const [itemCount, setItemCount] = useState(3);
+  const [canUse, setCanUse] = useState(true);
 
   useEffect(() => {
     let countdownInterval;
@@ -100,9 +101,13 @@ const GamePlay = ({
             </div>
             <div
               onClick={() => {
-                if (itemCount > 0) {
+                if (itemCount > 0 && canUse) {
                   setItemCount(itemCount - 1);
+                  setCanUse(false);
                   useItem();
+                  setTimeout(() => {
+                    setCanUse(true);
+                  }, 3000);
                 }
               }}
             >

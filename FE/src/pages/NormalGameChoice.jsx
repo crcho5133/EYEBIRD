@@ -23,8 +23,9 @@ const NormalGameChoice = () => {
     });
     console.log(response);
     const room = response.data;
-
-    navigate(`/room/${room.roomId}`, { state: { roomName: room.roomName } });
+    console.log(room);
+    // 수정해야함(02.12)
+    navigate(`/room/${room}`, { state: { gameType: "classic" } });
   };
 
   const handleFastItemClick = async () => {
@@ -35,7 +36,7 @@ const NormalGameChoice = () => {
     console.log(response);
     const room = response.data;
 
-    navigate(`/room/${room.roomId}`, { state: { roomName: room.roomName } });
+    navigate(`/room/${room.roomId}`, { state: { roomName: room.roomName, gameType: "item" } });
   };
 
   const handleCreatingRoomOpen = () => {

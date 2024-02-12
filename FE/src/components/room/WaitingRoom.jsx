@@ -8,6 +8,7 @@ import ChatModal from "../modal/ChatModal";
 import InviteModal from "../modal/InviteModal";
 const WaitingRoom = ({
   roomName,
+  gameType,
   publisher,
   subscribers,
   mySessionId,
@@ -112,7 +113,9 @@ const WaitingRoom = ({
           </button>
         </div>
         <div className="text-center">
-          <h2>방제: {roomName}</h2>
+          <h2>
+            방제: {roomName} / {gameType === "classic" ? "클래식전" : "아이템전"}
+          </h2>
         </div>
       </div>
       <div className="flex justify-between h-5/6">

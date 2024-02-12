@@ -45,7 +45,13 @@ const RoomSearch = () => {
       setIsPasswordModalOpen(true);
     } else {
       // 방이 비밀번호로 보호되어 있지 않으면 바로 입장
-      navigate(`/room/${room.roomId}`, { state: { roomName: room.roomName, password } });
+      navigate(`/room/${room.roomId}`, {
+        state: {
+          roomName: room.roomName,
+          password,
+          gameType: tabName === "클래식" ? "classic" : "item",
+        },
+      });
     }
   };
 
@@ -61,7 +67,12 @@ const RoomSearch = () => {
       );
       console.log(response);
       navigate(`/room/${selectedRoom.roomId}`, {
-        state: { roomName, password, hastoken: response.data.connectionToken },
+        state: {
+          roomName,
+          password,
+          hastoken: response.data.connectionToken,
+          gameType: tabName === "클래식" ? "classic" : "item",
+        },
       });
     } catch (error) {
       alert("비밀번호 오류");
