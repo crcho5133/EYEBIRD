@@ -1,3 +1,158 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@font-face {
+  font-family: "MaplestoryOTFBold";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/MaplestoryOTFBold.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.boxControl,
+.boxControl * {
+  box-sizing: border-box;
+}
+
+.rodal-close {
+  width: 30px;
+  height: 30px;
+  background-color: #702503;
+  border-radius: 50%;
+}
+
+/*GameLoading 컴포넌트 -> Countdown 깜빡깜빡하는 CSS*/
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+.blink {
+  animation: blink 1s infinite;
+}
+
+@media (min-width: 768px) {
+  .rodal-zoom-enter {
+    width: 30vw !important;
+    background-size: 25vw 50vh !important;
+  }
+
+  .loginContent1 {
+    margin-top: 25.5vh;
+    font-size: 2vw;
+  }
+
+  .loginContent2 {
+    margin-top: 3vh;
+    background-size: 17vw 30vh !important;
+  }
+
+  .loginContent3 {
+    margin-top: 10vh;
+  }
+
+  .loginContent4 {
+    width: 13vw;
+    font-size: 1vw;
+  }
+
+  .loginContent5 {
+    margin-top: 2vh;
+    background-size: 5vw 5vh !important;
+    font-size: 1vw;
+  }
+
+  .matchingInfo0 {
+    font-size: 3vw;
+  }
+
+  .matchingInfo1 {
+    background-size: 30vw 85vh !important;
+    background-position-y: top !important;
+  }
+
+  .matchingInfo2 {
+    background-position: center !important;
+    margin-top: 12vh;
+    width: 12vw;
+    height: 6vh;
+  }
+
+  .matchingInfo3 {
+    margin-left: 0vw;
+  }
+
+  .matchingInfo4 {
+    margin-left: 0vw;
+    font-size: 1vw;
+  }
+
+  .matchingInfo5 {
+    margin-left: 19vw;
+  }
+
+  .matchingInfo6 {
+    align-self: center;
+    transform: translateX(-45px);
+    margin-top: 2vh;
+  }
+
+  .matchingInfo7 {
+    width: 5vw !important;
+    height: vh !important;
+  }
+
+  .matchingInfo8 {
+    margin-left: 1vw;
+    width: 6vw !important;
+    height: 6vh !important;
+    font-size: 2vw;
+  }
+  .matchingInfo9 {
+    background-position: center !important;
+    margin-top: 3vh;
+    width: 12vw;
+    height: 6vh;
+  }
+
+  .matchingInfo10 {
+    margin-left: 1vw;
+  }
+
+  .gameResult1 {
+    background-size: 20vw 7vh !important;
+    width: 20vw !important;
+    height: 7vh !important;
+    font-size: 3vw;
+  }
+
+  .gameResult2 {
+    background-size: 40vw 55vh !important;
+    width: 40vw !important;
+    height: 55vh !important;
+  }
+
+  .gameResult3 {
+    background-size: 35vw 30vh !important;
+    margin-top: 3vh;
+    width: 35vw !important;
+    height: 30vh !important;
+  }
+
+  .gameResult4 {
+    width: 10vw !important;
+    height: 5vh !important;
+    font-size: 2vw;
+  }
+
+  .gameResult5 {
+    background-size: 35vw 40vh !important;
+    margin-top: 10vh;
+    width: 35vw !important;
+    height: 40vh !important;
+  }
+}

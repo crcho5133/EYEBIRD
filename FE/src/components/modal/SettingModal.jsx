@@ -1,11 +1,20 @@
 import { useState, useEffect } from "react";
 import Rodal from "rodal"; // Rodal import
 import "rodal/lib/rodal.css"; // Rodal CSS
+import LobbyBtn from "@/components/lobby/LobbyBtn";
+import useShowComponent from "@/hooks/useShowComponent";
+
 
 const SettingModal = ({ visible, onClose }) => {
   const [volume, setVolume] = useState(50); // 앱의 소리 조절 상태
   const [micVolume, setMicVolume] = useState(50); // 마이크 소리 조절 상태
   const [blockInvites, setBlockInvites] = useState(false); // 초대 차단 상태
+  const isBtnVisible = useShowComponent();
+
+  const logout = (event) => {
+    event.preventDefault();
+    useUsersApiCall.logout();
+  };
 
   const handleVolumeChange = (event) => {
     setVolume(event.target.value);
@@ -51,6 +60,9 @@ const SettingModal = ({ visible, onClose }) => {
             onClick={handleBlockInvitesChange}
             className={`w-10 h-6 rounded-full ${blockInvites ? "bg-green-500" : "bg-red-500"}`}
           ></button>
+        </div>
+        <div>
+          {!isBtnVisible.value && <LobbyBtn text="로그아웃" onClick={logout} />}
         </div>
       </div>
     </Rodal>

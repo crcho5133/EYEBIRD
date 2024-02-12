@@ -17,7 +17,7 @@ const usersApiCall = () => {
       const response = await privateAxios.post(usersUrl.signUp(), body);
       await login(email, password, accessToken.accessToken);
     } catch (error) {
-      alert("올바르지 않은 이메일 형식 입니다.");
+      alert(error.response?.data?.errorMessage);
     }
   };
 

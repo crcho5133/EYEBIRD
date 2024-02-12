@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { OpenVidu } from "openvidu-browser";
+import { usePreventBrowserControl } from "../hooks/usePreventBrowserControl";
 import { toast, Slide, Bounce } from "react-toastify";
 import axios from "axios";
 // 게임 매칭 화면(일반 / 랭크 case로 구분)
@@ -12,6 +13,7 @@ import LoadingSpinner from "../assets/img/loading/loading.gif";
 const APPLICATION_SERVER_URL = "http://localhost:8080/";
 
 const Game = () => {
+  usePreventBrowserControl();
   // 사용자 닉네임, 방 세션 할당은 백엔드랑 통신할 때 수정하기
   // let { sessionId } = useParams();
   const { sessionId: gameId } = useParams();
@@ -46,6 +48,11 @@ const Game = () => {
   // 패배 상태
   const [myLose, setMyLose] = useState(false);
   const [opponentLose, setOpponentLose] = useState(false);
+  const [myWin, setMyWin] = useState(null);
+  // 재도전 요청
+  const [rematchRequest, setRematchRequest] = useState(false);
+  const [rematchResponse, setRematchResponse] = useState(false);
+  const [rematch, setRematch] = useState(false);
 
   // 이 변수 switch camera 전용 변수? 확인하기
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
@@ -84,6 +91,11 @@ const Game = () => {
 
   useEffect(() => {
     if (myLose || opponentLose) {
+      if (myLose && myWin === null) {
+        setMyWin(false);
+      } else if (opponentLose && myWin === null) {
+        setMyWin(true);
+      }
       setTimeout(() => {
         setGameState("gameResult");
       }, 1000);
@@ -108,7 +120,7 @@ const Game = () => {
             videoSource: undefined,
             publishAudio: false,
             publishVideo: true,
-            resolution: "640x480",
+            resolution: "400x400",
             frameRate: 30,
             insertMode: "APPEND",
             mirror: false,
@@ -174,6 +186,22 @@ const Game = () => {
     });
   };
 
+  const sendRematch = () => {
+    setRematchRequest(true);
+    session.signal({
+      data: myUserName,
+      type: "rematch",
+    });
+  };
+
+  const acceptRematch = () => {
+    setRematch(true);
+    session.signal({
+      data: myUserName,
+      type: "accept",
+    });
+  };
+
   // // 새 사용자가 세션에 접속할 때 팀 정보 요청 신호 보내기
   // const requestTeamInfo = () => {
   //   session.signal({
@@ -212,6 +240,20 @@ const Game = () => {
         setMyLose(true);
       } else if (username !== myUserName) {
         setOpponentLose(true);
+      }
+    });
+
+    mySession.on("signal:rematch", (event) => {
+      const username = event.data;
+      if (username !== myUserName) {
+        setRematchResponse(true);
+      }
+    });
+
+    mySession.on("signal:accept", (event) => {
+      const username = event.data;
+      if (username !== myUserName) {
+        setRematch(true);
       }
     });
 
@@ -319,7 +361,29 @@ const Game = () => {
         <GamePlay publisher={publisher} subscriber={subscriber} {...gameProps} />
       )}
       {!isLoading && gameState === "gameResult" && (
-        <GameResult myLose={myLose} opponentLose={opponentLose} leaveSession={leaveSession} />
+        <GameResult
+          myLose={myLose}
+          opponentLose={opponentLose}
+          myWin={myWin}
+          leaveSession={leaveSession}
+          sendRematch={sendRematch}
+          acceptRematch={acceptRematch}
+          rematchRequest={rematchRequest}
+          rematchResponse={rematchResponse}
+          rematch={rematch}
+          gameId={gameId}
+          gameType={gameType}
+          opponentInfo={opponentInfo}
+          setGameState={setGameState}
+          setReady={setReady}
+          setOpponentReady={setOpponentReady}
+          setMyLose={setMyLose}
+          setOpponentLose={setOpponentLose}
+          setMyWin={setMyWin}
+          setRematchRequest={setRematchRequest}
+          setRematchResponse={setRematchResponse}
+          setRematch={setRematch}
+        />
       )}
     </>
   );
