@@ -12,10 +12,14 @@ const GamePlay = ({
   sendLose,
   myLose,
   opponentLose,
+  gameType,
+  itemVisible,
+  useItem,
 }) => {
   const [gameState, setGameState] = useState("waiting");
   const [time, setTime] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
+  const [itemCount, setItemCount] = useState(3);
 
   useEffect(() => {
     let countdownInterval;
@@ -88,13 +92,22 @@ const GamePlay = ({
         )}
         {!isLoading && gameState === "play" && (
           <div>
+            {gameType === "classic" ? "" : <div>아이템 사용 가능 횟수 : {itemCount}</div>}
             <div className="invisible absolute">
               {/* <div className="hidden"> */}
               나
               <UserVideoComponent streamManager={publisher} gameState={gameState} {...gameProps} />
             </div>
-            <div>
+            <div
+              onClick={() => {
+                if (itemCount > 0) {
+                  setItemCount(itemCount - 1);
+                  useItem();
+                }
+              }}
+            >
               상대방
+              {itemVisible ? <div className="absolute text-3xl">아이템 사용중</div> : ""}
               <OpponentVideoComponent streamManager={subscriber} />
               <div className="text-xl text-red-500">나 {myLose ? "패배" : "대기"}</div>
               <div className="text-xl text-red-500">상대{opponentLose ? "패배" : "대기"}</div>

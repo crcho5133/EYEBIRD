@@ -1,7 +1,7 @@
 import OpenViduVideoComponent from "./OvVideo";
 
 export default function OpponentVideoComponent({ streamManager }) {
-  console.log(streamManager);
+  // console.log(streamManager);
 
   const getNicknameTag = () => {
     // Gets the nickName of the user

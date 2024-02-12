@@ -21,10 +21,12 @@ const Game = () => {
   const location = useLocation();
   const { gameType, opponentInfo } = location.state;
   const opponentInfoParsed = JSON.parse(opponentInfo);
+  const myInfo = useAccessTokenState();
   const token = sessionStorage.getItem("accessToken");
   const myClassicPoint = sessionStorage.getItem("classicPt");
+  const prevClassicPoint = myInfo.classicPt;
   const myItemPoint = sessionStorage.getItem("itemPt");
-  const myInfo = useAccessTokenState();
+  const prevItemPoint = myInfo.itemPt;
 
   const [gameState, setGameState] = useState("entrance");
   const [isLoading, setIsLoading] = useState(false);
@@ -57,6 +59,8 @@ const Game = () => {
   const [rematchRequest, setRematchRequest] = useState(false);
   const [rematchResponse, setRematchResponse] = useState(false);
   const [rematch, setRematch] = useState(false);
+  // 아이템 사용
+  const [itemVisible, setItemVisible] = useState(false);
   // 게임 승/패 점수
   const expectedWinPt = opponentInfoParsed.expectedWinPt;
   const expectedLosePt = opponentInfoParsed.expectedLosePt;
@@ -125,7 +129,7 @@ const Game = () => {
       }
       setTimeout(() => {
         setGameState("gameResult");
-      }, 1000);
+      }, 2000);
     }
   }, [myLose, opponentLose]);
 
@@ -229,6 +233,13 @@ const Game = () => {
     });
   };
 
+  const useItem = () => {
+    session.signal({
+      data: myUserName,
+      type: "useitem",
+    });
+  };
+
   // // 새 사용자가 세션에 접속할 때 팀 정보 요청 신호 보내기
   // const requestTeamInfo = () => {
   //   session.signal({
@@ -281,6 +292,16 @@ const Game = () => {
       const username = event.data;
       if (username !== myUserName) {
         setRematch(true);
+      }
+    });
+
+    mySession.on("signal:useitem", (event) => {
+      const username = event.data;
+      if (username !== myUserName) {
+        setItemVisible(true);
+        setTimeout(() => {
+          setItemVisible(false);
+        }, 3000);
       }
     });
 
@@ -390,6 +411,9 @@ const Game = () => {
     sendLose,
     myLose,
     opponentLose,
+    gameType,
+    itemVisible,
+    useItem,
   };
 
   // 라우팅 구성
@@ -426,7 +450,7 @@ const Game = () => {
           rematch={rematch}
           gameId={gameId}
           gameType={gameType}
-          opponentInfo={opponentInfo}
+          opponentInfoParsed={opponentInfoParsed}
           setGameState={setGameState}
           setReady={setReady}
           setOpponentReady={setOpponentReady}
@@ -436,6 +460,8 @@ const Game = () => {
           setRematchRequest={setRematchRequest}
           setRematchResponse={setRematchResponse}
           setRematch={setRematch}
+          prevClassicPoint={prevClassicPoint}
+          prevItemPoint={prevItemPoint}
         />
       )}
     </>

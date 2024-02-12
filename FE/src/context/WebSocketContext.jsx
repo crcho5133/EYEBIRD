@@ -57,7 +57,7 @@ export const WebSocketProvider = ({ children }) => {
           const newMessage = message.body;
           console.log("Received message:", newMessage);
           const messageObject = JSON.parse(newMessage);
-          console.log(messageObject);
+          // console.log(messageObject);
           // 메시지를 받았을 때 처리 (예: 상태 업데이트)
           setOpponentInfo(newMessage);
           setMatch(true);

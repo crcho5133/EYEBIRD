@@ -13,7 +13,7 @@ const GameResult = ({
   rematch,
   gameId,
   gameType,
-  opponentInfo,
+  opponentInfoParsed,
   setGameState,
   setReady,
   setOpponentReady,
@@ -23,9 +23,15 @@ const GameResult = ({
   setRematchRequest,
   setRematchResponse,
   setRematch,
+  prevClassicPoint,
+  prevItemPoint,
 }) => {
   const [resultState, setResultState] = useState("phase1");
   const [progress, setProgress] = useState(100); // 진행 바 상태
+  const myClassicPoint = sessionStorage.getItem("classicPt");
+  const myItemPoint = sessionStorage.getItem("itemPt");
+  const expectedWinPt = opponentInfoParsed.expectedWinPt;
+  const expectedLosePt = opponentInfoParsed.expectedLosePt;
 
   useEffect(() => {
     // rematchRequest나 rematchResponse가 변경될 때 phase2로 설정
@@ -94,15 +100,15 @@ const GameResult = ({
       <div className="h-screen flex justify-center items-center text-center text-lg">
         <div className="flex-col">
           <div>결과 창</div>
-          <div>나</div>
+          {/* <div>나</div> */}
           <div className={`text-2xl ${myWin ? "text-green-600" : "text-red-600"}`}>
             {myWin ? "승리" : "패배"}
           </div>
-          <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+          {/* <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
           <div>상대</div>
           <div className={`text-2xl ${myWin ? "text-red-600" : "text-green-600"}`}>
             {myWin ? "패배" : "승리"}
-          </div>
+          </div> */}
           {resultState !== "phase3" && (
             <div className="flex justify-center m-4">
               <div className="w-44 bg-gray-200 h-4">
@@ -145,7 +151,6 @@ const GameResult = ({
           {resultState === "phase2" && !myWin && (
             <div>상대방의 재도전 수락여부를 기다리고 있습니다</div>
           )}
-
           {resultState === "phase3" && (
             <div className="m-4">
               <Link
@@ -157,6 +162,19 @@ const GameResult = ({
               </Link>
             </div>
           )}
+          {gameType === "classic" && myWin && (
+            <div>{Number(myClassicPoint) - Number(expectedWinPt)}점</div>
+          )}
+          {gameType === "item" && myWin && (
+            <div>{Number(myItemPoint) - Number(expectedWinPt)}점</div>
+          )}
+          {gameType === "classic" && !myWin && (
+            <div>{Number(myClassicPoint) + Number(expectedLosePt)}점</div>
+          )}
+          {gameType === "item" && !myWin && (
+            <div>{Number(myItemPoint) + Number(expectedLosePt)}점</div>
+          )}
+          {gameType === "classic" ? myClassicPoint : myItemPoint}점
         </div>
       </div>
     </>

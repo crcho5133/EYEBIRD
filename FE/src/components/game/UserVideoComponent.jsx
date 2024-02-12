@@ -31,7 +31,7 @@ export default function UserVideoComponent({
   myLose,
   opponentLose,
 }) {
-  console.log(streamManager);
+  // console.log(streamManager);
   const { socket, message } = useWebSocket();
 
   useEffect(() => {
