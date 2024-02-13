@@ -30,8 +30,8 @@ export const WebSocketProvider = ({ children }) => {
         accessToken: accessToken.accessToken,
         refreshToken: accessToken.refreshToken,
       });
-      // accessToken.setAccessToken(response.data.accessToken);
-      // accessToken.setRefreshToken(response.data.refreshToken);
+      accessToken.setAccessToken(response.data.accessToken);
+      accessToken.setRefreshToken(response.data.refreshToken);
       console.log("tettestestsetest");
       connectWebSocket(response.data.accessToken); // 갱신된 토큰으로 웹소켓 연결 재시도
     } catch (error) {
@@ -48,6 +48,7 @@ export const WebSocketProvider = ({ children }) => {
       beforeConnect: () => {
         console.log("Connecting to WebSocket");
       },
+      reconnectDelay: 0,
       onConnect: () => {
         console.log("Connected to WebSocket");
         setIsConnected(true);

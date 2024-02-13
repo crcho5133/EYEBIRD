@@ -94,7 +94,7 @@ const WaitingRoom = ({
   }, [teamA, teamB, myTeam, selectedAudioOption]);
 
   return (
-    <div className="waiting-room h-screen flex flex-col">
+    <div className="waiting-room h-screen flex flex-col animate-fade-left animate-once">
       <div className="h-2/3">
         <div className="flex justify-between">
           <Link

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import GameVideoComponent from "./GameVideoComponent";
 import GameUserVideoComponent from "./GameUserVideoComponent";
 
@@ -26,6 +26,14 @@ const NormalGamePlay = ({
   const [itemCount, setItemCount] = useState(3);
   const [canUse, setCanUse] = useState(true);
   const maxPhase = teamA.filter((id) => id !== null).length;
+
+  const checkRef = useRef(check);
+  const effectRef = useRef(effect);
+
+  useEffect(() => {
+    checkRef.current = check;
+    effectRef.current = effect;
+  }, [check, effect]);
 
   useEffect(() => {
     if (gamePhase === maxPhase) {
@@ -65,11 +73,11 @@ const NormalGamePlay = ({
   }, [gamePhase]);
 
   session.on("signal:lose", (event) => {
-    if (!check) {
+    if (!checkRef.current) {
       setCheck(true);
       const loseteam = event.data;
       console.log(loseteam);
-      if (inGameState === "playing" && !effect) {
+      if (inGameState === "playing" && !effectRef.current) {
         if (loseteam === "A") {
           setEffect("B");
           setScoreB(scoreB + 1);

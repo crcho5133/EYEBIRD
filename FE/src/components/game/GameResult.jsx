@@ -169,10 +169,10 @@ const GameResult = ({
             <div>{Number(myItemPoint) - Number(expectedWinPt)}점</div>
           )}
           {gameType === "classic" && !myWin && (
-            <div>{Number(myClassicPoint) + Number(expectedLosePt)}점</div>
+            <div>{Number(myClassicPoint) - Number(expectedLosePt)}점</div>
           )}
           {gameType === "item" && !myWin && (
-            <div>{Number(myItemPoint) + Number(expectedLosePt)}점</div>
+            <div>{Number(myItemPoint) - Number(expectedLosePt)}점</div>
           )}
           {gameType === "classic" ? myClassicPoint : myItemPoint}점
         </div>

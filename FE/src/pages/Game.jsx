@@ -71,6 +71,7 @@ const Game = () => {
   // 상태 최신화 참조
   const sessionRef = useRef(session);
   const mySessionIdRef = useRef(mySessionId);
+  const myWinRef = useRef(myWin);
 
   // OpenVidu 라이브러리 사용
   const OV = useRef(new OpenVidu());
@@ -100,9 +101,16 @@ const Game = () => {
     }
   }, [publisher, subscriber]);
 
+  // useEffect 훅
   useEffect(() => {
-    if (myLose || opponentLose) {
-      if (myLose && myWin === null) {
+    sessionRef.current = session;
+    mySessionIdRef.current = mySessionId;
+    myWinRef.current = myWin;
+  }, [session, mySessionId, myWin]);
+
+  useEffect(() => {
+    if (myWinRef.current === null && (myLose || opponentLose)) {
+      if (myLose && myWinRef.current === null) {
         setMyWin(false);
         if (gameType === "classic") {
           updatePoint(expectedLosePt, 0);
@@ -113,7 +121,7 @@ const Game = () => {
           myInfo.setItemPt(Number(myInfo.itemPt) + Number(expectedLosePt));
           myInfo.setLoseNumItem(Number(myInfo.loseNumItem) + 1);
         }
-      } else if (opponentLose && myWin === null) {
+      } else if (opponentLose && myWinRef.current === null) {
         setMyWin(true);
         if (gameType === "classic") {
           updatePoint(expectedWinPt, 0);
@@ -132,12 +140,6 @@ const Game = () => {
       }, 2000);
     }
   }, [myLose, opponentLose]);
-
-  // useEffect 훅
-  useEffect(() => {
-    sessionRef.current = session;
-    mySessionIdRef.current = mySessionId;
-  }, [session, mySessionId]);
 
   useEffect(() => {
     if (session) {
