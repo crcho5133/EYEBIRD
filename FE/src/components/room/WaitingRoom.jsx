@@ -8,6 +8,7 @@ import ChatModal from "../modal/ChatModal";
 import InviteModal from "../modal/InviteModal";
 const WaitingRoom = ({
   roomName,
+  gameType,
   publisher,
   subscribers,
   mySessionId,
@@ -44,6 +45,7 @@ const WaitingRoom = ({
   sendReady,
   participantsReady,
   setGameState,
+  sendStart,
 }) => {
   const [isChatModalVisible, setIsChatModalVisible] = useState(false);
   const [isAudioModalVisible, setIsAudioModalVisible] = useState(false);
@@ -92,7 +94,7 @@ const WaitingRoom = ({
   }, [teamA, teamB, myTeam, selectedAudioOption]);
 
   return (
-    <div className="waiting-room h-screen flex flex-col">
+    <div className="waiting-room h-screen flex flex-col animate-fade-left animate-once">
       <div className="h-2/3">
         <div className="flex justify-between">
           <Link
@@ -111,7 +113,9 @@ const WaitingRoom = ({
           </button>
         </div>
         <div className="text-center">
-          <h2>방제: {roomName}</h2>
+          <h2>
+            방제: {roomName} / {gameType === "classic" ? "클래식전" : "아이템전"}
+          </h2>
         </div>
       </div>
       <div className="flex justify-between h-5/6">
@@ -124,7 +128,7 @@ const WaitingRoom = ({
           </div>
           <div className="grid grid-rows-4 gap-1 overflow-hidden">
             {teamA.map((streamId, idx) => (
-              <div key={idx} className="w-full h-full border-sky-500">
+              <div key={idx} className="aspect-w-16 aspect-h-9 border border-sky-500">
                 {streamId ? (
                   <UserVideoComponent
                     streamManager={
@@ -182,7 +186,7 @@ const WaitingRoom = ({
               onClick={() => handleSelectTeam(publisher.stream.streamId, "W")}
               className="rounded-md w-full bg-green-300 hover:bg-green-700"
             >
-              대기열 선택
+              대기열<div>선택</div>
             </button>
           </div>
         </div>
@@ -288,7 +292,7 @@ const WaitingRoom = ({
             <div
               className={`w-[45px] h-[45px] mx-4 flex justify-center items-center border-4 rounded-lg border-indigo-700`}
               onClick={() => {
-                setGameState("gameLoading");
+                sendStart();
               }}
             >
               게임시작

@@ -8,6 +8,8 @@ import useShowRodal from "@/hooks/useShowRodal";
 import "rodal/lib/rodal.css";
 import LobbyBtn from "@/components/lobby/LobbyBtn";
 import { validateEmail, validateNickname, validatePassword } from "@/utils/validateForm";
+import backgroundImage from "@/assets/img/modal/background.png";
+import imageSelectBtn from "@/assets/img/modal/button1.png";
 
 const SignupFormModal = ({ visible, onClose }) => {
   const isProfileImageModalVisible = useShowRodal();
@@ -48,7 +50,7 @@ const SignupFormModal = ({ visible, onClose }) => {
       await useUsersApiCall.checkEmailDuplicate(email.value, email.setIsValid);
       email.setHasChecked(true);
     } catch (error) {
-      alert(error);
+      alert(error.response?.data?.errorMessage);
     }
   };
 
@@ -58,7 +60,7 @@ const SignupFormModal = ({ visible, onClose }) => {
       await useUsersApiCall.checkNicknameDuplicate(nickname.value, nickname.setIsValid);
       nickname.setHasChecked(true);
     } catch (error) {
-      alert(error);
+      alert(error.response?.data?.errorMessage);
     }
   };
 
@@ -69,73 +71,131 @@ const SignupFormModal = ({ visible, onClose }) => {
     passwordCheck.clear();
     profileImage.clear();
     ProfileImageIndex.clear();
-    setPasswordsMatch(true);
+    setPasswordsMatch(false);
   };
 
   return (
     <>
       <Rodal
         visible={visible}
+        customStyles={{
+          width: "80vw",
+          height: "90vh",
+          top: 0,
+          left: 0,
+          padding: 0, // 내부 패딩 제거
+          background: `url(${backgroundImage}) no-repeat center center`,
+          backgroundSize: "contain",
+          // maxWidth: "500px",
+          borderRadius: "0",
+          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
         onClose={() => {
           clearAllInput();
           onClose();
         }}
-        customStyles={{ width: "70%", height: "45%" }}
       >
-        <div className="p-4">
-          {profileImage.value ? (
-            <img
-              src={profileImage.value}
-              alt="프로필 이미지"
-              className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full mb-4"
-            />
-          ) : (
-            <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full bg-gray-200 mb-4"></div>
-          )}
-          <LobbyBtn
-            onClick={isProfileImageModalVisible.showRodal}
-            className="mt-2 py-1 px-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md"
-            text="선택"
-          />
-        </div>
+        <div
+          style={{
+            position: "absolute", // 부모 요소에 상대적인 절대 위치
+            top: "50%", // 부모의 세로 중앙에서 시작
+            transform: "translateY(-50%)",
+            width: "70%",
+            height: "70%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            background: "transparent",
+          }}
+          className="flex flex-col"
+        >
+          <div className="max-w-full space-y-1" style={{ marginTop: "8vh" }}>
+            <div className="p-4 flex flex-col justify-center items-center max-w-full">
+              {profileImage.value ? (
+                <div className="border-4 border-gold-500 shadow-lg rounded-full overflow-hidden">
+                  <img
+                    src={profileImage.value}
+                    alt="프로필 이미지"
+                    className="w-16 h-16 object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
+              )}
 
-        <div className="space-y-2 p-2">
-          <div className="space-y-2">
-            <div className="flex space-x-1">
+              <LobbyBtn
+                onClick={isProfileImageModalVisible.showRodal}
+                style={{
+                  marginTop: "1vh",
+                  backgroundImage: `url(${imageSelectBtn})`,
+                  backgroundSize: "100% 100%",
+                  backgroundPosition: "center",
+                  width: "25vw",
+                  height: "3vh",
+                }}
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <label
+                htmlFor="email"
+                className="text-sm font-bold"
+                style={{ width: "5vw", height: "1vh" }}
+              >
+                이메일 :
+              </label>
               <input
+                id="email"
                 type="text"
-                placeholder="이메일"
                 value={email.value}
-                className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                style={{ width: "30vw", height: "1vh" }}
+                className="px-3 py-2 border-2 border-orange-300 rounded-md focus:outline-none focus:ring focus:ring-orange-500 bg-transparent text-sm shadow"
                 onChange={(e) => email.onChange(e.target.value)}
               />
               <ModalBtn
                 text="중복확인"
                 onClick={checkEmailDuplicate}
                 disabled={!email.isValid || !email.value}
+                className="text-xs border-2 border-orange-300 rounded-md flex items-center justify-center"
+                style={{ width: "8vw", height: "5vh" }}
               />
             </div>
-            {!email.isValid && email.hasChecked && (
-              <div style={{ color: "green" }}>중복확인이 완료 되었습니다.</div>
-            )}
-            {email.isValid && email.hasChecked && (
-              <div style={{ color: "red" }}>중복된 아이디가 있습니다.</div>
-            )}
-          </div>
 
-          <div className="space-y-2">
-            <div className="flex space-x-1">
+            <p className="text-sm text-green-500">
+              {!email.isValid && email.hasChecked && (
+                <div style={{ color: "green" }}>중복확인이 완료 되었습니다.</div>
+              )}{" "}
+            </p>
+            <p className="text-sm text-red-500">
+              {email.isValid && email.hasChecked && (
+                <div style={{ color: "red" }}>중복된 이메일이 있습니다.</div>
+              )}
+            </p>
+
+            <div className="flex items-center space-x-2">
+              <label
+                htmlFor="email"
+                className="text-sm font-bold flex-shrink-0"
+                style={{ width: "5vw", height: "1vh" }}
+              >
+                닉네임 :
+              </label>
               <input
                 type="text"
-                placeholder="닉네임"
                 value={nickname.value}
-                className="flex-1 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                style={{ width: "30vw", height: "1vh" }}
+                className="w-5/12 px-3 py-2 border-2 border-orange-300 rounded-md focus:outline-none focus:ring focus:ring-orange-500 bg-transparent text-sm shadow"
                 onChange={(e) => nickname.onChange(e.target.value)}
               />
               <ModalBtn
                 text="중복확인"
                 onClick={checkNicknameDuplicate}
                 disabled={!nickname.isValid || !nickname.value}
+                className="text-xs border-2 border-orange-300 rounded-md flex items-center justify-center"
+                style={{ width: "8vw", height: "5vh" }}
               />
             </div>
             {!nickname.isValid && nickname.hasChecked && (
@@ -144,46 +204,75 @@ const SignupFormModal = ({ visible, onClose }) => {
             {nickname.isValid && nickname.hasChecked && (
               <div style={{ color: "red" }}>중복된 닉네임이 있습니다.</div>
             )}
-          </div>
-          <div className="text-xs text-gray-600">
-            ※ 닉네임은 영문자, 숫자, 한글로 이루어진 1~8자 까지 가능합니다
-          </div>
 
-          <form>
-            <input
-              type="password"
-              placeholder="비밀번호"
-              value={password.value}
-              onChange={passwordHandleChange}
-              className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <div className="text-xs text-gray-600">
-              ※ 비밀번호는 적어도 하나의 영문자,특수문자, 숫자를 포함하여 6자리 이상이 되어야 합니다
+            <div
+              className="text-xs text-black-600 font-semibold"
+              style={{ width: "50vw", height: "5vh" }}
+            >
+              ※ 닉네임은 영문자, 숫자, 한글로 이루어진 1~8자까지 가능합니다.
             </div>
 
-            <input
-              type="password"
-              placeholder="비밀번호 확인"
-              value={passwordCheck.value}
-              onChange={passwordCheckHandleChange}
-              className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            <form className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-bold flex-shrink-0"
+                  style={{ width: "5vw", height: "1vh" }}
+                >
+                  비밀번호 :
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  placeholder="비밀번호"
+                  value={password.value}
+                  onChange={passwordHandleChange}
+                  style={{ width: "40vw", height: "1vh" }}
+                  className="w-full px-3 py-2 border-2 border-orange-300 rounded-md focus:outline-none focus:ring focus:ring-orange-500 bg-transparent text-sm shadow"
+                />
+              </div>
+
+              <div className="text-xs text-orange-600 font-semibold">
+                ※ 비밀번호는 6자리 이상으로 영문자, 특수문자, 숫자를 모두 포함하여야 합니다.
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <label
+                  htmlFor="passwordCheck"
+                  className="text-sm font-bold flex-shrink-0"
+                  style={{ width: "25vw", height: "1vh" }}
+                >
+                  비밀번호 확인 :
+                </label>
+                <input
+                  id="passwordCheck"
+                  type="password"
+                  placeholder="비밀번호 확인"
+                  value={passwordCheck.value}
+                  onChange={passwordCheckHandleChange}
+                  style={{ width: "30vw", height: "1vh" }}
+                  className="w-full px-3 py-2 border-2 border-orange-300 rounded-md focus:outline-none focus:ring focus:ring-orange-500 bg-transparent text-sm shadow"
+                />
+              </div>
+              {!passwordsMatch && passwordCheck.value && (
+                <div className="text-red-500">비밀번호가 일치하지 않습니다.</div>
+              )}
+            </form>
+            <ModalBtn
+              onClick={signup}
+              type="submit"
+              text="회원가입"
+              disabled={
+                email.isValid ||
+                nickname.isValid ||
+                !passwordsMatch ||
+                !password.isValid ||
+                !ProfileImageIndex.value
+              }
+              className="text-xs border-2 border-orange-300 rounded-md flex items-center justify-center"
+              style={{ width: "8vw", height: "5vh" }}
             />
-            {!passwordsMatch && passwordCheck.value && (
-              <div className="text-red-500">비밀번호가 일치하지 않습니다</div>
-            )}
-          </form>
-          <ModalBtn
-            onClick={signup}
-            type="submit"
-            text="회원가입"
-            disabled={
-              email.isValid ||
-              nickname.isValid ||
-              !passwordsMatch ||
-              !password.isValid ||
-              !ProfileImageIndex.value
-            }
-          />
+          </div>
         </div>
       </Rodal>
 

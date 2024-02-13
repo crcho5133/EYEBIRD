@@ -8,7 +8,6 @@ import { useState } from "react";
 import MessageModal from "../../components/modal/MessageModal.jsx";
 import MessageIcon from "../../assets/img/messageicon.png";
 
-
 const NavBar = () => {
   const [settingsVisible, setSettingsVisible] = useState(false); // 설정 모달 가시성 state
   const [notificationVisible, setNotificationVisible] = useState(false); // 알림 모달 가시성 state
@@ -50,22 +49,22 @@ const NavBar = () => {
         {/* <button onClick={handleBackButtonClick}>
           <img src={BackMark} alt="BackMark" />
         </button> */}
-        <button onClick={handleMessageOpen}>
+        {/* <button onClick={handleMessageOpen}>
           <img src={MessageIcon} />
         </button>
         <button onClick={handleNotificationOpen}>
           <img src={NotificationIcon} alt="NotificationIcon" />
-        </button>
+        </button> */}
         <button onClick={handleSettingsOpen}>
           <img src={SettingIcon} alt="SettingIcon" />
         </button>
       </div>
       {/* 메시지 모달 */}
       <MessageModal visible={messageVisible} onClose={handleMessageClose} />
+      {/* 알림 모달 */}
+      {/* <NotificationModal visible={notificationVisible} onClose={handleNotificationClose} /> */}
       {/* 설정 모달 */}
       <SettingModal visible={settingsVisible} onClose={handleSettingsClose} />
-      {/* 알림 모달 */}
-      <NotificationModal visible={notificationVisible} onClose={handleNotificationClose} />
     </div>
   );
 };

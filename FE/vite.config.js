@@ -7,11 +7,11 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: [], // 정적 파일 목록
+      includeAssets: [],
       manifest: {
         name: "눈 깜빡할 새",
         short_name: "눈 깜빡할 새",
-        start_url: "/?fullscreen=true",
+        start_url: "/",
         display: "fullscreen",
         theme_color: "#ffffff",
         icons: [
@@ -25,7 +25,6 @@ export default defineConfig({
             sizes: "512x512",
             type: "image/png",
           },
-          // 추가 아이콘 사이즈를 여기에 명시
         ],
       },
     }),

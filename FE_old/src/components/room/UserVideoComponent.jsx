@@ -38,11 +38,9 @@ export default function UserVideoComponent({
   return (
     <div className={`h-full w-full ${color}`}>
       {streamManager !== undefined ? (
-        <div className="h-full w-full bg-gray-200 text-gray-700 font-bold">
+        <div className="flex-col text-center text-sm justify-center h-full w-full bg-gray-200 text-gray-700 font-bold">
           <OpenViduVideoComponent streamManager={streamManager} readyState={readyState} />
-          <div className="text-center">
-            <p className="inline-block">{getNicknameTag()}</p>
-          </div>
+          <p className="inline-block">{getNicknameTag()}</p>
           {/* <div className="text-right">
             {clientStreamId !== streamId ? (
               <button onClick={toggleAudio}>{isActive ? "들려요" : "안들려요"}</button>

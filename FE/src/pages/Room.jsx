@@ -35,6 +35,7 @@ const Room = () => {
   const roomName = location.state?.roomName ?? "";
   const password = location.state?.password ?? "";
   const hastoken = location.state?.hastoken ?? "";
+  const gameType = location.state?.gameType ?? "";
 
   // const roomName = location.state.roomName;
   const token = sessionStorage.getItem("accessToken");
@@ -78,6 +79,10 @@ const Room = () => {
   const [teamChatMessages, setTeamChatMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
   const [chatMode, setChatMode] = useState("all");
+  // 아이템 사용
+  const [itemVisible, setItemVisible] = useState(false);
+  // 승패
+  const [winTeam, setWinTeam] = useState("");
   // 상태 최신화 참조
   const myTeamRef = useRef(myTeam);
   const myStreamIdRef = useRef(myStreamId);
@@ -236,6 +241,20 @@ const Room = () => {
     });
   };
 
+  const sendStart = () => {
+    session.signal({
+      data: "",
+      type: "start",
+    });
+  };
+
+  const sendLose = () => {
+    session.signal({
+      data: myTeam,
+      type: "lose",
+    });
+  };
+
   const chatProps = {
     chatMessages,
     teamChatMessages,
@@ -329,6 +348,13 @@ const Room = () => {
     });
   };
 
+  const useItem = () => {
+    session.signal({
+      data: myUserName,
+      type: "useitem",
+    });
+  };
+
   const joinSession = useCallback(() => {
     const mySession = OV.current.initSession();
 
@@ -354,6 +380,13 @@ const Room = () => {
       } else if (receivedMessage.mode === myTeamRef.current) {
         setTeamChatMessages((prevMessages) => [...prevMessages, receivedMessage]);
       }
+    });
+
+    mySession.on("signal:start", async () => {
+      setGameState("gameLoading");
+      setTimeout(() => {
+        setGameState("gamePlay");
+      }, 3000);
     });
 
     mySession.on("signal:ready", (event) => {
@@ -456,6 +489,16 @@ const Room = () => {
           }
           return newTeamW;
         });
+      }
+    });
+
+    mySession.on("signal:useitem", (event) => {
+      const username = event.data;
+      if (username !== myUserName) {
+        setItemVisible(true);
+        setTimeout(() => {
+          setItemVisible(false);
+        }, 3000);
       }
     });
 
@@ -632,6 +675,7 @@ const Room = () => {
       {!isLoading && gameState === "waitingRoom" && (
         <WaitingRoom
           roomName={roomName}
+          gameType={gameType}
           publisher={publisher}
           subscribers={subscribers}
           mySessionId={mySessionId}
@@ -660,11 +704,43 @@ const Room = () => {
           sendReady={sendReady}
           participantsReady={participantsReady}
           setGameState={setGameState}
+          sendStart={sendStart}
         />
       )}
-      {!isLoading && gameState === "gameLoading" && <NormalGameLoading /* 필요한 props */ />}
-      {!isLoading && gameState === "gamePlay" && <NormalGamePlay /* 필요한 props */ />}
-      {!isLoading && gameState === "gameResult" && <NormalGameResult /* 필요한 props */ />}
+      {!isLoading && gameState === "gameLoading" && (
+        <NormalGameLoading
+          gameType={gameType}
+          publisher={publisher}
+          subscribers={subscribers}
+          teamA={teamA}
+          teamB={teamB}
+        />
+      )}
+      {!isLoading && gameState === "gamePlay" && (
+        <NormalGamePlay
+          session={session}
+          gameType={gameType}
+          publisher={publisher}
+          subscribers={subscribers}
+          teamA={teamA}
+          teamB={teamB}
+          setGameState={setGameState}
+          sendLose={sendLose}
+          setWinTeam={setWinTeam}
+          itemVisible={itemVisible}
+          useItem={useItem}
+        />
+      )}
+      {!isLoading && gameState === "gameResult" && (
+        <NormalGameResult
+          winTeam={winTeam}
+          teamA={teamA}
+          teamB={teamB}
+          setGameState={setGameState}
+          setWinTeam={setWinTeam}
+          sendReady={sendReady}
+        />
+      )}
     </>
   );
 };

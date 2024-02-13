@@ -1,9 +1,10 @@
-const ModalBtn = ({ text, onClick, disabled }) => {
+const ModalBtn = ({ text, style, onClick, className, disabled }) => {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`px-3 py-1 ${disabled ? "bg-gray-300" : "bg-blue-500 hover:bg-blue-600"} text-white font-bold rounded-md`}
+      style={{ ...style, padding: 0, border: "none" }}
+      className={`${disabled ? "bg-gray-300" : "bg-blue-500 hover:bg-blue-600"} ${className}`}
     >
       {text}
     </button>

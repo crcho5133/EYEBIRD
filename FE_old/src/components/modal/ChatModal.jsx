@@ -26,8 +26,14 @@ const ChatModal = ({
   }, [chatMode, isVisible]);
 
   return (
-    <Rodal visible={isVisible} onClose={hideModal} height={400} animation="slideUp">
-      <div>
+    <Rodal
+      visible={isVisible}
+      customStyles={{ width: "90vw", height: "50vh" }}
+      onClose={hideModal}
+      height={400}
+      animation="slideUp"
+    >
+      <div className="flex flex-col h-full">
         <div className="flex my-2">
           <button
             onClick={() => setChatMode("all")}
@@ -70,7 +76,7 @@ const ChatModal = ({
           )}
         </h2>
         <div
-          className="h-64 overflow-y-auto border-2 rounded border-solid border-sky-500 my-1"
+          className="h-full overflow-y-auto border-2 rounded border-solid border-sky-500 my-1"
           ref={chatListRef}
         >
           {chatMode === "all" &&

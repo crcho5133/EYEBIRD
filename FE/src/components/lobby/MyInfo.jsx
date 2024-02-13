@@ -23,7 +23,10 @@ const MyInfo = ({ visible, onClose }) => {
   };
 
   return (
-    <div className="p-4 bg-white shadow-lg rounded-lg" visible={visible}>
+    <div
+      className="p-4 bg-white shadow-lg rounded-lg animate-fade-down animate-once"
+      visible={visible}
+    >
       <div className="flex justify-between mb-4">
         <button
           className="border border-gray-300 px-4 py-2 rounded hover:bg-gray-100"
