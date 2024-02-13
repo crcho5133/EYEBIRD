@@ -22,7 +22,7 @@ public class RedisConfig {
     private String password;
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
+    public RedisConnectionFactory redisConnectionFactory(){
         RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(host, port);
         redisConfig.setPassword(password);
 
@@ -43,4 +43,3 @@ public class RedisConfig {
         return redisTemplate;
     }
 }
-

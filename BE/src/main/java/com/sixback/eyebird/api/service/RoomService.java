@@ -69,6 +69,7 @@ public class RoomService {
         room.setPassword(0);
         return room;
     }
+
     // Redis에서 room으로 시작하는 key값을 검색합니다.
     // RoomId 받아오기 때문에 String
     public List<RoomDto> getRoomList(boolean item) {
@@ -87,7 +88,7 @@ public class RoomService {
                 room = (RoomDto) redisTemplate.opsForValue().get(key);
 
             // 아이템전 여부 확인하고 추가
-            if (room.isItem() == item&&!room.isStatus()){
+            if (room.isItem() == item && !room.isStatus()) {
                 rooms.add(room);
 
                 room.setPassword(0);
@@ -107,7 +108,7 @@ public class RoomService {
      * -2 : 비번 틀림
      * -3 : 블랙리스트
      */
-    public int enterRoom(RoomDto room, String userEmail) {
+    public int enterRoom(RoomDto room, String userEmail, boolean invite) {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(RoomDto.class));
 
         // 미리 pw 저장
@@ -127,20 +128,22 @@ public class RoomService {
             return -1;
         }
 
+        if (!invite) {
 
-        //password 확인
-        if (room.getPassword() != pw) {
-            return -2;
-        }
+            //password 확인
+            if (room.getPassword() != pw) {
+                return -2;
+            }
 
-        System.out.println("비번확인");
-        // 블랙리스트 블락
-        ArrayList<String> blacklist = blackListService.blacklist(room.getRoomId());
+            System.out.println("비번확인");
+            // 블랙리스트 블락
+            ArrayList<String> blacklist = blackListService.blacklist(room.getRoomId());
 
-        if (blacklist.size() > 0) {
-            for (int i = 0; i < blacklist.size(); i++) {
-                if (userEmail.equals(blacklist.get(i))) {
-                    return -3;
+            if (blacklist.size() > 0) {
+                for (int i = 0; i < blacklist.size(); i++) {
+                    if (userEmail.equals(blacklist.get(i))) {
+                        return -3;
+                    }
                 }
             }
         }
@@ -153,34 +156,8 @@ public class RoomService {
         return 1;
     }
 
-    // 초대 받아서 입장
-    // 방 존재 여부와 현재 인원만 체크
-    public int inviteEnterRoom(RoomDto room, String userEmail) {
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(RoomDto.class));
 
-        // 룸 id로 key값을 조회해 해당 방을 가져옴
-        if (redisTemplate.opsForValue().get("room_" + room.getRoomId()) != null) {
-            room = (RoomDto) redisTemplate.opsForValue().get("room_" + room.getRoomId());
-        }
-
-        // 방이 없으면 false
-        if (room.getRoomName() == null) return 0;
-
-        // 현재 인원이 max값보다 많은
-        if (room.getMaxCapacity() <= room.getCurrentCapacity()) {
-            System.out.println("적정인원");
-            return -1;
-        }
-
-        //방 인원 하나 늘리고
-        room.addCapacity();
-        // 다시 저장
-        redisTemplate.opsForValue().set("room_" + room.getRoomId(), room);
-
-        return 1;
-    }
-
-    public String quickEnterRoom(boolean isItem, String email) {
+    public RoomDto quickEnterRoom(boolean isItem, String email) {
         // 1. 방 목록 불러오기
         // 2. 블랙리스트 확인
         // 3. 입장
@@ -191,7 +168,7 @@ public class RoomService {
 
         for (int i = 0; i < rlist.size(); i++) {
             // 해당 방이 가득 차 있으면 입장 불가.
-            if(rlist.get(i).getCurrentCapacity() >= rlist.get(i).getMaxCapacity()) continue;
+            if (rlist.get(i).getCurrentCapacity() >= rlist.get(i).getMaxCapacity()) continue;
 
             // 비밀 번호가 있으면 입장 불가
             if (rlist.get(i).getPassword() != 0) continue;
@@ -207,17 +184,12 @@ public class RoomService {
             }
             if (blist) continue;
 
-
             RoomDto room = rlist.get(i);
-            //방 인원 하나 늘리고
-            room.addCapacity();
-            // 다시 저장
-            redisTemplate.opsForValue().set("room_" + room.getRoomId(), room);
 
-            return rlist.get(i).getRoomId();
+            return room;
         }
 
-        return "fail";
+        return null;
     }
 
     // 방 삭제
@@ -248,7 +220,7 @@ public class RoomService {
     }
 
     //방 상태 변경
-    public RoomDto changeStatus(RoomDto room){
+    public RoomDto changeStatus(RoomDto room) {
         // status 저장
         boolean status = room.isStatus();
         room = findRoom(room.getRoomId());
