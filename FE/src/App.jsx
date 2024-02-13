@@ -11,7 +11,7 @@ import PrivateRoute from "@/privateRoute/PrivateRoute";
 import { WebSocketProvider } from "@/context/WebSocketContext";
 import { VideoWebSocketProvider } from "./context/VideoWebSocketContext";
 
-function App() {
+export default function App() {
   return (
     <>
       <BrowserRouter>
@@ -45,5 +45,3 @@ function App() {
     </>
   );
 }
-
-export default App;

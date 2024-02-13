@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import UserVideoComponent from "./UserVideoComponent";
 import OpponentVideoComponent from "./OpponentVideoComponent";
+import background_magma2 from "../../assets/img/background_magma2.gif";
+import game_waiting from "../../assets/img/game_waiting.png";
+import ready_button from "../../assets/img/ready_button.png";
 
 const GamePlay = ({
   publisher,
@@ -15,12 +18,15 @@ const GamePlay = ({
   gameType,
   itemVisible,
   useItem,
+  streamManager,
 }) => {
   const [gameState, setGameState] = useState("waiting");
   const [time, setTime] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
   const [itemCount, setItemCount] = useState(3);
   const [canUse, setCanUse] = useState(true);
+  const [gameStartTime, setGameStartTime] = useState(null);
+  const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {
     let countdownInterval;
@@ -51,40 +57,107 @@ const GamePlay = ({
     };
   }, [ready, opponentReady]);
 
+  useEffect(() => {
+    let interval;
+
+    if (gameState === "play" && gameStartTime === null) {
+      setGameStartTime(Date.now());
+    }
+
+    if (gameState === "play") {
+      interval = setInterval(() => {
+        setElapsedTime(Date.now() - gameStartTime);
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [gameState, gameStartTime]);
+
   const gameProps = {
     sendLose,
     myLose,
     opponentLose,
   };
 
+  // 밀리초 단위의 elapsedTime를 분과 초로 변환
+  const minutes = Math.floor(elapsedTime / 60000);
+  const seconds = ((elapsedTime % 60000) / 1000).toFixed(0);
+
   return (
     <>
-      <div className="h-screen flex justify-center items-center text-center">
+      <div
+        className="h-screen flex justify-center items-center text-center"
+        style={{
+          backgroundImage: `url(${background_magma2})`,
+          backgroundSize: "100% 100%",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
         {isLoading && (
           <div className="flex-col">
-            <div className="text-3xl animate-bounce">잠시 후 게임이 시작됩니다!!</div>
+            <div
+              className="text-3xl animate-bounce p-2"
+              style={{
+                backgroundImage: `url(${game_waiting})`,
+                backgroundSize: "110% 100%",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                fontSize: "20px",
+              }}
+            >
+              잠시 후 게임이 시작됩니다!!
+            </div>
             <div className="text-6xl text-red-500 animate-ping">{time}</div>
           </div>
         )}
         {!isLoading && gameState === "waiting" && (
-          <div className="flex-col">
-            <div>
-              나<UserVideoComponent streamManager={publisher} gameState={gameState} />
+          <div className="flex-col ">
+            <div
+              style={{
+                backgroundImage: `url(${game_waiting})`,
+                backgroundSize: "80% 100%",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                fontSize: "20px",
+              }}
+            >
+              아래의 준비완료 버튼을 눌러주세요
             </div>
-            <div className="text-center">
+            <div className=" ">
+              <UserVideoComponent streamManager={publisher} gameState={gameState} />
+            </div>
+            <div className="text-center ">
               <button
                 onClick={() => {
                   setReady(true);
                   sendReady();
                 }}
-                className={`m-3 p-2 border-2 rounded-xl border-green-500 hover:bg-green-500 ${ready ? "bg-green-500" : ""} text-xl`}
+                className={`m-3 p-3 border-4 rounded-xl text-xl ${ready ? "border-red-600" : "border-transparent"}`}
+                style={{
+                  backgroundImage: `url(${ready_button})`,
+                  backgroundSize: "100% 100%",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center",
+                  fontSize: "20px",
+                }}
               >
                 준비
               </button>
             </div>
             <div className="text-center">
               <span
-                className={`m-3 p-2 border-2 rounded-xl border-green-500 ${opponentReady ? "bg-green-500" : ""} text-xl`}
+                className={`m-3 p-3 border-4 rounded-xl text-xl ${opponentReady ? "border-red-600" : "border-transparent"} `}
+                style={{
+                  backgroundImage: `url(${ready_button})`,
+                  backgroundSize: "100% 100%",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center",
+                  fontSize: "20px",
+                }}
               >
                 상대방 준비 완료
               </span>
@@ -111,6 +184,9 @@ const GamePlay = ({
                 }
               }}
             >
+              <div className="text-xl text-red-500">
+                게임 진행 시간: {minutes}분 {seconds}초
+              </div>
               상대방
               {itemVisible ? <div className="absolute text-3xl">아이템 사용중</div> : ""}
               <OpponentVideoComponent streamManager={subscriber} />

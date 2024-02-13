@@ -98,7 +98,7 @@ const RankingGameChoice = () => {
   return (
     <>
       {/* <NavBar /> */}
-      <div className="h-screen flex flex-col items-center space-y-12">
+      <div className="h-screen flex flex-col items-center space-y-2 animate-fade-left animate-once">
         <div></div>
         <div
           className="flex justify-center items-center "
@@ -128,17 +128,17 @@ const RankingGameChoice = () => {
             랭킹전
           </div>
         </div>
-        <div className="flex-col" style={{ position: "relative", height: "60%", width: "80%" }}>
+        <div className="flex-col" style={{ position: "relative", height: "60%" }}>
           <img src={wooden_board} />
           <div
             className="object-cover absolute z-0 w-4/5 h-4/5"
             style={{
               transform: "translateX(-50%)",
               left: "50%",
-              top: "1%",
+              top: "5%",
             }}
           >
-            <div className="flex " style={{ position: "relative" }}>
+            <div className="flex " style={{ display: "flex", justifyContent: "center" }}>
               <button onClick={handleClassicClick} style={{ position: "relative" }}>
                 <img src={post_it_1} />
                 <div
@@ -157,7 +157,7 @@ const RankingGameChoice = () => {
                 </div>
               </button>
             </div>
-            <div className="flex ">
+            <div className="flex" style={{ display: "flex", justifyContent: "center" }}>
               <button onClick={handleItemClick} style={{ position: "relative" }}>
                 <img src={post_it_2} />
                 <div

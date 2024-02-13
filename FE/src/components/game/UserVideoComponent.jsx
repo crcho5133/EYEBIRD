@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import { useWebSocket } from "../../context/VideoWebSocketContext";
+import { useAccessTokenState } from "@/context/AccessTokenContext";
 import OpenViduVideoComponent from "./OvVideo";
+import { useWebSocket } from "../../context/VideoWebSocketContext";
+import nickname_plate from "../../assets/img/nickname_plate.png";
+import frame from "../../assets/img/frame.png";
 
 // function ClosedEyeMessage({ socket }) {
 //   const [closed, setClosed] = useState(false);
@@ -33,6 +36,7 @@ export default function UserVideoComponent({
 }) {
   // console.log(streamManager);
   const { socket, message } = useWebSocket();
+  const myInfo = useAccessTokenState();
 
   useEffect(() => {
     if (streamManager && socket && gameState === "play") {
@@ -114,11 +118,36 @@ export default function UserVideoComponent({
   };
 
   return (
-    <div>
+    <div className="flex ">
       {streamManager !== undefined ? (
-        <div className="">
+        <div className="m-5 flex flex-col items-center justify-center ">
           <OpenViduVideoComponent streamManager={streamManager} />
-          <p>{getNicknameTag()}</p>
+          <div className="flex flex-row m-2">
+            <div>
+              <img
+                src={myInfo.profile}
+                style={{
+                  width: "50px",
+                  backgroundImage: `url(${frame})`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "100%",
+                  backgroundPosition: "center",
+                }}
+              />
+            </div>
+            <div
+              className="p-3"
+              style={{
+                backgroundImage: `url(${nickname_plate})`,
+                backgroundSize: "100% 100%",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                fontSize: "20px",
+              }}
+            >
+              {getNicknameTag()}
+            </div>
+          </div>
           {/* <ClosedEyeMessage socket={socket} /> */}
         </div>
       ) : null}

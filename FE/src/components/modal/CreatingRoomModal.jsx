@@ -82,7 +82,13 @@ const CreatingRoomModal = ({ visible, onClose }) => {
   };
 
   return (
-    <Rodal visible={visible} onClose={onCloseModal} closeOnEsc={true} closeMaskOnClick={false}>
+    <Rodal
+      visible={visible}
+      onClose={onCloseModal}
+      closeOnEsc={true}
+      closeMaskOnClick={false}
+      width={"100%"}
+    >
       <input
         type="text"
         value={roomName}

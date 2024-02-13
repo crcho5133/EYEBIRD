@@ -156,7 +156,7 @@ const Game = () => {
             resolution: "400x400",
             frameRate: 30,
             insertMode: "APPEND",
-            mirror: false,
+            mirror: true,
           });
 
           session.publish(publisher);

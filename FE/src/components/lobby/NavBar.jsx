@@ -47,27 +47,27 @@ const NavBar = () => {
       <div></div>
       {/* 알림, 설정 버튼 */}
       <div className="flex justify-between gap-4 p-4">
-      <button onClick={handleBackButtonClick}>
-        <img src={BackMark} />
-      </button>
-      <div className="flex gap-4">
-        <button onClick={handleMessageOpen}>
-          <img src={MessageIcon} />
+        <button onClick={handleBackButtonClick}>
+          <img src={BackMark} />
         </button>
-        <button onClick={handleNotificationOpen}>
-          <img src={NotificationIcon} />
-        </button>
-        <button onClick={handleSettingsOpen}>
-          <img src={SettingIcon} />
-        </button>
+        <div className="flex gap-4">
+          {/* <button onClick={handleMessageOpen}>
+            <img src={MessageIcon} />
+          </button> */}
+          {/* <button onClick={handleNotificationOpen}>
+            <img src={NotificationIcon} />
+          </button> */}
+          <button onClick={handleSettingsOpen}>
+            <img src={SettingIcon} />
+          </button>
+        </div>
       </div>
-    </div>
       {/* 메시지 모달 */}
-      <MessageModal visible={messageVisible} onClose={handleMessageClose} />
+      {/* <MessageModal visible={messageVisible} onClose={handleMessageClose} /> */}
+      {/* 알림 모달 */}
+      {/* <NotificationModal visible={notificationVisible} onClose={handleNotificationClose} /> */}
       {/* 설정 모달 */}
       <SettingModal visible={settingsVisible} onClose={handleSettingsClose} />
-      {/* 알림 모달 */}
-      <NotificationModal visible={notificationVisible} onClose={handleNotificationClose} />
     </div>
   );
 };

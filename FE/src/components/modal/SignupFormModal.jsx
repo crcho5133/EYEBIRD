@@ -8,7 +8,7 @@ import useShowRodal from "@/hooks/useShowRodal";
 import "rodal/lib/rodal.css";
 import LobbyBtn from "@/components/lobby/LobbyBtn";
 import { validateEmail, validateNickname, validatePassword } from "@/utils/validateForm";
-import backgroundImage from "@/assets/img/modal/background.png";
+import ModalBackground from "@/assets/img/modal/ModalBackground.png";
 import imageSelectBtn from "@/assets/img/modal/button1.png";
 
 const SignupFormModal = ({ visible, onClose }) => {
@@ -75,19 +75,14 @@ const SignupFormModal = ({ visible, onClose }) => {
   };
 
   return (
-    <>
+    <div className="boxControl mt-0">
       <Rodal
         visible={visible}
         customStyles={{
           width: "80vw",
           height: "90vh",
-          top: 0,
-          left: 0,
-          padding: 0, // 내부 패딩 제거
-          background: `url(${backgroundImage}) no-repeat center center`,
+          background: `url(${ModalBackground}) no-repeat center center`,
           backgroundSize: "contain",
-          // maxWidth: "500px",
-          borderRadius: "0",
           boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
           display: "flex",
           justifyContent: "center",
@@ -100,8 +95,8 @@ const SignupFormModal = ({ visible, onClose }) => {
       >
         <div
           style={{
-            position: "absolute", // 부모 요소에 상대적인 절대 위치
-            top: "50%", // 부모의 세로 중앙에서 시작
+            position: "absolute",
+            top: "50%",
             transform: "translateY(-50%)",
             width: "70%",
             height: "70%",
@@ -131,7 +126,7 @@ const SignupFormModal = ({ visible, onClose }) => {
                 onClick={isProfileImageModalVisible.showRodal}
                 style={{
                   marginTop: "1vh",
-                  backgroundImage: `url(${imageSelectBtn})`,
+                  ModalBackground: `url(${imageSelectBtn})`,
                   backgroundSize: "100% 100%",
                   backgroundPosition: "center",
                   width: "25vw",
@@ -164,16 +159,16 @@ const SignupFormModal = ({ visible, onClose }) => {
               />
             </div>
 
-            <p className="text-sm text-green-500">
+            <div className="text-sm text-green-500">
               {!email.isValid && email.hasChecked && (
                 <div style={{ color: "green" }}>중복확인이 완료 되었습니다.</div>
               )}{" "}
-            </p>
-            <p className="text-sm text-red-500">
+            </div>
+            <div className="text-sm text-red-500">
               {email.isValid && email.hasChecked && (
                 <div style={{ color: "red" }}>중복된 이메일이 있습니다.</div>
               )}
-            </p>
+            </div>
 
             <div className="flex items-center space-x-2">
               <label
@@ -233,7 +228,7 @@ const SignupFormModal = ({ visible, onClose }) => {
               </div>
 
               <div className="text-xs text-orange-600 font-semibold">
-                ※ 비밀번호는 6자리 이상으로 영문자, 특수문자, 숫자를 모두 포함하여야 합니다.
+                ※ 비밀번호는 영문자 숫자의 조합으로 6 이상으로 입력해주세요
               </div>
 
               <div className="flex items-center space-x-2">
@@ -282,7 +277,7 @@ const SignupFormModal = ({ visible, onClose }) => {
         setProfileImage={profileImage.setValue}
         setProfileImageIndex={ProfileImageIndex.setValue}
       />
-    </>
+    </div>
   );
 };
 
