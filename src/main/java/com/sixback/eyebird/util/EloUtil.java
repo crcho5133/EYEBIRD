@@ -9,6 +9,7 @@ public class EloUtil {
     // normalization을 위한 상수
     private final int k = 32;
 
+
     // 첫번째 유저와 두번째 유저의 승리 시 예상 승점을 각각 계산
     public int[] getExpectedWinPts(int firstUserPt, int secondUserPt) {
         int ratingDiff = firstUserPt - secondUserPt;
