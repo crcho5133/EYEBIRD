@@ -38,13 +38,13 @@ public class RoomController {
     @Operation(summary = "아이템방 리스트 조회", description = "아이템방 리스트 조회")
     @GetMapping("/item")
     public List<RoomDto> itemRoomList() {
-        return roomService.roomList(true);
+        return roomService.getRoomList(true);
     }
 
     @Operation(summary = "클래식방 리스트 조회", description = "클래식방 리스트 조회")
     @GetMapping("/classic")
     public List<RoomDto> classicRoomList() {
-        return roomService.roomList(false);
+        return roomService.getRoomList(false);
     }
 
     // 방 생성
@@ -53,8 +53,9 @@ public class RoomController {
     public ResponseEntity<CreateRoomResDto> createRoom(@RequestBody RequestRoomDto reqRoom) throws OpenViduJavaClientException, OpenViduHttpException {
         // Issue : 토큰은 나중에 새로 주면 쓰기
         //System.out.println(reqRoom);
-        RoomDto room = new RoomDto(Sha256Convert.getInstance().ShaEncoder(reqRoom.getRoomName()), reqRoom.getRoomName(), reqRoom.isItem(), reqRoom.getMaxCapacity(), 0, reqRoom.getPassword(), 0);
+        RoomDto room = new RoomDto(Sha256Convert.getInstance().ShaEncoder(reqRoom.getRoomName()), reqRoom.getRoomName(), reqRoom.isItem(), reqRoom.getPassword()!=0?true:false, false, reqRoom.getMaxCapacity(), 0, reqRoom.getPassword(), 0);
         log.info(room.getRoomId());
+
         int result = roomService.createRoom(room);
 
         HashMap<Integer, String> message = new HashMap<>();
@@ -108,6 +109,8 @@ public class RoomController {
         String sessionId = roomReq.getRoomId();
         RoomDto room = new RoomDto();
         room.setRoomId(sessionId);
+        room.setPassword(roomReq.getPassword());
+
 
         int result = roomService.enterRoom(room, curUserEmail);
         if (result == 1) {
@@ -133,6 +136,7 @@ public class RoomController {
         throw new RuntimeException(msg);
     }
 
+
     @Operation(summary = "방 초대", description = "방 존재와 풀방 여부만 체크하고 프리패스")
     @PostMapping("/invite")
     public ResponseEntity<EnterRoomResDto> inviteEnterRoom(@RequestBody RoomReqDto roomReq, @RequestBody(required = false) Map<String, Object> params, Authentication authentication)
@@ -142,7 +146,7 @@ public class RoomController {
         RoomDto room = new RoomDto();
         room.setRoomId(sessionId);
 
-        int result = roomService.enterRoom(room, curUserEmail);
+        int result = roomService.inviteEnterRoom(room, curUserEmail);
         if (result == 1) {
             return ResponseEntity.ok(enterOpenVidu(sessionId, params));
         }
@@ -164,8 +168,8 @@ public class RoomController {
     // 빈 방에 아무데나 입장 신청 -> 블랙리스트 제외
     // 아이템 빠른 입장
     @Operation(summary = "빠른 입장", description = "블랙리스트/방 인원수 초과 시 입장 불가")
-    @PostMapping("/quick/item")
-    public ResponseEntity<EnterRoomResDto> quickEnterItemRoom(@RequestBody(required = false) Map<String, Object> params, Authentication authentication)
+    @GetMapping("/quick/item")
+    public ResponseEntity<String> quickEnterItemRoom(@RequestBody(required = false) Map<String, Object> params, Authentication authentication)
             throws OpenViduJavaClientException, OpenViduHttpException {
         String curUserEmail = authentication.getName();
 
@@ -175,7 +179,7 @@ public class RoomController {
         System.out.println(sessionId);
 
         if (result != "fail") {
-            return ResponseEntity.ok(enterOpenVidu(sessionId, params));
+            return ResponseEntity.ok(sessionId);
         }
 
         throw new RuntimeException("방 입장: 방 입장에 실패했습니다");
@@ -183,8 +187,8 @@ public class RoomController {
 
     // 클래식 빠른 입장
     @Operation(summary = "빠른 입장", description = "블랙리스트/방 인원수 초과 시 입장 불가")
-    @PostMapping("/quick/classic")
-    public ResponseEntity<EnterRoomResDto> quickEnterClassicRoom(@RequestBody(required = false) Map<String, Object> params, Authentication authentication)
+    @GetMapping("/quick/classic")
+    public ResponseEntity<String> quickEnterClassicRoom(@RequestBody(required = false) Map<String, Object> params, Authentication authentication)
             throws OpenViduJavaClientException, OpenViduHttpException {
         String curUserEmail = authentication.getName();
 
@@ -194,7 +198,7 @@ public class RoomController {
         System.out.println(sessionId);
 
         if (result != "fail") {
-            return ResponseEntity.ok(enterOpenVidu(sessionId, params));
+            return ResponseEntity.ok(sessionId);
         }
 
         throw new RuntimeException("방 입장: 방 입장에 실패했습니다");
@@ -202,6 +206,7 @@ public class RoomController {
 
     public EnterRoomResDto enterOpenVidu(String sessionId, Map<String, Object> params)throws OpenViduJavaClientException, OpenViduHttpException{
         OpenVidu openvidu = openViduManager.getOpenvidu();
+        log.info("들어온 세션 : " + sessionId);
         Session session = openvidu.getActiveSession(sessionId);
         if (session == null) {
             throw new RuntimeException("방 입장: sessionId를 지닌 session이 존재하지 않습니다");
@@ -218,5 +223,14 @@ public class RoomController {
     }
 
 
+    @Operation(summary = "방 상태 변경")
+    @PatchMapping()
+    public ResponseEntity<RoomDto> changeStatus(@RequestBody RoomDto room){ // id와 status만 받을 예정
+        room = roomService.changeStatus(room);
+        if(room.getRoomId()!=null)
+        return ResponseEntity.ok(room);
 
+        throw new RuntimeException("상태를 변경하지 못했습니다.");
+    }
 }
+
