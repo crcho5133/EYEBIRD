@@ -16,7 +16,7 @@ export default function OpenViduVideoComponent({ streamManager, readyState }) {
           <div className="absolute text-sm text-green-500 bg-green-200 rounded">준비완료</div>
         </div>
       )}
-      <video autoPlay={true} ref={videoRef} />
+      <video className="h-full w-full" autoPlay={true} ref={videoRef} />
     </>
   );
 }

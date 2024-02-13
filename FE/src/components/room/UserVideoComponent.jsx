@@ -38,7 +38,7 @@ export default function UserVideoComponent({
   return (
     <div className={`h-full w-full ${color}`}>
       {streamManager !== undefined ? (
-        <div className="flex-col text-center text-sm justify-center h-full w-full bg-gray-200 text-gray-700 font-bold">
+        <div className="flex-col text-center text-sm justify-center bg-gray-200 text-gray-700 font-bold">
           <OpenViduVideoComponent streamManager={streamManager} readyState={readyState} />
           <p className="inline-block">{getNicknameTag()}</p>
           {/* <div className="text-right">
