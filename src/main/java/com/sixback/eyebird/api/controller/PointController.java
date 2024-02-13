@@ -180,8 +180,8 @@ public class PointController {
                 Session session = openvidu.createSession(properties);
 
                 // firstUser와 secondUser의 현재 점수
-                int firstUserPt = firstUser.getPoint().getItemPt();
-                int secondUserPt = secondUser.getPoint().getItemPt();
+                int firstUserPt = firstUser.getPoint().getClassicPt();
+                int secondUserPt = secondUser.getPoint().getClassicPt();
 
                 // 첫번째, 두번째 유저의 예상 승점
                 int[] expectedWinPts = eloUtil.getExpectedWinPts(firstUserPt, secondUserPt);
@@ -200,8 +200,8 @@ public class PointController {
                 OpenviduSessionIdResDto secondUserOpenviduSessionIdResDto = OpenviduSessionIdResDto.builder()
                         .openviduSessionId(session.getSessionId())
                         .user(firstUser)
-                        .expectedWinPt(expectedWinPts[0])
-                        .expectedLosePt(expectedLosePts[0])
+                        .expectedWinPt(expectedWinPts[1])
+                        .expectedLosePt(expectedLosePts[1])
                         .build();
 
                 String jsonFirstUserOpenviduSessionIdResDto = objectMapper.writeValueAsString(firstUserOpenviduSessionIdResDto);
