@@ -12,20 +12,20 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
   // const subnickname = JSON.parse(subscriber.stream.connection.data).clientData;
   const [countdown, setCountdown] = useState(3);
 
-  const myNickName = sessionStorage.getItem("nickname");
-  const myProfileImage = sessionStorage.getItem("profile");
+  const myNickName = sessionStorage.getItem("nickname") || "test";
+  const myProfileImage = sessionStorage.getItem("profile") || proFileImage;
   const opponentNickname = opponentInfoParsed.nickname;
-  const myClassicPoint = sessionStorage.getItem("classicPt");
+  const myClassicPoint = sessionStorage.getItem("classicPt") || "test";
   const opponentClassicPoint = opponentInfoParsed.classicPt;
-  const myWinNumClassic = sessionStorage.getItem("winNumClassic");
+  const myWinNumClassic = sessionStorage.getItem("winNumClassic") || "test";
   const opponentWinNumClassic = opponentInfoParsed.winNumClassic;
-  const myLoseNumClassic = sessionStorage.getItem("loseNumClassic");
+  const myLoseNumClassic = sessionStorage.getItem("loseNumClassic") || "test";
   const opponentLoseNumClassic = opponentInfoParsed.loseNumClassic;
-  const myItemPoint = sessionStorage.getItem("itemPt");
+  const myItemPoint = sessionStorage.getItem("itemPt") || "test";
   const opponentItemPoint = opponentInfoParsed.itemPt;
-  const myWinNumItem = sessionStorage.getItem("winNumItem");
+  const myWinNumItem = sessionStorage.getItem("winNumItem") || "test";
   const opponentWinNumItem = opponentInfoParsed.winNumItem;
-  const myLoseNumItem = sessionStorage.getItem("loseNumItem");
+  const myLoseNumItem = sessionStorage.getItem("loseNumItem") || "test";
   const opponentLoseNumItem = opponentInfoParsed.loseNumItem;
   // const expectedWinPt = opponentInfoParsed.expectedWinPt;
   // const expectedLosePt = opponentInfoParsed.expectedLosePt;
@@ -39,7 +39,7 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
 
   return (
     <div className="boxControl" style={{ backgroundColor: "#69492E", height: "100%vh" }}>
-      <div className="flex flex-col h-100vh">
+      <div className="flex flex-col h-100vh matchingInfo6">
         <div className="text-10vw font-bold text-center mt-5vh matchingInfo0">
           {gameType === "classic" ? "클래식전" : "아이템전"}
           <hr className="mt-1vh border-black" />
@@ -68,40 +68,40 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
             />
             <div className="flex justify-center matchingInfo4 w-30vw">{myNickName}</div>
           </div>
-          <div className="matchingInfo5">
-            <div className="mt-2vh ml-20vw">
+          <div>
+            <div className="mt-2vh ml-22vw matchingInfo5">
               {gameType === "classic" ? "점수(Classic) :" : "점수(Item) :"}
               <span className="ml-3vw text-[#7B1616] matchingInfo10">
                 {gameType === "classic" ? myClassicPoint : myItemPoint}점
               </span>
             </div>
-            <div className="mt-2vh ml-20vw">
+            <div className="mt-2vh ml-22vw matchingInfo5">
               전적 :
               <span className="ml-3vw text-[#7B1616] matchingInfo10">
                 <span>{gameType === "classic" ? myWinNumClassic : myWinNumItem}승</span>
                 <span>{gameType === "classic" ? myLoseNumClassic : myLoseNumItem}패</span>
               </span>
             </div>
-            <div className="mt-2vh ms-20vw">
+            <div className="mt-2vh ml-22vw matchingInfo5">
               예상 획득 점수 :<span className="ml-3vw text-[#7B1616] matchingInfo10">±30점</span>
             </div>
           </div>
-          <div className="flex items-center ms-12vh matchingInfo6">
+          <div className="flex items-center ms-12vh matchingInfo7-1 mt-2vh mb-2vh">
             <img src={VSImage} style={{ width: "20vw", height: "7vh" }} className="matchingInfo7" />
-            <div className="flex flex-col justify-center items-center">
+            <div className=" flex flex-col justify-center items-center ms-2vw">
               <div
                 style={{
                   background: `url(${CountdownBackground}) no-repeat center center`,
                   backgroundSize: "contain",
                   width: "15vw",
-                  height: "15vh",
+                  height: "8vh",
                 }}
                 className="ms-10vw blink flex justify-center items-center text-10vw matchingInfo8"
               >
                 {countdown}
               </div>
-              <div className="text-4vw ms-8vw">초 뒤 게임이 </div>
-              <div className="text-4vw ms-8vw">시작됩니다</div>
+              <div className="text-4vw ms-8vw matchingInfo11">초 뒤 게임이 </div>
+              <div className="text-4vw ms-8vw matchingInfo11">시작됩니다</div>
             </div>
           </div>
           <div
@@ -119,13 +119,13 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
             <div className="flex justify-center matchingInfo4 w-30vw">{opponentNickname}</div>
           </div>
           <div className="matchingInfo5">
-            <div className="mt-2vh ml-20vw">
+            <div className="mt-2vh ml-22vw matchingInfo5">
               {gameType === "classic" ? "점수(Classic) :" : "점수(Item) :"}
               <span className="ml-3vw text-[#7B1616] matchingInfo10">
                 {gameType === "classic" ? opponentClassicPoint : opponentItemPoint}점
               </span>
             </div>
-            <div className="mt-2vh ml-20vw">
+            <div className="mt-2vh ml-22vw matchingInfo5">
               전적 :
               <span className="ml-3vw text-[#7B1616] matchingInfo10">
                 <span>{gameType === "classic" ? opponentWinNumClassic : opponentWinNumItem}승</span>
@@ -134,7 +134,7 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
                 </span>
               </span>
             </div>
-            <div className="mt-2vh ml-20vw">
+            <div className="mt-2vh ml-22vw matchingInfo5">
               예상 획득 점수 :<span className="ml-3vw text-[#7B1616] matchingInfo10">±30점</span>
             </div>
           </div>

@@ -66,7 +66,7 @@ const GameResult = ({
 
       // 3초 후에 자동으로 phase3로 설정
       const timeout = setTimeout(() => {
-        setResultState("phase3");
+        // setResultState("phase3");
         clearInterval(interval); // 타이머 정지
         setProgress(0); // 진행 바를 0으로 설정
       }, 4000);
@@ -136,7 +136,7 @@ const GameResult = ({
 
   return (
     <div
-      className="boxControl flex flex-col items-center"
+      className="boxControl flex flex-col items-center animate-fade-left animate-once"
       style={{ backgroundColor: "#69492E", height: "100vh" }}
     >
       {/*Top*/}
@@ -178,7 +178,7 @@ const GameResult = ({
             <div>잠시만 기다려 주십시오</div>
             {resultState !== "phase3" && (
               <div className="mt-1vh flex justify-center">
-                <div className="w-40vw bg-gray-300 h-3vh rounded-full shadow">
+                <div className="gameResult18 w-40vw bg-gray-300 h-3vh rounded-full shadow">
                   <div
                     className="bg-amber-800 h-full rounded-full transition-all ease-in-out"
                     style={{
@@ -201,10 +201,10 @@ const GameResult = ({
             }}
             className="gameResult3 text-4vw flex flex-col justify-center items-center"
           >
-            <div className="mt-2vh">재도전 하시겠습니까?</div>
+            <div className="mt-2vh gameResult17">재도전 하시겠습니까?</div>
             {resultState !== "phase3" && (
               <div className="mt-1vh flex justify-center">
-                <div className="w-40vw bg-gray-300 h-3vh rounded-full shadow">
+                <div className="gameResult18 w-40vw bg-gray-300 h-3vh rounded-full shadow">
                   <div
                     className="bg-amber-800 h-full rounded-full transition-all ease-in-out"
                     style={{
@@ -215,7 +215,7 @@ const GameResult = ({
               </div>
             )}
             <button
-              className="mt-1vh text-4vw w-10vw h-3vh bg-amber-700 text-white font-bold rounded hover:bg-amber-800 focus:outline-none focus:shadow-outline"
+              className="gameResult19 mt-1vh text-4vw w-10vw h-3vh bg-amber-700 text-white font-bold rounded hover:bg-amber-800 focus:outline-none focus:shadow-outline"
               onClick={() => sendRematch()}
             >
               네
@@ -233,11 +233,11 @@ const GameResult = ({
             }}
             className="gameResult3 flex flex-col justify-center items-center"
           >
-            <div className="mt-1vh">상대방이 재도전을 요청하였습니다</div>
-            <div>수락하시겠습니까?</div>
+            <div className="mt-1vh gameResult17">상대방이 재도전을 요청하였습니다</div>
+            <div className="gameResult17">수락하시겠습니까?</div>
             {resultState !== "phase3" && (
               <div className="mt-1vh flex justify-center">
-                <div className="w-40vw bg-gray-300 h-3vh rounded-full shadow">
+                <div className="gameResult18 w-40vw bg-gray-300 h-3vh rounded-full shadow">
                   <div
                     className="bg-amber-800 h-full rounded-full transition-all ease-in-out"
                     style={{
@@ -249,7 +249,7 @@ const GameResult = ({
             )}
             <div>
               <button
-                className="mt-1vh text-4vw w-10vw h-3vh bg-amber-700 text-white font-bold rounded hover:bg-amber-800 focus:outline-none focus:shadow-outline"
+                className="gameResult19 mt-1vh text-4vw w-10vw h-3vh bg-amber-700 text-white font-bold rounded hover:bg-amber-800 focus:outline-none focus:shadow-outline"
                 onClick={() => acceptRematch()}
               >
                 네
@@ -268,11 +268,11 @@ const GameResult = ({
             }}
             className="gameResult3 flex flex-col justify-center items-center"
           >
-            <div>상대방의 재도전 수락여부를</div>
-            <div>기다리고 있습니다</div>
+            <div className="gameResult17">상대방의 재도전 수락여부를</div>
+            <div className="gameResult17">기다리고 있습니다</div>
             {resultState !== "phase3" && (
               <div className="mt-1vh flex justify-center">
-                <div className="w-40vw bg-gray-300 h-3vh rounded-full shadow">
+                <div className="gameResult18 w-40vw bg-gray-300 h-3vh rounded-full shadow">
                   <div
                     className="bg-amber-800 h-full rounded-full transition-all ease-in-out"
                     style={{
@@ -314,12 +314,12 @@ const GameResult = ({
           }}
           className="gameResult5 flex flex-col"
         >
-          <div className="ms-3vw self-center">Rank</div>
-          <div className="flex">
-            <div className="flex flex-col items-start space-y-1vh">
+          <div className="ms-3vw self-center gameResult6">Rank</div>
+          <div className="flex gameResult7">
+            <div className="flex flex-col items-start space-y-2vh">
               <div className="flex justify-center items-center">
                 <div
-                  className=" ms-1vw flex justify-center items-center"
+                  className="ms-1vw flex justify-center items-center gameResult8"
                   style={{
                     background: `url(${RankingTitle}) no-repeat`,
                     backgroundPosition: "0.5vw center",
@@ -330,11 +330,11 @@ const GameResult = ({
                 >
                   1
                 </div>
-                <div className="ms-2vw">nickname1</div>
+                <div className="ms-2vw gameResult11">nickname1</div>
               </div>
               <div className="flex justify-center items-center">
                 <div
-                  className="ms-3vw flex justify-center items-center"
+                  className="ms-3vw flex justify-center items-center gameResult9"
                   style={{
                     background: `url(${RankingTitle}) no-repeat`,
                     backgroundPosition: "0.5vw center",
@@ -345,11 +345,11 @@ const GameResult = ({
                 >
                   2
                 </div>
-                <div className="ms-2vw">nickname2</div>
+                <div className="ms-2vw gameResult11">nickname2</div>
               </div>
               <div className="flex justify-center items-center">
                 <div
-                  className="ms-5vw flex justify-center items-center"
+                  className="ms-5vw flex justify-center items-center gameResult10"
                   style={{
                     background: `url(${RankingTitle}) no-repeat`,
                     backgroundPosition: "0.5vw center",
@@ -360,27 +360,28 @@ const GameResult = ({
                 >
                   3
                 </div>
-                <div className="ms-2vw">nickname3</div>
+                <div className="ms-2vw gameResult11">nickname3</div>
               </div>
             </div>
 
-            <div className="ms-3vw flex flex-col justify-center items-center">
-              <div className="ms-4vw text-8vw flex justify-center items-center text-red-600">
+            <div className="gameResult14 ms-3vw flex flex-col justify-center items-center">
+              <div className="gameResult12 ms-4vw text-8vw flex flex-wrap justify-center items-center text-red-600">
                 {number}
               </div>
-              {myWin ? (
-                <div className="ms-10vw"> {accessPoint}</div>
-              ) : (
-                <div className="ms-10vw"> {accessPoint}</div>
-              )}
+
+              <div className="ms-10vw gameResult13"> {accessPoint}</div>
             </div>
           </div>
         </div>
       </div>
 
       {/*Bottom*/}
-      <div className="flex flex-col justify-center items-center">
-        <img src={proFileImage} style={{ width: "20vw", height: "13vh" }} />
+      <div className="flex flex-col justify-center items-center ">
+        <img
+          className="gameResult15"
+          src={proFileImage}
+          style={{ width: "20vw", height: "13vh" }}
+        />
         <div
           style={{
             background: `url(${NicknameTitle}) no-repeat`,
@@ -389,7 +390,7 @@ const GameResult = ({
             width: "50vw",
             height: "7vh",
           }}
-          className="flex justify-center items-center"
+          className="flex justify-center items-center gameResult16"
         >
           닉네임
         </div>

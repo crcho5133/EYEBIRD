@@ -38,17 +38,17 @@
 @media (min-width: 768px) {
   .rodal-zoom-enter {
     width: 30vw !important;
-    background-size: 25vw 50vh !important;
+    background-size: 400px 60vh !important;
   }
 
   .loginContent1 {
     margin-top: 25.5vh;
-    font-size: 2vw;
+    font-size: 50px;
   }
 
   .loginContent2 {
     margin-top: 3vh;
-    background-size: 17vw 30vh !important;
+    background-size: 250px 30vh !important;
   }
 
   .loginContent3 {
@@ -56,103 +56,211 @@
   }
 
   .loginContent4 {
-    width: 13vw;
+    width: 150px;
     font-size: 1vw;
   }
 
   .loginContent5 {
     margin-top: 2vh;
-    background-size: 5vw 5vh !important;
-    font-size: 1vw;
+    background-size: 100px 5vh !important;
+    font-size: 20px;
   }
 
   .matchingInfo0 {
-    font-size: 3vw;
+    font-size: 50px;
   }
 
   .matchingInfo1 {
-    background-size: 30vw 85vh !important;
+    background-size: 400px 85vh !important;
     background-position-y: top !important;
+    align-items: center;
   }
 
   .matchingInfo2 {
     background-position: center !important;
-    margin-top: 12vh;
-    width: 12vw;
+    margin-top: 15vh;
+    width: 250px;
     height: 6vh;
   }
 
   .matchingInfo3 {
-    margin-left: 0vw;
+    margin-left: 20px;
+    width: 150px !important;
+    height: 50px !important;
   }
 
   .matchingInfo4 {
-    margin-left: 0vw;
-    font-size: 1vw;
+    margin-left: -50px;
+    font-size: 30px;
   }
 
   .matchingInfo5 {
-    margin-left: 19vw;
+    margin-left: 0;
   }
 
   .matchingInfo6 {
-    align-self: center;
-    transform: translateX(-45px);
-    margin-top: 2vh;
+    align-items: cneter;
   }
 
   .matchingInfo7 {
-    width: 5vw !important;
-    height: vh !important;
+    margin-right: 40px;
+    width: 80px !important;
+  }
+
+  .matchingInfo7-1 {
+    margin-left: 0px;
   }
 
   .matchingInfo8 {
-    margin-left: 1vw;
-    width: 6vw !important;
+    width: 50px !important;
     height: 6vh !important;
-    font-size: 2vw;
+    font-size: 40px;
+    margin-left: 0px;
   }
+
   .matchingInfo9 {
     background-position: center !important;
     margin-top: 3vh;
-    width: 12vw;
+    width: 250px;
     height: 6vh;
   }
 
   .matchingInfo10 {
-    margin-left: 1vw;
+    margin-left: 10px;
+  }
+
+  .matchingInfo11 {
+    font-size: 15px;
+    margin-left: 0;
   }
 
   .gameResult1 {
-    background-size: 20vw 7vh !important;
-    width: 20vw !important;
+    background-size: 250px 7vh !important;
+    width: 250px !important;
     height: 7vh !important;
     font-size: 3vw;
   }
 
   .gameResult2 {
-    background-size: 40vw 55vh !important;
-    width: 40vw !important;
+    background-size: 400px 55vh !important;
+    width: 400px !important;
     height: 55vh !important;
   }
 
   .gameResult3 {
-    background-size: 35vw 30vh !important;
-    margin-top: 3vh;
-    width: 35vw !important;
-    height: 30vh !important;
+    background-size: cover !important;
+    background-position: center;
+    width: 350px !important;
+    height: 50vh !important;
   }
 
   .gameResult4 {
-    width: 10vw !important;
+    width: 200px !important;
     height: 5vh !important;
-    font-size: 2vw;
+    font-size: 30px;
   }
 
   .gameResult5 {
-    background-size: 35vw 40vh !important;
-    margin-top: 10vh;
-    width: 35vw !important;
-    height: 40vh !important;
+    background-size: cover !important;
+    background-position: center;
+    width: 350px !important;
+    height: 50vh !important;
+  }
+
+  .gameResult6 {
+    margin-top: 1.5vh;
+    font-size: 30px;
+    margin-right: 30px;
+  }
+
+  .gameResult7 {
+    margin-top: 2vh;
+  }
+
+  .gameResult8 {
+    background-size: contain !important;
+    background-position: center;
+    width: 40px !important;
+    height: 3vh !important;
+    font-size: 15px;
+    margin-left: 5px;
+    padding-left: 6px;
+  }
+
+  .gameResult9 {
+    background-size: contain !important;
+    background-position: center;
+    width: 40px !important;
+    height: 3vh !important;
+    margin-left: 15px;
+    font-size: 15px;
+    padding-left: 6px;
+  }
+
+  .gameResult10 {
+    background-size: contain !important;
+    background-position: center;
+    width: 40px !important;
+    height: 3vh !important;
+    font-size: 15px;
+    margin-left: 25px;
+    padding-left: 6px;
+  }
+
+  .gameResult11 {
+    background-size: contain !important;
+    background-position: center;
+    width: 4vw !important;
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+  }
+
+  .gameResult12 {
+    font-size: 60px;
+    margin-left: 0;
+  }
+
+  .gameResult13 {
+    font-size: 30px;
+    margin-left: -40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    margin-top: -20px;
+  }
+
+  .gameResult14 {
+    align-items: start;
+    margin-left: 50px;
+    margin-top: -20px;
+  }
+
+  .gameResult15 {
+    width: 200px !important;
+    height: 200px !important;
+  }
+  .gameResult16 {
+    background-size: contain !important;
+    background-position: center;
+    width: 300px !important;
+  }
+  .gameResult17 {
+    font-size: 20px;
+  }
+  .gameResult18 {
+    width: 200px;
+    height: 15px;
+  }
+
+  .gameResult19 {
+    width: 80px;
+    height: 40px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
   }
 }
