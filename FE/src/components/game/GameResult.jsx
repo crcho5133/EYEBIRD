@@ -98,7 +98,7 @@ const GameResult = ({
 
   //랭크 점수 출력하는 로직
   const [number, setNumber] = useState(1000); // "1000"에서 시작하여 증가
-  const [accessPoint, setAccessPoint] = useState(-36); // "36"에서 시작하여 감소
+  const [accessPoint, setAccessPoint] = useState(36); // "36"에서 시작하여 감소
   const finalNumber = number + accessPoint;
   const finalAccessPoint = 0;
 
@@ -114,7 +114,7 @@ const GameResult = ({
           if (number >= finalNumber && accessPoint <= finalAccessPoint) {
             clearInterval(interval);
           }
-        }, 10);
+        }, 50);
 
         return () => clearInterval(interval);
       } else {

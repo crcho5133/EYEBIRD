@@ -17,7 +17,7 @@ const Home = () => {
 
   return (
     <div
-      className="flex flex-col justify-center space-y-8 h-screen items-center"
+      className="flex flex-col justify-center space-y-6 h-screen items-center"
       style={{
         backgroundImage: `url(${background_home2})`,
         backgroundSize: "cover",

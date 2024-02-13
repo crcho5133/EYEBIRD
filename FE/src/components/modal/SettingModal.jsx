@@ -3,13 +3,14 @@ import Rodal from "rodal"; // Rodal import
 import "rodal/lib/rodal.css"; // Rodal CSS
 import LobbyBtn from "@/components/lobby/LobbyBtn";
 import useShowComponent from "@/hooks/useShowComponent";
+import usersApiCall from "@/api/axios/usersApiCall";
 
 const SettingModal = ({ visible, onClose }) => {
   const [volume, setVolume] = useState(50); // 앱의 소리 조절 상태
   const [micVolume, setMicVolume] = useState(50); // 마이크 소리 조절 상태
   const [blockInvites, setBlockInvites] = useState(false); // 초대 차단 상태
   const isBtnVisible = useShowComponent();
-
+  const useUsersApiCall = usersApiCall();
   const logout = (event) => {
     event.preventDefault();
     useUsersApiCall.logout();
