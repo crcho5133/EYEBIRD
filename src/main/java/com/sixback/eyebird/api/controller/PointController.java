@@ -39,6 +39,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class PointController {
     private final PointService pointService;
 
+    
     // 아이템전 매칭 요청이 들어온 유저들을 담은 queue
     //private final Queue<String> matchingQueueItem = new ConcurrentLinkedQueue<>();
     // 클래식전 매칭 요청이 들어온 유저들을 담은 queue
@@ -184,8 +185,8 @@ public class PointController {
                 Session session = openvidu.createSession(properties);
 
                 // firstUser와 secondUser의 현재 점수
-                int firstUserPt = firstUser.getPoint().getItemPt();
-                int secondUserPt = secondUser.getPoint().getItemPt();
+                int firstUserPt = firstUser.getPoint().getClassicPt();
+                int secondUserPt = secondUser.getPoint().getClassicPt();
 
                 // 첫번째, 두번째 유저의 예상 승점
                 int[] expectedWinPts = eloUtil.getExpectedWinPts(firstUserPt, secondUserPt);
@@ -204,8 +205,8 @@ public class PointController {
                 OpenviduSessionIdResDto secondUserOpenviduSessionIdResDto = OpenviduSessionIdResDto.builder()
                         .openviduSessionId(session.getSessionId())
                         .user(firstUser)
-                        .expectedWinPt(expectedWinPts[0])
-                        .expectedLosePt(expectedLosePts[0])
+                        .expectedWinPt(expectedWinPts[1])
+                        .expectedLosePt(expectedLosePts[1])
                         .build();
 
                 String jsonFirstUserOpenviduSessionIdResDto = objectMapper.writeValueAsString(firstUserOpenviduSessionIdResDto);
