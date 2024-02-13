@@ -39,7 +39,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class PointController {
     private final PointService pointService;
 
-    
+
     // 아이템전 매칭 요청이 들어온 유저들을 담은 queue
     //private final Queue<String> matchingQueueItem = new ConcurrentLinkedQueue<>();
     // 클래식전 매칭 요청이 들어온 유저들을 담은 queue
