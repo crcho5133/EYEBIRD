@@ -87,7 +87,7 @@ const CreatingRoomModal = ({ visible, onClose }) => {
       onClose={onCloseModal}
       closeOnEsc={true}
       closeMaskOnClick={false}
-      width={"100%"}
+      customStyles={{ width: "100%" }}
     >
       <input
         type="text"

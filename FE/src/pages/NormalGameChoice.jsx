@@ -60,7 +60,7 @@ const NormalGameChoice = () => {
 
   return (
     <>
-      <div className="h-screen flex flex-col items-center space-y-5">
+      <div className="h-screen flex flex-col items-center space-y-5 animate-fade-left animate-once">
         <div
           className="flex justify-center items-center"
           style={{

@@ -67,8 +67,8 @@ const GameResult = ({
     if (resultState === "phase1" || resultState === "phase2") {
       setProgress(100); // phase1 또는 phase2로 진입할 때 진행 바를 다시 채웁니다.
       const interval = setInterval(() => {
-        setProgress((prevProgress) => (prevProgress > 0 ? prevProgress - 100 / (4000 / 10) : 0));
-      }, 10); // 매 10밀리초마다 진행 바 감소
+        setProgress((prevProgress) => (prevProgress > 0 ? prevProgress - 1 : 0));
+      }, 40); // 매 10밀리초마다 진행 바 감소
 
       // 3초 후에 자동으로 phase3로 설정
       const timeout = setTimeout(() => {
@@ -336,7 +336,7 @@ const GameResult = ({
                 >
                   1
                 </div>
-                <div className="ms-2vw gameResult11">nickname1</div>
+                <div className="ms-2vw gameResult11">김싸피</div>
               </div>
               <div className="flex justify-center items-center">
                 <div
@@ -351,7 +351,7 @@ const GameResult = ({
                 >
                   2
                 </div>
-                <div className="ms-2vw gameResult11">nickname2</div>
+                <div className="ms-2vw gameResult11">눈싸움왕</div>
               </div>
               <div className="flex justify-center items-center">
                 <div
@@ -366,7 +366,7 @@ const GameResult = ({
                 >
                   3
                 </div>
-                <div className="ms-2vw gameResult11">nickname3</div>
+                <div className="ms-2vw gameResult11">포이즌</div>
               </div>
             </div>
 

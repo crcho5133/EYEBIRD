@@ -4,6 +4,7 @@ import OpponentVideoComponent from "./OpponentVideoComponent";
 import background_magma2 from "../../assets/img/background_magma2.gif";
 import game_waiting from "../../assets/img/game_waiting.png";
 import ready_button from "../../assets/img/ready_button.png";
+import item1 from "../../assets/img/gameItem/item1.gif";
 
 const GamePlay = ({
   publisher,
@@ -166,13 +167,18 @@ const GamePlay = ({
         )}
         {!isLoading && gameState === "play" && (
           <div>
-            {gameType === "classic" ? "" : <div>아이템 사용 가능 횟수 : {itemCount}</div>}
+            {gameType === "classic" ? (
+              ""
+            ) : (
+              <div className="text-white">아이템 사용 가능 횟수 : {itemCount}</div>
+            )}
             <div className="invisible absolute">
               {/* <div className="hidden"> */}
               나
               <UserVideoComponent streamManager={publisher} gameState={gameState} {...gameProps} />
             </div>
             <div
+              className="flex flex-col items-center justify-center"
               onClick={() => {
                 if (itemCount > 0 && canUse) {
                   setItemCount(itemCount - 1);
@@ -180,7 +186,7 @@ const GamePlay = ({
                   useItem();
                   setTimeout(() => {
                     setCanUse(true);
-                  }, 3000);
+                  }, 5000);
                 }
               }}
             >
@@ -188,11 +194,16 @@ const GamePlay = ({
                 게임 진행 시간: {minutes}분 {seconds}초
               </div>
               상대방
-              {itemVisible ? <div className="absolute text-3xl">아이템 사용중</div> : ""}
+              {itemVisible ? <img className="absolute w-full h-full" src={item1} /> : ""}
               <OpponentVideoComponent streamManager={subscriber} />
-              <div className="text-xl text-red-500">나 {myLose ? "패배" : "대기"}</div>
-              <div className="text-xl text-red-500">상대{opponentLose ? "패배" : "대기"}</div>
             </div>
+            {gameType === "classic" ? (
+              ""
+            ) : (
+              <div className="text-xl text-white">화면을 터치하면 아이템이 사용됩니다</div>
+            )}
+            <div className="text-xl text-red-500">나 {myLose ? "패배" : "대기"}</div>
+            <div className="text-xl text-red-500">상대{opponentLose ? "패배" : "대기"}</div>
           </div>
         )}
       </div>

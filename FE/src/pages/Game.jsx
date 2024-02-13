@@ -303,7 +303,7 @@ const Game = () => {
         setItemVisible(true);
         setTimeout(() => {
           setItemVisible(false);
-        }, 3000);
+        }, 5000);
       }
     });
 

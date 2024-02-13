@@ -28,7 +28,7 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
   const opponentWinNumItem = opponentInfoParsed.winNumItem;
   const myLoseNumItem = sessionStorage.getItem("loseNumItem") || "test";
   const opponentLoseNumItem = opponentInfoParsed.loseNumItem;
-  // const expectedWinPt = opponentInfoParsed.expectedWinPt;
+  const expectedWinPt = opponentInfoParsed.expectedWinPt;
   // const expectedLosePt = opponentInfoParsed.expectedLosePt;
 
   useEffect(() => {
@@ -84,7 +84,8 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
               </span>
             </div>
             <div className="mt-2vh ml-22vw matchingInfo5">
-              예상 획득 점수 :<span className="ml-3vw text-[#7B1616] matchingInfo10">±30점</span>
+              예상 획득 점수 :
+              <span className="ml-3vw text-[#7B1616] matchingInfo10">+{expectedWinPt}점</span>
             </div>
           </div>
           <div className="flex items-center ms-12vh matchingInfo7-1 mt-2vh mb-2vh">
