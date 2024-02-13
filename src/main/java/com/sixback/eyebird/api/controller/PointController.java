@@ -16,6 +16,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.sixback.eyebird.api.dto.PointReqDto;
@@ -94,6 +95,30 @@ public class PointController {
         response.put("total", pointService.getListSize(false));
         response.put("rankList", test);
         return  new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/rank/myrank/classic")
+    @Operation(summary = "클래식 랭크 받아오기", description = "redis에서 classic rank 받아오기")
+    public ResponseEntity<List<PointDto>> getUpDownClassicScore(Authentication authentication){
+        String curUserEmail = authentication.getName();
+
+        List<PointDto> response = pointService.getUpDownScore(false, curUserEmail);
+        if(response != null)
+            return  new ResponseEntity<>(response, HttpStatus.OK);
+        
+        throw new RuntimeException("점수 불러오기 실패");
+    }
+
+    @GetMapping("/rank/myrank/item")
+    @Operation(summary = "클래식 랭크 받아오기", description = "redis에서 classic rank 받아오기")
+    public ResponseEntity<List<PointDto>> getUpDownItemScore(Authentication authentication){
+        String curUserEmail = authentication.getName();
+
+        List<PointDto> response = pointService.getUpDownScore(true, curUserEmail);
+        if(response != null)
+            return  new ResponseEntity<>(response, HttpStatus.OK);
+
+        throw new RuntimeException("점수 불러오기 실패");
     }
 
     // 랭크 게임의 매칭 요청이 왔을 때
