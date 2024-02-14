@@ -36,9 +36,79 @@
 }
 
 @media (min-width: 768px) {
-  .rodal-zoom-enter {
-    width: 30vw !important;
-    background-size: 400px 60vh !important;
+  .signup0 > .rodal-zoom-enter {
+    width: 25vw !important;
+    background-size: 25vw 90vh !important;
+  }
+
+  .signup1 {
+    width: 15vw !important;
+    height: 10vh !important;
+    margin-left: 2vw;
+    margin-top: 4vh;
+  }
+
+  .signup2 {
+    margin-top: 4vh;
+  }
+
+  .signup2-1 {
+    background-size: 10vw 15vh !important;
+    width: 10vw;
+    height: 15vh;
+  }
+
+  .signup2-2 {
+    background-size: 10vw 15vh !important;
+    width: 10vw;
+    height: 15vh;
+  }
+
+  .signup2-3 {
+    width: 60px;
+    height: 60px;
+  }
+
+  .signup2-4 {
+    background-size: contain !important;
+    padding-top: 0.5vw;
+    width: 20vw !important;
+    height: 40px !important;
+  }
+
+  .signup3-1 {
+    margin-left: 1vh;
+  }
+  .signup3-2 {
+    font-size: 15px !important;
+  }
+
+  .signup3-3 {
+    margin-left: 1vw;
+    width: 8vw !important;
+  }
+
+  .signup3-4 {
+    width: 3vw;
+    font-size: 0.5vw;
+    margin-left: 0.5vw;
+    padding: 0;
+  }
+
+  .signup3-5 {
+    margin-left: 5vw;
+  }
+
+  .signup4 {
+    margin-top: 3vh;
+    margin-left: -1vw;
+    width: 7vw !important;
+    height: 4vh;
+  }
+
+  .loginContent0 > .rodal-zoom-enter {
+    width: 25vw !important;
+    background-size: 25vw 60vh !important;
   }
 
   .loginContent1 {

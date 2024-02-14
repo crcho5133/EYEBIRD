@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { OpenVidu } from "openvidu-browser";
 import { usePreventBrowserControl } from "../hooks/usePreventBrowserControl";
+import { useAccessTokenState } from "@/context/AccessTokenContext";
 import { toast, Slide, Bounce } from "react-toastify";
 import axios from "axios";
 // 게임 매칭 화면(일반 / 랭크 case로 구분)
@@ -20,7 +21,12 @@ const Game = () => {
   const location = useLocation();
   const { gameType, opponentInfo } = location.state;
   const opponentInfoParsed = JSON.parse(opponentInfo);
+  const myInfo = useAccessTokenState();
   const token = sessionStorage.getItem("accessToken");
+  const myClassicPoint = sessionStorage.getItem("classicPt");
+  const prevClassicPoint = myInfo.classicPt;
+  const myItemPoint = sessionStorage.getItem("itemPt");
+  const prevItemPoint = myInfo.itemPt;
 
   const [gameState, setGameState] = useState("entrance");
   const [isLoading, setIsLoading] = useState(false);
@@ -53,6 +59,11 @@ const Game = () => {
   const [rematchRequest, setRematchRequest] = useState(false);
   const [rematchResponse, setRematchResponse] = useState(false);
   const [rematch, setRematch] = useState(false);
+  // 아이템 사용
+  const [itemVisible, setItemVisible] = useState(false);
+  // 게임 승/패 점수
+  const expectedWinPt = opponentInfoParsed.expectedWinPt;
+  const expectedLosePt = opponentInfoParsed.expectedLosePt;
 
   // 이 변수 switch camera 전용 변수? 확인하기
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
@@ -60,6 +71,7 @@ const Game = () => {
   // 상태 최신화 참조
   const sessionRef = useRef(session);
   const mySessionIdRef = useRef(mySessionId);
+  const myWinRef = useRef(myWin);
 
   // OpenVidu 라이브러리 사용
   const OV = useRef(new OpenVidu());
@@ -89,24 +101,45 @@ const Game = () => {
     }
   }, [publisher, subscriber]);
 
-  useEffect(() => {
-    if (myLose || opponentLose) {
-      if (myLose && myWin === null) {
-        setMyWin(false);
-      } else if (opponentLose && myWin === null) {
-        setMyWin(true);
-      }
-      setTimeout(() => {
-        setGameState("gameResult");
-      }, 1000);
-    }
-  }, [myLose, opponentLose]);
-
   // useEffect 훅
   useEffect(() => {
     sessionRef.current = session;
     mySessionIdRef.current = mySessionId;
-  }, [session, mySessionId]);
+    myWinRef.current = myWin;
+  }, [session, mySessionId, myWin]);
+
+  useEffect(() => {
+    if (myWinRef.current === null && (myLose || opponentLose)) {
+      if (myLose && myWinRef.current === null) {
+        setMyWin(false);
+        if (gameType === "classic") {
+          updatePoint(expectedLosePt, 0);
+          myInfo.setClassicPt(Number(myInfo.classicPt) + Number(expectedLosePt));
+          myInfo.setLoseNumClassic(Number(myInfo.loseNumClassic) + 1);
+        } else {
+          updatePoint(0, expectedLosePt);
+          myInfo.setItemPt(Number(myInfo.itemPt) + Number(expectedLosePt));
+          myInfo.setLoseNumItem(Number(myInfo.loseNumItem) + 1);
+        }
+      } else if (opponentLose && myWinRef.current === null) {
+        setMyWin(true);
+        if (gameType === "classic") {
+          updatePoint(expectedWinPt, 0);
+          myInfo.setClassicPt(Number(myInfo.classicPt) + Number(expectedWinPt));
+          myInfo.setWinNumClassic(Number(myInfo.winNumClassic) + 1);
+          updateResult(false, myInfo.nickname, opponentInfoParsed.nickname);
+        } else {
+          updatePoint(0, expectedWinPt);
+          myInfo.setItemPt(Number(myInfo.itemPt) + Number(expectedWinPt));
+          myInfo.setWinNumItem(Number(myInfo.winNumItem) + 1);
+          updateResult(true, myInfo.nickname, opponentInfoParsed.nickname);
+        }
+      }
+      setTimeout(() => {
+        setGameState("gameResult");
+      }, 2000);
+    }
+  }, [myLose, opponentLose]);
 
   useEffect(() => {
     if (session) {
@@ -123,7 +156,7 @@ const Game = () => {
             resolution: "400x400",
             frameRate: 30,
             insertMode: "APPEND",
-            mirror: false,
+            mirror: true,
           });
 
           session.publish(publisher);
@@ -202,6 +235,13 @@ const Game = () => {
     });
   };
 
+  const useItem = () => {
+    session.signal({
+      data: myUserName,
+      type: "useitem",
+    });
+  };
+
   // // 새 사용자가 세션에 접속할 때 팀 정보 요청 신호 보내기
   // const requestTeamInfo = () => {
   //   session.signal({
@@ -257,6 +297,16 @@ const Game = () => {
       }
     });
 
+    mySession.on("signal:useitem", (event) => {
+      const username = event.data;
+      if (username !== myUserName) {
+        setItemVisible(true);
+        setTimeout(() => {
+          setItemVisible(false);
+        }, 5000);
+      }
+    });
+
     setSession(mySession);
   }, []);
 
@@ -290,6 +340,32 @@ const Game = () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [leaveSession]);
+
+  const updatePoint = async (classicPt, itemPt) => {
+    const response = await axios.patch(
+      APPLICATION_SERVER_URL + "api/point",
+      { classicPt: classicPt, itemPt: itemPt },
+      {
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+      }
+    );
+    console.log(response);
+  };
+
+  const updateResult = async (isItem, winner, loser) => {
+    const response = await axios.post(
+      APPLICATION_SERVER_URL + "api/game-result",
+      {
+        isItem: isItem,
+        userWinnerNickname: winner,
+        userLoserNickname: loser,
+      },
+      {
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+      }
+    );
+    console.log(response);
+  };
 
   const getToken2 = async () => {
     const response = await axios.post(
@@ -337,6 +413,9 @@ const Game = () => {
     sendLose,
     myLose,
     opponentLose,
+    gameType,
+    itemVisible,
+    useItem,
   };
 
   // 라우팅 구성
@@ -373,7 +452,7 @@ const Game = () => {
           rematch={rematch}
           gameId={gameId}
           gameType={gameType}
-          opponentInfo={opponentInfo}
+          opponentInfoParsed={opponentInfoParsed}
           setGameState={setGameState}
           setReady={setReady}
           setOpponentReady={setOpponentReady}
@@ -383,6 +462,8 @@ const Game = () => {
           setRematchRequest={setRematchRequest}
           setRematchResponse={setRematchResponse}
           setRematch={setRematch}
+          prevClassicPoint={prevClassicPoint}
+          prevItemPoint={prevItemPoint}
         />
       )}
     </>

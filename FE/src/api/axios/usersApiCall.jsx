@@ -82,9 +82,10 @@ const usersApiCall = () => {
 
     try {
       await privateAxios.post(url, body);
-      webSocket.client.deactivate();
       alert("로그아웃 되었습니다.");
-      accessToken.clear();
+      accessToken.clear(() => {
+        webSocket.client.deactivate();
+      });
       navigate("/");
     } catch (error) {
       console.log(error);

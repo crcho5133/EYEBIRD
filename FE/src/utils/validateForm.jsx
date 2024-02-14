@@ -10,6 +10,6 @@ export const validateNickname = (nickname) => {
 };
 
 export const validatePassword = (password) => {
-  const re = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+  const re = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d!?@#$%^&*]{6,}$/;
   return re.test(password);
 };

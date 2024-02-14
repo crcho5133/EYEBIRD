@@ -10,10 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 import PrivateRoute from "@/privateRoute/PrivateRoute";
 import { WebSocketProvider } from "@/context/WebSocketContext";
 import { VideoWebSocketProvider } from "./context/VideoWebSocketContext";
-import GameResult from "@/components/game/GameResult";
-import GameLoading from "@/components/game/GameLoading";
 
-function App() {
+export default function App() {
   return (
     <>
       <BrowserRouter>
@@ -24,26 +22,6 @@ function App() {
               <WebMobileLayout>
                 <div className="font-maplestory-bold">
                   <Routes>
-                    {/* <Route element={<PrivateRoute requireAuth={false} />}>
-                      <Route
-                        path="/"
-                        element={
-                          <GameLoading
-                            gameType="classic"
-                            opponentInfoParsed={{
-                              nickname: "test",
-                              classicPt: 10,
-                              winNumClassic: 10,
-                              loseNumClassic: 10,
-                              itemPt: 10,
-                              winNumItem: 10,
-                              loseNumItem: 10,
-                            }}
-                          />
-                        }
-                      />
-                    </Route> */}
-
                     <Route element={<PrivateRoute requireAuth={false} />}>
                       <Route path="/" element={<Home />} />
                     </Route>
@@ -67,5 +45,3 @@ function App() {
     </>
   );
 }
-
-export default App;

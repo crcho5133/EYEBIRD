@@ -20,7 +20,7 @@ const GameResult = ({
   rematch,
   gameId,
   gameType,
-  opponentInfo,
+  opponentInfoParsed,
   setGameState,
   setReady,
   setOpponentReady,
@@ -30,9 +30,15 @@ const GameResult = ({
   setRematchRequest,
   setRematchResponse,
   setRematch,
+  prevClassicPoint,
+  prevItemPoint,
 }) => {
   const [resultState, setResultState] = useState("phase1");
   const [progress, setProgress] = useState(100); // 진행 바 상태
+  const myClassicPoint = sessionStorage.getItem("classicPt");
+  const myItemPoint = sessionStorage.getItem("itemPt");
+  const expectedWinPt = opponentInfoParsed.expectedWinPt;
+  const expectedLosePt = opponentInfoParsed.expectedLosePt;
 
   useEffect(() => {
     // rematchRequest나 rematchResponse가 변경될 때 phase2로 설정
@@ -61,12 +67,12 @@ const GameResult = ({
     if (resultState === "phase1" || resultState === "phase2") {
       setProgress(100); // phase1 또는 phase2로 진입할 때 진행 바를 다시 채웁니다.
       const interval = setInterval(() => {
-        setProgress((prevProgress) => (prevProgress > 0 ? prevProgress - 100 / (4000 / 10) : 0));
-      }, 10); // 매 10밀리초마다 진행 바 감소
+        setProgress((prevProgress) => (prevProgress > 0 ? prevProgress - 1 : 0));
+      }, 40); // 매 10밀리초마다 진행 바 감소
 
       // 3초 후에 자동으로 phase3로 설정
       const timeout = setTimeout(() => {
-        // setResultState("phase3");
+        setResultState("phase3");
         clearInterval(interval); // 타이머 정지
         setProgress(0); // 진행 바를 0으로 설정
       }, 4000);
@@ -98,7 +104,7 @@ const GameResult = ({
 
   //랭크 점수 출력하는 로직
   const [number, setNumber] = useState(1000); // "1000"에서 시작하여 증가
-  const [accessPoint, setAccessPoint] = useState(-36); // "36"에서 시작하여 감소
+  const [accessPoint, setAccessPoint] = useState(36); // "36"에서 시작하여 감소
   const finalNumber = number + accessPoint;
   const finalAccessPoint = 0;
 
@@ -114,7 +120,7 @@ const GameResult = ({
           if (number >= finalNumber && accessPoint <= finalAccessPoint) {
             clearInterval(interval);
           }
-        }, 10);
+        }, 50);
 
         return () => clearInterval(interval);
       } else {
@@ -330,7 +336,7 @@ const GameResult = ({
                 >
                   1
                 </div>
-                <div className="ms-2vw gameResult11">nickname1</div>
+                <div className="ms-2vw gameResult11">김싸피</div>
               </div>
               <div className="flex justify-center items-center">
                 <div
@@ -345,7 +351,7 @@ const GameResult = ({
                 >
                   2
                 </div>
-                <div className="ms-2vw gameResult11">nickname2</div>
+                <div className="ms-2vw gameResult11">눈싸움왕</div>
               </div>
               <div className="flex justify-center items-center">
                 <div
@@ -360,7 +366,7 @@ const GameResult = ({
                 >
                   3
                 </div>
-                <div className="ms-2vw gameResult11">nickname3</div>
+                <div className="ms-2vw gameResult11">포이즌</div>
               </div>
             </div>
 
@@ -402,7 +408,7 @@ const GameResult = ({
           <div className={`text-2xl ${myWin ? "text-green-600" : "text-red-600"}`}>
             {myWin ? "승리" : "패배"}
           </div>
-          <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+          {/* <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
           <div>상대</div>
           <div className={`text-2xl ${myWin ? "text-red-600" : "text-green-600"}`}>
             {myWin ? "패배" : "승리"}
@@ -449,7 +455,6 @@ const GameResult = ({
           {resultState === "phase2" && !myWin && (
             <div>상대방의 재도전 수락여부를 기다리고 있습니다</div>
           )}
-
           {resultState === "phase3" && (
             <div className="m-4">
               <Link

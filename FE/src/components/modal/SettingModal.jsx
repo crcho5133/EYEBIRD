@@ -3,14 +3,14 @@ import Rodal from "rodal"; // Rodal import
 import "rodal/lib/rodal.css"; // Rodal CSS
 import LobbyBtn from "@/components/lobby/LobbyBtn";
 import useShowComponent from "@/hooks/useShowComponent";
-
+import usersApiCall from "@/api/axios/usersApiCall";
 
 const SettingModal = ({ visible, onClose }) => {
   const [volume, setVolume] = useState(50); // 앱의 소리 조절 상태
   const [micVolume, setMicVolume] = useState(50); // 마이크 소리 조절 상태
   const [blockInvites, setBlockInvites] = useState(false); // 초대 차단 상태
   const isBtnVisible = useShowComponent();
-
+  const useUsersApiCall = usersApiCall();
   const logout = (event) => {
     event.preventDefault();
     useUsersApiCall.logout();
@@ -29,7 +29,18 @@ const SettingModal = ({ visible, onClose }) => {
   };
 
   return (
-    <Rodal visible={visible} onClose={onClose} closeOnEsc={true} closeMaskOnClick={false}>
+    <Rodal
+      visible={visible}
+      onClose={onClose}
+      closeOnEsc={true}
+      closeMaskOnClick={false}
+      width={window.innerWidth}
+      height={280}
+      customStyles={{
+        padding: 10,
+        overflow: "auto",
+      }}
+    >
       <div className="flex flex-col items-center p-5 bg-gray-800 text-white rounded-lg">
         <h1 className="mb-4 text-2xl font-bold">설정</h1>
         <div className="w-full mb-4">
@@ -54,16 +65,15 @@ const SettingModal = ({ visible, onClose }) => {
             className="w-full h-2 bg-blue-500 rounded"
           />
         </div>
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <label className="mr-2">초대 차단: </label>
           <button
             onClick={handleBlockInvitesChange}
             className={`w-10 h-6 rounded-full ${blockInvites ? "bg-green-500" : "bg-red-500"}`}
           ></button>
-        </div>
-        <div>
-          {!isBtnVisible.value && <LobbyBtn text="로그아웃" onClick={logout} />}
-        </div>
+        </div> */}
+        <div>{!isBtnVisible.value && <LobbyBtn text="로그아웃" onClick={logout} />}</div>
+        <div></div>
       </div>
     </Rodal>
   );
