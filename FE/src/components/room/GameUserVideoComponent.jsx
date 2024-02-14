@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-import { useWebSocket } from "../../context/VideoWebSocketContext";
 import OpenViduVideoComponent from "./OvVideo";
 import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 

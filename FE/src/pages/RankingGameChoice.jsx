@@ -138,7 +138,10 @@ const RankingGameChoice = () => {
               top: "5%",
             }}
           >
-            <div className="flex " style={{ display: "flex", justifyContent: "center" }}>
+            <div
+              className="active:animate-rotate-x active:animate-duration-500"
+              style={{ display: "flex", justifyContent: "center" }}
+            >
               <button onClick={handleClassicClick} style={{ position: "relative" }}>
                 <img src={post_it_1} />
                 <div
@@ -157,7 +160,10 @@ const RankingGameChoice = () => {
                 </div>
               </button>
             </div>
-            <div className="flex" style={{ display: "flex", justifyContent: "center" }}>
+            <div
+              className="active:animate-rotate-x active:animate-duration-500"
+              style={{ display: "flex", justifyContent: "center" }}
+            >
               <button onClick={handleItemClick} style={{ position: "relative" }}>
                 <img src={post_it_2} />
                 <div
