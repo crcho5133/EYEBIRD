@@ -6,6 +6,7 @@ import useShowComponent from "@/hooks/useShowComponent";
 import profile from "../assets/img/bird_weard_pirate-hat.png"; // 프로필 사진 파일 경로
 import cup_gold from "../assets/img/cup_gold.png";
 import my_info from "../assets/img/my_info.png";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Routes, Route, Outlet } from "react-router-dom";
 import NavBarNoBack from "../components/lobby/NavBarNoBack";
 import NavBar from "../components/lobby/NavBar";
@@ -17,6 +18,7 @@ import RoomSearch from "@/components/lobby/RoomSearch";
 import btn_main from "@/assets/img/btn_main.png";
 import frame from "../assets/img/frame.png";
 import background_pirate from "../assets/img/background_pirate.png";
+import { BGM, playBGM, createBGMInstance, SFX, playSFX } from "../utils/audioManager";
 
 const Lobby = () => {
   const useUsersApiCall = usersApiCall();
@@ -26,6 +28,19 @@ const Lobby = () => {
   const location = useLocation();
   const isMainLobby = location.pathname === "/lobby";
   const myInfo = useAccessTokenState();
+  const [bgm, setBgm] = useState(null);
+
+  useEffect(() => {
+    if (!bgm) {
+      setBgm(createBGMInstance(BGM.MAIN));
+    }
+    if (bgm) {
+      return () => {
+        bgm.pause();
+        bgm.src = "";
+      };
+    }
+  }, [bgm]);
 
   const logout = (event) => {
     event.preventDefault();
@@ -33,6 +48,7 @@ const Lobby = () => {
   };
 
   const onClickMyInfo = () => {
+    playSFX(SFX.POPUP);
     isMyInfoVisible.showComponent();
     isBtnVisible.showComponent();
   };
@@ -43,6 +59,7 @@ const Lobby = () => {
   };
 
   const onCloseMyInfo = () => {
+    playSFX(SFX.POPUP);
     isMyInfoVisible.hideComponent();
     isBtnVisible.hideComponent();
   };
@@ -55,10 +72,12 @@ const Lobby = () => {
   const navigate = useNavigate();
 
   const handleRankingGameChoiceClick = () => {
+    playSFX(SFX.CLICK);
     navigate("rankingGame");
   };
 
   const handleNormalMatchChoiceClick = () => {
+    playSFX(SFX.CLICK);
     navigate("normalGame");
   };
 
@@ -74,8 +93,8 @@ const Lobby = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        {!isMainLobby && <NavBar />}
-        {isMainLobby && !isBtnVisible.value && <NavBarNoBack />}
+        {!isMainLobby && <NavBar bgm={bgm} />}
+        {isMainLobby && !isBtnVisible.value && <NavBarNoBack bgm={bgm} />}
         <Routes>
           <Route path="rankingGame" element={<RankingGameChoice />} />
 
@@ -136,11 +155,7 @@ const Lobby = () => {
                   </div>
                   {/* 랭킹전, 일반전 버튼 */}
                   <div className="flex justify-center items-center">
-                    <button
-                      className="active:animate-ping active:animate-duration-500"
-                      onClick={handleRankingGameChoiceClick}
-                      style={{ position: "relative" }}
-                    >
+                    <button onClick={handleRankingGameChoiceClick} style={{ position: "relative" }}>
                       <img src={btn_main} />
                       <div
                         className="font-bold"

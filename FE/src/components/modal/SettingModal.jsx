@@ -4,13 +4,21 @@ import "rodal/lib/rodal.css"; // Rodal CSS
 import LobbyBtn from "@/components/lobby/LobbyBtn";
 import useShowComponent from "@/hooks/useShowComponent";
 import usersApiCall from "@/api/axios/usersApiCall";
+import { BGM, playBGM, createBGMInstance } from "../../utils/audioManager";
 
-const SettingModal = ({ visible, onClose }) => {
+const SettingModal = ({ visible, onClose, bgm }) => {
   const [volume, setVolume] = useState(50); // 앱의 소리 조절 상태
   const [micVolume, setMicVolume] = useState(50); // 마이크 소리 조절 상태
   const [blockInvites, setBlockInvites] = useState(false); // 초대 차단 상태
   const isBtnVisible = useShowComponent();
   const useUsersApiCall = usersApiCall();
+
+  useEffect(() => {
+    if (bgm) {
+      setVolume(Number(bgm.volume) * 100);
+    }
+  }, [bgm]);
+
   const logout = (event) => {
     event.preventDefault();
     useUsersApiCall.logout();
@@ -18,6 +26,7 @@ const SettingModal = ({ visible, onClose }) => {
 
   const handleVolumeChange = (event) => {
     setVolume(event.target.value);
+    bgm.volume = Number(event.target.value) / 100;
   };
 
   const handleMicVolumeChange = (event) => {

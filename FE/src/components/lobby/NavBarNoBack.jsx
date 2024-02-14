@@ -7,8 +7,9 @@ import SettingModal from "../modal/SettingModal"; // SettingRodal import
 import { useState } from "react";
 import MessageModal from "../../components/modal/MessageModal.jsx";
 import MessageIcon from "../../assets/img/messageicon.png";
+import { SFX, playSFX } from "../../utils/audioManager";
 
-const NavBar = () => {
+const NavBar = ({ bgm }) => {
   const [settingsVisible, setSettingsVisible] = useState(false); // 설정 모달 가시성 state
   const [notificationVisible, setNotificationVisible] = useState(false); // 알림 모달 가시성 state
   // const navigate = useNavigate();
@@ -31,10 +32,12 @@ const NavBar = () => {
   };
 
   const handleSettingsOpen = () => {
+    playSFX(SFX.POPUP);
     setSettingsVisible(true); // 설정 모달 열기
   };
 
   const handleSettingsClose = () => {
+    playSFX(SFX.POPUP);
     setSettingsVisible(false); // 설정 모달 닫기
   };
 
@@ -64,7 +67,7 @@ const NavBar = () => {
       {/* 알림 모달 */}
       {/* <NotificationModal visible={notificationVisible} onClose={handleNotificationClose} /> */}
       {/* 설정 모달 */}
-      <SettingModal visible={settingsVisible} onClose={handleSettingsClose} />
+      <SettingModal visible={settingsVisible} onClose={handleSettingsClose} bgm={bgm} />
     </div>
   );
 };

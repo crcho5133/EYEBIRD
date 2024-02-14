@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useWebSocket } from "../context/WebSocketContext";
 import { useEffect, useState } from "react";
 import { toast, Slide, Bounce } from "react-toastify";
+import { BGM, playBGM, createBGMInstance } from "../utils/audioManager";
 
 const RankingGameChoice = () => {
   const { client, match, gameId, setMatch, opponentInfo } = useWebSocket();
@@ -19,6 +20,16 @@ const RankingGameChoice = () => {
   const classicPoint = sessionStorage.getItem("classicPt");
   const itemPoint = sessionStorage.getItem("itemPt");
   const email = sessionStorage.getItem("email");
+  const [bgm, setBgm] = useState(null);
+
+  useEffect(() => {
+    if (bgm) {
+      return () => {
+        bgm.pause();
+        bgm.src = "";
+      };
+    }
+  });
 
   useEffect(() => {
     if (match && gameId) {
@@ -77,9 +88,14 @@ const RankingGameChoice = () => {
     // 클래식 버튼 클릭 시 수행하는 함수를 여기에 작성하세요.
     if (!matching) {
       setGameType("classic");
+      setBgm(createBGMInstance(BGM.MATCHING));
       startMatch(false);
     } else {
       setGameType("");
+      if (bgm) {
+        bgm.pause();
+        bgm.src = "";
+      }
       cancelMatch(false);
     }
   };
@@ -88,9 +104,14 @@ const RankingGameChoice = () => {
     // 아이템 버튼 클릭 시 수행하는 함수를 여기에 작성하세요.
     if (!matching) {
       setGameType("item");
+      setBgm(createBGMInstance(BGM.MATCHING));
       startMatch(true);
     } else {
       setGameType("");
+      if (bgm) {
+        bgm.pause();
+        bgm.src = "";
+      }
       cancelMatch(true);
     }
   };
