@@ -36,6 +36,14 @@
 }
 
 @media (min-width: 768px) {
+  .settingModal > .rodal-zoom-enter {
+    width: 400px !important;
+  }
+
+  .creatingRoom > .rodal-zoom-enter {
+    width: 400px !important;
+  }
+
   .signup0 > .rodal-zoom-enter {
     width: 25vw !important;
     background-size: 25vw 90vh !important;

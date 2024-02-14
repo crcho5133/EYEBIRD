@@ -29,12 +29,13 @@ const SettingModal = ({ visible, onClose }) => {
       onClose={onClose}
       closeOnEsc={true}
       closeMaskOnClick={false}
-      width={window.innerWidth}
       height={280}
       customStyles={{
         padding: 10,
         overflow: "auto",
+        width: "80%",
       }}
+      className="settingModal"
     >
       <div className="flex flex-col items-center p-5  text-black rounded-lg">
         <h1 className="mb-4 text-2xl font-bold">설정</h1>

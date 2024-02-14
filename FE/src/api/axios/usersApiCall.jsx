@@ -82,16 +82,10 @@ const usersApiCall = () => {
 
     try {
       await privateAxios.post(url, body);
-<<<<<<< HEAD
       alert("로그아웃 되었습니다.");
       accessToken.clear(() => {
         webSocket.client.deactivate();
       });
-=======
-      webSocket.client.deactivate();
-      alert("로그아웃 되었습니다.");
-      accessToken.clear();
->>>>>>> origin/develop-FE-js_02_14
       navigate("/");
     } catch (error) {
       console.log(error);

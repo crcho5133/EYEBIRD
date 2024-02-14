@@ -123,7 +123,7 @@ const RoomSearch = () => {
           </div>
           <div className="absolute right-0">
             <div
-              className="felx items-center justify-center"
+              className="items-center justify-center"
               style={{
                 backgroundImage: `url(${post_it_4})`,
                 backgroundSize: "cover",

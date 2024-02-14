@@ -86,11 +86,12 @@ const CreatingRoomModal = ({ visible, onClose }) => {
       onClose={onCloseModal}
       closeOnEsc={true}
       closeMaskOnClick={false}
-      width={window.innerWidth}
       height={240}
       customStyles={{
         overflow: "auto",
+        width: "80%",
       }}
+      className="creatingRoom"
     >
       <div>
         <div>
