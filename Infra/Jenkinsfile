@@ -51,7 +51,7 @@ pipeline {
                 // }
                 dir('FE') {
                         sh "rm -rf node_modules package-lock.json"
-                        sh "npm install"
+                        sh "npm install --legacy-peer-deps"
                         // Build the project using npm
                         sh "CI=false npm run build"
                     }
