@@ -8,7 +8,8 @@ import { baseUrl } from "../../api/url/baseUrl";
 import room_search from "../../assets/img/room_search.png";
 import old_paper from "../../assets/img/old_paper.png";
 import post_it_4 from "../../assets/img/post_it_4.png";
-
+import button_pagenation from "../../assets/img/button_pagenation.png";
+import button_pagenation_on from "../../assets/img/button_pagenation_on.png";
 const RoomSearch = () => {
   const [refresh, setRefresh] = useState(false);
   const [roomsClassic, setRoomsClassic] = useState([]);
@@ -85,7 +86,7 @@ const RoomSearch = () => {
   const indexOfLastRoom = currentPage * roomsPerPage;
   const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
   const currentRooms =
-    tabName === "아이템▼"
+    tabName === "아이템 ▼"
       ? roomsItem.slice(indexOfFirstRoom, indexOfLastRoom)
       : roomsClassic.slice(indexOfFirstRoom, indexOfLastRoom);
 
@@ -115,7 +116,7 @@ const RoomSearch = () => {
 
   return (
     <>
-      <div className="h-screen flex flex-col items-center space-y-12">
+      <div className="h-screen flex flex-col items-center">
         <div className="flex justify-center items-center" style={{ position: "relative" }}>
           <div>
             <img src={room_search} />
@@ -171,27 +172,45 @@ const RoomSearch = () => {
             </div>
           </div>
         </div>
-        <div className="p-4" style={{ position: "relative" }}>
-          <img src={old_paper} />
+        <div
+          className="p-2 flex flex-col "
+          style={{
+            position: "relative",
+            textShadow: "3px 3px 4px rgba(0,0,0,0.5)", // 텍스트 주위에 테두리 효과 추가
+          }}
+        >
           {currentRooms.map((room) => (
             <div
               key={room.roomName}
-              className="border p-2 mb-2"
+              className=" w-64 py-2 px-4 mb-2 text-center "
+              style={{
+                position: "absolute",
+                top: "20%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                background:
+                  "radial-gradient(circle, rgba(200,100,150,0.1) 0%, rgba(200,120,20,0.5) 100%)", // 피색 배경과 빛처럼 퍼지는 효과 추가
+                borderRadius: "20px", // 모서리 둥글게
+                boxShadow: "0 5px 5px rgba(0,0,0,0.5)", // 그림자 추가
+              }} // room을 이미지 위로 이동
               onClick={() => {
                 setRoomName(room.roomName);
                 handleRoomDoubleClick(room);
               }}
             >
-              <div className="flex justify-between">
-                <p>{room.hasPassword ? "🔒" : ""}</p>
-                <p>{room.roomName}</p>
-                <p>
+              <div className="flex justify-between ">
+                <p style={{ flexGrow: 1, width: "12rem" }}>{room.hasPassword ? "🔒" : ""}</p>
+                <p style={{ flexGrow: 3, width: "12rem" }}>{room.roomName}</p>
+                <p style={{ flexGrow: 2, width: "12rem" }}>
                   {room.maxCapacity} vs {room.maxCapacity}
                 </p>
               </div>
-              <div className="flex justify-between">
-                <p>{room.ownerId}</p>
-                <p>{`${room.currentCapacity} / ${room.maxCapacity}`}</p>
+              <hr style={{ border: "none", height: "2px", backgroundColor: "#A0522D" }} />
+              <div className="flex justify-between ">
+                <p style={{ flexGrow: 1, width: "12rem" }}>{room.ownerId}</p>
+                <p
+                  style={{ flexGrow: 1, width: "12rem" }}
+                >{`${room.currentCapacity} / ${room.maxCapacity}`}</p>
               </div>
             </div>
             // </Link>
@@ -202,6 +221,7 @@ const RoomSearch = () => {
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             <button onClick={handleConfirm}>입장</button>
           </Rodal>
+          <img src={old_paper} />
         </div>
 
         <div className="p-4">
@@ -218,7 +238,13 @@ const RoomSearch = () => {
               <button
                 key={page}
                 onClick={() => handlePageChange(page)}
-                className="bg-blue-500 text-white p-2 rounded"
+                className="text-white p-3 "
+                style={{
+                  fontSize: "20px",
+                  backgroundImage: `url(${currentPage === page ? button_pagenation_on : button_pagenation})`,
+                  backgroundSize: "100% 100%",
+                  backgroundPosition: "center",
+                }}
               >
                 {page}
               </button>

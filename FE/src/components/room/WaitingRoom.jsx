@@ -5,7 +5,10 @@ import { useNavigate, Link } from "react-router-dom";
 import UserVideoComponent from "./UserVideoComponent";
 import AudioControlModal from "../modal/AudioControlModal";
 import ChatModal from "../modal/ChatModal";
-import InviteModal from "../modal/InviteModal";
+import back_mark from "../../assets/img/back_mark.png";
+import background_pirate from "../../assets/img/background_pirate.png";
+import room_name from "../../assets/img/room_name.png";
+// import InviteModal from "../modal/InviteModal";
 const WaitingRoom = ({
   roomName,
   gameType,
@@ -54,13 +57,13 @@ const WaitingRoom = ({
 
   const navigate = useNavigate();
 
-  const handleInviteOpen = () => {
-    setInviteVisible(true); // 설정 모달 열기
-  };
+  // const handleInviteOpen = () => {
+  //   setInviteVisible(true); // 설정 모달 열기
+  // };
 
-  const handleInviteClose = () => {
-    setInviteVisible(false); // 설정 모달 닫기
-  };
+  // const handleInviteClose = () => {
+  //   setInviteVisible(false); // 설정 모달 닫기
+  // };
 
   const toggleAudio = (Team, turn) => {
     Team.map((streamId) => {
@@ -94,28 +97,42 @@ const WaitingRoom = ({
   }, [teamA, teamB, myTeam, selectedAudioOption]);
 
   return (
-    <div className="waiting-room h-screen flex flex-col animate-fade-left animate-once">
+    <div
+      className="waiting-room h-screen flex flex-col animate-fade-left animate-once"
+      style={{
+        backgroundImage: `url(${background_pirate})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className="h-2/3">
-        <div className="flex justify-between">
-          <Link
-            to="/lobby"
-            className="btn btn-large btn-danger bg-red-600"
-            onClick={() => leaveSession()}
-          >
-            방 나가기
-          </Link>
-          <button
+        <div className="text-center flex flex-row">
+          <div className="flex justify-between">
+            <Link to="/lobby" className="btn btn-large btn-danger" onClick={() => leaveSession()}>
+              <img src={back_mark} />
+            </Link>
+            {/* <button
             className="btn btn-large btn-primary bg-green-600"
             id="buttonInviteModal"
             onClick={handleInviteOpen}
           >
             초대하기
-          </button>
-        </div>
-        <div className="text-center">
-          <h2>
-            방제: {roomName} / {gameType === "classic" ? "클래식전" : "아이템전"}
-          </h2>
+          </button> */}
+          </div>
+          <div
+            className="flex flex-col"
+            style={{
+              backgroundImage: `url(${room_name})`,
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              width: "60%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <h2>방제목 : {roomName}</h2>
+            <h2>{gameType === "classic" ? "클래식전" : "아이템전"}</h2>
+          </div>
         </div>
       </div>
       <div className="flex justify-between h-5/6">
@@ -325,7 +342,7 @@ const WaitingRoom = ({
         </div>
       </div>
       {/* 설정 모달 */}
-      <InviteModal visible={inviteVisible} onClose={handleInviteClose} />
+      {/* <InviteModal visible={inviteVisible} onClose={handleInviteClose} /> */}
     </div>
   );
 };
