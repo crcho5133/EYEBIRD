@@ -204,7 +204,7 @@ const SignupFormModal = ({ visible, onClose }) => {
                 <div className="ms-15vw signup3-5">
                   {!(!nickname.isValid && nickname.hasChecked) && (
                     <div className="mt-1 text-xs text-amber-800 font-semibold">
-                      ※ 닉네임은 최대 8자까지 가능합니다.
+                      ※ 닉네임은 최대 6자까지 가능합니다.
                     </div>
                   )}
 

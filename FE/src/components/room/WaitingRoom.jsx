@@ -8,6 +8,7 @@ import ChatModal from "../modal/ChatModal";
 import back_mark from "../../assets/img/back_mark.png";
 import background_pirate from "../../assets/img/background_pirate.png";
 import room_name from "../../assets/img/room_name.png";
+import EachTemplate from "@/assets/img/room/EachTemplate.png";
 // import InviteModal from "../modal/InviteModal";
 const WaitingRoom = ({
   roomName,
@@ -99,54 +100,62 @@ const WaitingRoom = ({
   return (
     <div
       className="waiting-room h-screen flex flex-col animate-fade-left animate-once"
-      style={{
-        backgroundImage: `url(${background_pirate})`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-      }}
+      style={{ backgroundColor: "#69492E", height: "100%vh" }}
     >
       <div className="h-2/3">
-        <div className="text-center flex flex-row">
-          <div className="flex justify-between">
-            <Link to="/lobby" className="btn btn-large btn-danger" onClick={() => leaveSession()}>
-              <img src={back_mark} />
-            </Link>
-            {/* <button
+        <div className="h-full text-center flex justify-center items-end relative">
+          <Link
+            to="/lobby"
+            className="btn btn-large btn-danger flex absolute left-5"
+            onClick={() => leaveSession()}
+          >
+            <img src={back_mark} />
+          </Link>
+          {/* <button
             className="btn btn-large btn-primary bg-green-600"
             id="buttonInviteModal"
             onClick={handleInviteOpen}
           >
             초대하기
           </button> */}
-          </div>
           <div
             className="flex flex-col"
             style={{
-              backgroundImage: `url(${room_name})`,
+              background: `url(${room_name})`,
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
-              width: "60%",
+              width: "50%",
               display: "flex",
               justifyContent: "center",
             }}
           >
-            <h2>방제목 : {roomName}</h2>
-            <h2>{gameType === "classic" ? "클래식전" : "아이템전"}</h2>
+            <h2 className="text-8vw">{roomName}</h2>
+            <h2 className="text-5vw">{gameType === "classic" ? "클래식전" : "아이템전"}</h2>
           </div>
         </div>
       </div>
       <div className="flex justify-between h-5/6">
         <div
           id="teamA-container"
-          className="grid grid-rows-[auto_1fr_auto] border-4 border-sky-500 bg-sky-300 m-2 h-full w-2/5"
+          // className="grid grid-rows-[auto_1fr_auto] border-4 border-sky-500 bg-sky-300 m-2 h-full w-2/5"
+          className="grid grid-rows-[auto_1fr_auto] m-2 h-full w-2/5"
         >
-          <div className="text-center text-xs bg-sky-200 p-2">
+          <div className="text-center text-xs bg-amber-700 p-2 mb-1vh">
             A 팀 : {teamA.filter((id) => id !== null).length} / 4 명
           </div>
-          <div className="grid grid-rows-4 gap-1 overflow-hidden">
+          <div className="grid grid-rows-4 overflow-hidden justify-items-center">
             {teamA.map((streamId, idx) => (
-              <div key={idx} className="aspect-w-16 aspect-h-9 border border-sky-500">
-                {streamId ? (
+              <div
+                key={idx}
+                // className="aspect-w-16 aspect-h-9 border border-sky-500"
+                style={{
+                  background: `url(${EachTemplate}) no-repeat center center`,
+                  backgroundSize: "30vw 15vh",
+                  width: "30vw",
+                  height: "15vh",
+                }}
+              >
+                {streamId && (
                   <UserVideoComponent
                     streamManager={
                       streamId === publisher?.stream.streamId
@@ -158,16 +167,14 @@ const WaitingRoom = ({
                     color="border-sky-500"
                     participantsReady={participantsReady}
                   />
-                ) : (
-                  <div className="flex justify-center items-center bg-gray-200">빈자리</div>
                 )}
               </div>
             ))}
           </div>
-          <div className="text-center bg-sky-200 p-2">
+          <div className="text-center p-2">
             <button
               onClick={() => handleSelectTeam(publisher.stream.streamId, "A")}
-              className={`rounded-md w-full ${isTeamFull(teamA) ? "bg-gray-400" : "bg-sky-300 hover:bg-sky-700"}`}
+              className={`rounded-md w-full ${isTeamFull(teamA) ? "bg-gray-400" : "bg-amber-500 hover:bg-amber-900"}`}
               disabled={isTeamFull(teamA)}
             >
               A팀 선택

@@ -7,6 +7,7 @@ import RankPointBackground from "@/assets/img/gameResult/RankPointBackground.png
 import NicknameTitle from "@/assets/img/gameResult/NicknameTitle.png";
 import RankingTitle from "@/assets/img/gameResult/RankingTitle.png";
 import proFileImage from "@/assets/img/profile/bird1.png";
+import gameApiCall from "@/api/axios/gameApiCall";
 
 const GameResult = ({
   myLose,
@@ -34,11 +35,28 @@ const GameResult = ({
   prevItemPoint,
 }) => {
   const [resultState, setResultState] = useState("phase1");
-  const [progress, setProgress] = useState(100); // 진행 바 상태
+  const [progress, setProgress] = useState(100);
+  const [rankings, setRankings] = useState("");
+  const useGameApiCall = gameApiCall();
+  const [isFirstEffectCompleted, setIsFirstEffectCompleted] = useState(false);
   const myClassicPoint = sessionStorage.getItem("classicPt");
   const myItemPoint = sessionStorage.getItem("itemPt");
   const expectedWinPt = opponentInfoParsed.expectedWinPt;
   const expectedLosePt = opponentInfoParsed.expectedLosePt;
+  const [nowPoint, setNowPoint] = useState(0);
+  const [accessPoint, setAccessPoint] = useState(0);
+  const finalPoint = nowPoint + accessPoint;
+  const finalAccessPoint = 0;
+
+  useEffect(() => {
+    const getRanking = async () => {
+      const ranking = await useGameApiCall.getRanking(gameType);
+      setRankings(ranking);
+      console.log(ranking);
+    };
+
+    getRanking();
+  }, []);
 
   useEffect(() => {
     // rematchRequest나 rematchResponse가 변경될 때 phase2로 설정
@@ -103,42 +121,61 @@ const GameResult = ({
   }, [rematch]);
 
   //랭크 점수 출력하는 로직
-  const [number, setNumber] = useState(1000); // "1000"에서 시작하여 증가
-  const [accessPoint, setAccessPoint] = useState(36); // "36"에서 시작하여 감소
-  const finalNumber = number + accessPoint;
-  const finalAccessPoint = 0;
 
   useEffect(() => {
-    setTimeout(() => {
-      if (number < finalNumber) {
-        const interval = setInterval(() => {
-          setNumber((prevNumber) => (prevNumber < finalNumber ? prevNumber + 1 : prevNumber));
-          setAccessPoint((prevNumber) =>
-            prevNumber > finalAccessPoint ? prevNumber - 1 : prevNumber
-          );
-
-          if (number >= finalNumber && accessPoint <= finalAccessPoint) {
-            clearInterval(interval);
-          }
-        }, 50);
-
-        return () => clearInterval(interval);
+    if (gameType === "classic") {
+      if (myWin) {
+        setNowPoint(parseInt(myClassicPoint) - parseInt(expectedWinPt));
+        setAccessPoint(parseInt(expectedWinPt));
       } else {
-        const interval = setInterval(() => {
-          setNumber((prevNumber) => (prevNumber > finalNumber ? prevNumber - 1 : prevNumber));
-          setAccessPoint((prevNumber) =>
-            prevNumber < finalAccessPoint ? prevNumber + 1 : prevNumber
-          );
-
-          if (number <= finalNumber && accessPoint >= finalAccessPoint) {
-            clearInterval(interval);
-          }
-        }, 50);
-
-        return () => clearInterval(interval);
+        setNowPoint(parseInt(myClassicPoint) - parseInt(expectedLosePt));
+        setAccessPoint(parseInt(expectedLosePt));
       }
-    }, 1000);
-  }, []);
+    } else {
+      if (myWin) {
+        setNowPoint(parseInt(myItemPoint) - parseInt(expectedWinPt));
+        setAccessPoint(parseInt(expectedWinPt));
+      } else {
+        setNowPoint(parseInt(myItemPoint) - parseInt(expectedLosePt));
+        setAccessPoint(parseInt(expectedLosePt));
+      }
+    }
+    setIsFirstEffectCompleted(true);
+  }, [myClassicPoint, myItemPoint]);
+
+  useEffect(() => {
+    if (isFirstEffectCompleted) {
+      setTimeout(() => {
+        if (nowPoint < finalPoint) {
+          const interval = setInterval(() => {
+            setNowPoint((prevNumber) => (prevNumber < finalPoint ? prevNumber + 1 : prevNumber));
+            setAccessPoint((prevNumber) =>
+              prevNumber > finalAccessPoint ? prevNumber - 1 : prevNumber
+            );
+
+            if (nowPoint >= finalPoint && accessPoint <= finalAccessPoint) {
+              clearInterval(interval);
+            }
+          }, 50);
+
+          return () => clearInterval(interval);
+        } else {
+          const interval = setInterval(() => {
+            setNowPoint((prevNumber) => (prevNumber > finalPoint ? prevNumber - 1 : prevNumber));
+            setAccessPoint((prevNumber) =>
+              prevNumber < finalAccessPoint ? prevNumber + 1 : prevNumber
+            );
+
+            if (nowPoint <= finalPoint && accessPoint >= finalAccessPoint) {
+              clearInterval(interval);
+            }
+          }, 50);
+
+          return () => clearInterval(interval);
+        }
+      }, 1000);
+    }
+  }, [isFirstEffectCompleted]);
 
   return (
     <div
@@ -322,60 +359,69 @@ const GameResult = ({
         >
           <div className="ms-3vw self-center gameResult6">Rank</div>
           <div className="flex gameResult7">
-            <div className="flex flex-col items-start space-y-2vh">
-              <div className="flex justify-center items-center">
+            <div className="flex flex-col items-start ms-2vw space-y-2vh">
+              <div className="flex justify-center items-center mt-2vh">
                 <div
                   className="ms-1vw flex justify-center items-center gameResult8"
                   style={{
                     background: `url(${RankingTitle}) no-repeat`,
                     backgroundPosition: "0.5vw center",
-                    backgroundSize: "8vw 5vh",
-                    width: "8vw",
-                    height: "5vh",
+                    backgroundSize: "5vw 3vh",
+                    width: "5vw",
+                    height: "3vh",
                   }}
                 >
                   1
                 </div>
-                <div className="ms-2vw gameResult11">김싸피</div>
+                <div className="ms-1vw gameResult11">
+                  {rankings ? `${rankings[0].nickname} - ${rankings[0].point}점` : ""}
+                </div>
               </div>
               <div className="flex justify-center items-center">
                 <div
-                  className="ms-3vw flex justify-center items-center gameResult9"
+                  className="ms-2vw flex justify-center items-center gameResult9"
                   style={{
                     background: `url(${RankingTitle}) no-repeat`,
                     backgroundPosition: "0.5vw center",
-                    backgroundSize: "8vw 5vh",
-                    width: "8vw",
-                    height: "5vh",
+                    backgroundSize: "5vw 3vh",
+                    width: "5vw",
+                    height: "3vh",
                   }}
                 >
                   2
                 </div>
-                <div className="ms-2vw gameResult11">눈싸움왕</div>
+                <div className="ms-1vw gameResult11">
+                  {rankings ? `${rankings[1].nickname} - ${rankings[1].point}점` : ""}
+                </div>
               </div>
               <div className="flex justify-center items-center">
                 <div
-                  className="ms-5vw flex justify-center items-center gameResult10"
+                  className="ms-3vw flex justify-center items-center gameResult10"
                   style={{
                     background: `url(${RankingTitle}) no-repeat`,
                     backgroundPosition: "0.5vw center",
-                    backgroundSize: "8vw 5vh",
-                    width: "8vw",
-                    height: "5vh",
+                    backgroundSize: "5vw 3vh",
+                    width: "5vw",
+                    height: "3vh",
                   }}
                 >
                   3
                 </div>
-                <div className="ms-2vw gameResult11">포이즌</div>
+                <div className="ms-1vw gameResult11">
+                  {rankings ? `${rankings[1].nickname} - ${rankings[1].point}점` : ""}
+                </div>
               </div>
             </div>
 
-            <div className="gameResult14 ms-3vw flex flex-col justify-center items-center">
-              <div className="gameResult12 ms-4vw text-8vw flex flex-wrap justify-center items-center text-red-600">
-                {number}
+            <div className="gameResult14 mt-3vh ms-10vw flex flex-col justify-center items-center">
+              <div className="gameResult12 ms-1vw text-7vw flex flex-wrap justify-center items-center text-red-600">
+                {nowPoint}
               </div>
 
-              <div className="ms-10vw gameResult13"> {accessPoint}</div>
+              <div className="ms-10vw gameResult13">
+                {" "}
+                {myWin ? `+ ${accessPoint}` : `${accessPoint}`}
+              </div>
             </div>
           </div>
         </div>
@@ -398,7 +444,7 @@ const GameResult = ({
           }}
           className="flex justify-center items-center gameResult16"
         >
-          닉네임
+          {sessionStorage.getItem("nickname")}
         </div>
       </div>
 

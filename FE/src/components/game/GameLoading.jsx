@@ -1,10 +1,9 @@
-import background_wooden_plate from "../../assets/img/background_wooden_plate.png";
 import TitleBar from "@/assets/img/matchingInfo/TitleBar.png";
 import InfoBackground3 from "@/assets/img/matchingInfo/InfoBackground3.png";
 import VSImage from "@/assets/img/matchingInfo/VSImage.png";
 import CountdownBackground from "@/assets/img/matchingInfo/CountdownBackground.png";
-import proFileImage from "@/assets/img/profile/bird1.png";
 import { useState, useEffect } from "react";
+import changeProfileImage from "@/utils/changeProfileImage";
 
 const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) => {
   // console.log(publisher);
@@ -13,20 +12,20 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
   // const subnickname = JSON.parse(subscriber.stream.connection.data).clientData;
   const [countdown, setCountdown] = useState(5);
 
-  const myNickName = sessionStorage.getItem("nickname") || "test";
-  const myProfileImage = sessionStorage.getItem("profile") || proFileImage;
+  const myNickName = sessionStorage.getItem("nickname");
+  const myProfileImage = sessionStorage.getItem("profile");
   const opponentNickname = opponentInfoParsed.nickname;
-  const myClassicPoint = sessionStorage.getItem("classicPt") || "test";
+  const myClassicPoint = sessionStorage.getItem("classicPt");
   const opponentClassicPoint = opponentInfoParsed.classicPt;
-  const myWinNumClassic = sessionStorage.getItem("winNumClassic") || "test";
+  const myWinNumClassic = sessionStorage.getItem("winNumClassic");
   const opponentWinNumClassic = opponentInfoParsed.winNumClassic;
-  const myLoseNumClassic = sessionStorage.getItem("loseNumClassic") || "test";
+  const myLoseNumClassic = sessionStorage.getItem("loseNumClassic");
   const opponentLoseNumClassic = opponentInfoParsed.loseNumClassic;
-  const myItemPoint = sessionStorage.getItem("itemPt") || "test";
+  const myItemPoint = sessionStorage.getItem("itemPt");
   const opponentItemPoint = opponentInfoParsed.itemPt;
-  const myWinNumItem = sessionStorage.getItem("winNumItem") || "test";
+  const myWinNumItem = sessionStorage.getItem("winNumItem");
   const opponentWinNumItem = opponentInfoParsed.winNumItem;
-  const myLoseNumItem = sessionStorage.getItem("loseNumItem") || "test";
+  const myLoseNumItem = sessionStorage.getItem("loseNumItem");
   const opponentLoseNumItem = opponentInfoParsed.loseNumItem;
   const expectedWinPt = opponentInfoParsed.expectedWinPt;
   const expectedLosePt = opponentInfoParsed.expectedLosePt;
@@ -53,67 +52,65 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
             width: "90vw",
             height: "90vh",
           }}
-          className="mt-3vh flex flex-col self-center matchingInfo1"
+          className="mt-2vh flex flex-col self-center matchingInfo1"
         >
           <div
             style={{
               background: `url(${TitleBar}) no-repeat`,
               backgroundSize: "cover",
             }}
-            className="mt-10vh w-50vw h-5vh flex items-center self-center border-2 matchingInfo2"
+            className="mt-10vh w-50vw h-7vh flex items-center self-center border-2 matchingInfo2"
           >
             <img
-              src={myProfileImage}
-              style={{ width: "6vw", height: "3vh" }}
+              src={sessionStorage.getItem("profile")}
+              style={{ width: "8vw", height: "5vh" }}
               className="ms-5vw matchingInfo3"
             />
-            <div className="flex justify-center matchingInfo4 w-30vw">{myNickName}</div>
+            <div className="flex justify-center matchingInfo4 ms-2vw w-30vw text-5vw">
+              {myNickName}
+            </div>
           </div>
-          <div>
-            <div className="mt-2vh ml-22vw matchingInfo5">
-              {gameType === "classic" ? "점수(Classic) :" : "점수(Item) :"}
-              <span className="ml-3vw text-[#7B1616] matchingInfo10">
-                {gameType === "classic" ? myClassicPoint : myItemPoint}점
+          <div className="matchingInfo5-0">
+            <div className="text-5vw mt-2vh ml-16vw matchingInfo5">
+              {gameType === "classic" ? "1. 점수(Classic) :" : "점수(Item) :"}
+              <span className="ml-3vw text-gray-300 matchingInfo10">
+                {gameType === "classic" ? myClassicPoint : myItemPoint} 점
               </span>
             </div>
-            <div className="mt-2vh ml-22vw matchingInfo5">
-              전적 :
-              <span className="ml-3vw text-[#7B1616] matchingInfo10">
-                <span>{gameType === "classic" ? myWinNumClassic : myWinNumItem}승</span>
-                <span>{gameType === "classic" ? myLoseNumClassic : myLoseNumItem}패</span>
+            <div className="text-5vw mt-1vh ml-16vw matchingInfo5">
+              2. 전적 :
+              <span className="ml-3vw text-gray-300 matchingInfo10">
+                {gameType === "classic" ? myWinNumClassic : myWinNumItem}승{" "}
+                {gameType === "classic" ? myLoseNumClassic : myLoseNumItem}패
               </span>
             </div>
-            <div className="mt-2vh ml-22vw matchingInfo5">
+            <div className="text-5vw mt-1vh ml-16vw matchingInfo5">
               <div>
-                승리 시 :
-                <span className="ml-3vw text-[rgb(250,43,43)] matchingInfo10">
-                  +{expectedWinPt}점
+                ㆍ게임 결과(승리) :
+                <span className="ml-3vw text-6vw text-[#7ce772] matchingInfo10">
+                  +{expectedWinPt} 점
                 </span>
               </div>
               <div>
-                패배 시 :
-                <span className="ml-3vw text-[rgb(250,43,43)] matchingInfo10">
-                  {expectedLosePt}점
+                ㆍ게임 결과(패배) :
+                <span className="ml-3vw text-6vw text-[#ebbcbc] matchingInfo10">
+                  {expectedLosePt} 점
                 </span>
               </div>
             </div>
           </div>
-          <div className="flex items-center ms-12vh matchingInfo7-1 mt-2vh mb-2vh">
+          <div className="flex items-center ms-12vh matchingInfo7-1 mt-3vh mb-2vh">
             <img src={VSImage} style={{ width: "20vw", height: "7vh" }} className="matchingInfo7" />
-            <div className=" flex flex-col justify-center items-center ms-2vw">
-              <div
-                style={{
-                  background: `url(${CountdownBackground}) no-repeat center center`,
-                  backgroundSize: "contain",
-                  width: "15vw",
-                  height: "8vh",
-                }}
-                className="ms-10vw blink flex justify-center items-center text-10vw matchingInfo8"
-              >
-                {countdown}
-              </div>
-              <div className="text-4vw ms-8vw matchingInfo11">초 뒤 게임이 </div>
-              <div className="text-4vw ms-8vw matchingInfo11">시작됩니다</div>
+            <div
+              style={{
+                background: `url(${CountdownBackground}) no-repeat center center`,
+                backgroundSize: "20vw 8vh",
+                width: "20vw",
+                height: "8vh",
+              }}
+              className="ms-10vw blink flex justify-center items-center text-8vw text-[#f3f3f3] matchingInfo8"
+            >
+              {countdown} 초
             </div>
           </div>
           <div
@@ -121,29 +118,30 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
               background: `url(${TitleBar}) no-repeat`,
               backgroundSize: "cover",
             }}
-            className="w-50vw h-5vh flex items-center self-center border-2 border-black matchingInfo9"
+            className="mt-2vh w-50vw h-7vh flex items-center self-center border-amber-500 border-4 matchingInfo9"
           >
             <img
-              src={myProfileImage}
-              style={{ width: "6vw", height: "3vh" }}
+              src={changeProfileImage().profileImagePath(opponentInfoParsed.profileImage)}
+              style={{ width: "8vw", height: "5vh" }}
               className="ms-5vw matchingInfo3"
             />
-            <div className="flex justify-center matchingInfo4 w-30vw">{opponentNickname}</div>
+            <div className="flex justify-center matchingInfo4 ms-2vw w-30vw text-5vw text-amber-500">
+              {opponentNickname}
+            </div>
           </div>
-          <div className="matchingInfo5">
-            <div className="mt-2vh ml-22vw matchingInfo5">
-              {gameType === "classic" ? "점수(Classic) :" : "점수(Item) :"}
-              <span className="ml-3vw text-[#7B1616] matchingInfo10">
-                {gameType === "classic" ? opponentClassicPoint : opponentItemPoint}점
+          <div className="matchingInfo5-1">
+            <div className="text-5vw mt-2vh ml-16vw matchingInfo5">
+              {gameType === "classic" ? "1. 점수(Classic) :" : "점수(Item) :"}
+              <span className="ml-3vw text-amber-500 matchingInfo10">
+                {gameType === "classic" ? opponentClassicPoint : opponentItemPoint} 점
               </span>
             </div>
-            <div className="mt-2vh ml-22vw matchingInfo5">
-              전적 :
-              <span className="ml-3vw text-[#7B1616] matchingInfo10">
-                <span>{gameType === "classic" ? opponentWinNumClassic : opponentWinNumItem}승</span>
-                <span>
-                  {gameType === "classic" ? opponentLoseNumClassic : opponentLoseNumItem}패
-                </span>
+
+            <div className="text-5vw mt-1vh ml-16vw matchingInfo5">
+              2. 전적 :
+              <span className="ml-3vw text-amber-500 matchingInfo10">
+                {gameType === "classic" ? opponentWinNumClassic : opponentWinNumItem}승{" "}
+                {gameType === "classic" ? opponentLoseNumClassic : opponentLoseNumItem}패
               </span>
             </div>
           </div>

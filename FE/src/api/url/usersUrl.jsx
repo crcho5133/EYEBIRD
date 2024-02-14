@@ -1,15 +1,15 @@
 import { baseUrl } from "@/api/url/baseUrl";
 
 export default {
-  signUp: () => `${baseUrl}/api/user/signup`,
-  login: () => `${baseUrl}/api/auth/login`,
-  logout: () => `${baseUrl}/api/auth/logout`,
-  checkEmailDuplicate: () => `${baseUrl}/api/user/check/email`,
-  checkNicknameDuplicate: () => `${baseUrl}/api/user/check/nickname`,
-  changeProfileImage: () => `${baseUrl}/api/user/profile-image`,
-  changeNickname: () => `${baseUrl}/api/user/nickname`,
-  changePassword: () => `${baseUrl}/api/user/password`,
-  deleteUser: () => `${baseUrl}/api/user`,
-  getFriendsList: () => `${baseUrl}/api/friend`,
-  getReissue: () => `${baseUrl}/api/auth/reissue`,
+  signUp: () => "api/user/signup",
+  login: () => "api/auth/login",
+  logout: () => "api/auth/logout",
+  checkEmailDuplicate: () => "api/user/check/email",
+  checkNicknameDuplicate: () => "api/user/check/nickname",
+  changeProfileImage: () => "api/user/profile-image",
+  changeNickname: () => "api/user/nickname",
+  changePassword: () => "api/user/password",
+  deleteUser: () => "api/user",
+  getFriendsList: () => "api/friend",
+  getReissue: () => "api/auth/reissue",
 };
