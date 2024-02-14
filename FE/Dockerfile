@@ -2,7 +2,7 @@
 FROM node:20.11.0 AS build
 WORKDIR /app
 COPY package.json ./
-RUN npm install --legacy-peer-deps
+RUN npm i --legacy-peer-deps
 COPY . .
 RUN npm run build
 
