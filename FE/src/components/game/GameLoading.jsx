@@ -11,7 +11,7 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
   // console.log(subscriber);
   // const pubnickname = JSON.parse(publisher.stream.connection.data).clientData;
   // const subnickname = JSON.parse(subscriber.stream.connection.data).clientData;
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(5);
 
   const myNickName = sessionStorage.getItem("nickname") || "test";
   const myProfileImage = sessionStorage.getItem("profile") || proFileImage;
@@ -29,7 +29,7 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
   const myLoseNumItem = sessionStorage.getItem("loseNumItem") || "test";
   const opponentLoseNumItem = opponentInfoParsed.loseNumItem;
   const expectedWinPt = opponentInfoParsed.expectedWinPt;
-  // const expectedLosePt = opponentInfoParsed.expectedLosePt;
+  const expectedLosePt = opponentInfoParsed.expectedLosePt;
 
   useEffect(() => {
     if (countdown > 0) {
@@ -84,8 +84,18 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
               </span>
             </div>
             <div className="mt-2vh ml-22vw matchingInfo5">
-              예상 획득 점수 :
-              <span className="ml-3vw text-[#7B1616] matchingInfo10">+{expectedWinPt}점</span>
+              <div>
+                승리 시 :
+                <span className="ml-3vw text-[rgb(250,43,43)] matchingInfo10">
+                  +{expectedWinPt}점
+                </span>
+              </div>
+              <div>
+                패배 시 :
+                <span className="ml-3vw text-[rgb(250,43,43)] matchingInfo10">
+                  {expectedLosePt}점
+                </span>
+              </div>
             </div>
           </div>
           <div className="flex items-center ms-12vh matchingInfo7-1 mt-2vh mb-2vh">
@@ -135,9 +145,6 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
                   {gameType === "classic" ? opponentLoseNumClassic : opponentLoseNumItem}패
                 </span>
               </span>
-            </div>
-            <div className="mt-2vh ml-22vw matchingInfo5">
-              예상 획득 점수 :<span className="ml-3vw text-[#7B1616] matchingInfo10">±30점</span>
             </div>
           </div>
         </div>

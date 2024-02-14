@@ -197,8 +197,8 @@ const NormalGameChoice = () => {
             </div>
           </div>
         </div>
-        <CreatingRoomModal visible={creatingRoomVisible} onClose={handleCreatingRoomClose} />
       </div>
+      <CreatingRoomModal visible={creatingRoomVisible} onClose={handleCreatingRoomClose} />
     </>
   );
 };
