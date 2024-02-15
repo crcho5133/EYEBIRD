@@ -96,7 +96,9 @@ export const WebSocketProvider = ({ children }) => {
         console.log("Disconnected from WebSocket");
       },
       onWebSocketClose: (closeEvent) => {
-        refreshTokenAndReconnect();
+        if (accessToken.accessToken) {
+          refreshTokenAndReconnect();
+        }
       },
       onWebSocketError: (error) => {
         console.log("WebSocket error: ", error);

@@ -1,8 +1,8 @@
 import { baseUrl } from "@/api/url/baseUrl";
 
 export default {
-  getRankingList: () => `${baseUrl}/api/point/rank`,
-  searchUsers: () => `${baseUrl}/api/user/search`,
+  getRankingList: () => "api/point/rank",
+  searchUsers: () => "api/user/search",
 
   //웹소켓 메시지 매핑 (친구추가 버튼 눌렀을 때 가는 Url)
   addFriendRequest: () => `${baseUrl}/api/message/private`,

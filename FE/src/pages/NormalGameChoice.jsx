@@ -10,6 +10,7 @@ import post_it_5 from "../assets/img/post_it_5.png";
 import post_it_6 from "../assets/img/post_it_6.png";
 import post_it_7 from "../assets/img/post_it_7.png";
 import axios from "axios";
+import { SFX, playSFX } from "../utils/audioManager";
 
 const NormalGameChoice = () => {
   const [creatingRoomVisible, setCreatingRoomVisible] = useState(false);
@@ -47,14 +48,17 @@ const NormalGameChoice = () => {
   };
 
   const handleCreatingRoomOpen = () => {
+    playSFX(SFX.POPUP);
     setCreatingRoomVisible(true);
   };
 
   const handleCreatingRoomClose = () => {
+    playSFX(SFX.POPUP);
     setCreatingRoomVisible(false);
   };
 
   const handleRoomSearchClick = () => {
+    playSFX(SFX.CLICK);
     navigate("roomSearch"); // 랭킹전 화면으로 이동
   };
 
@@ -197,8 +201,8 @@ const NormalGameChoice = () => {
             </div>
           </div>
         </div>
-        <CreatingRoomModal visible={creatingRoomVisible} onClose={handleCreatingRoomClose} />
       </div>
+      <CreatingRoomModal visible={creatingRoomVisible} onClose={handleCreatingRoomClose} />
     </>
   );
 };

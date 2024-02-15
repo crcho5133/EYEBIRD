@@ -1,22 +1,22 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, forwardRef } from "react";
 
-export default function OpenViduVideoComponent({ streamManager, readyState }) {
-  const videoRef = useRef();
-
+const OpenViduVideoComponent = forwardRef(({ streamManager, readyState }, ref) => {
   useEffect(() => {
-    if (streamManager && videoRef.current) {
-      streamManager.addVideoElement(videoRef.current);
+    if (streamManager && ref.current) {
+      streamManager.addVideoElement(ref.current);
     }
-  }, [streamManager]);
+  }, [streamManager, ref]);
 
   return (
     <>
       {readyState && (
         <div className="flex justify-end">
-          <div className="absolute text-sm text-green-500 bg-green-200 rounded">준비완료</div>
+          <div className="absolute text-sm text-amber-500 bg-amber-200 rounded">준비완료</div>
         </div>
       )}
-      <video className="h-full w-full" autoPlay={true} ref={videoRef} />
+      <video className="h-full w-full" autoPlay={true} ref={ref} />
     </>
   );
-}
+});
+
+export default OpenViduVideoComponent;

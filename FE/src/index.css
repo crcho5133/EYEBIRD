@@ -35,20 +35,140 @@
   animation: blink 1s infinite;
 }
 
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+
+.shake {
+  animation: shake 0.1s;
+  animation-iteration-count: infinite;
+}
+
 @media (min-width: 768px) {
-  .rodal-zoom-enter {
-    width: 30vw !important;
-    background-size: 400px 60vh !important;
+  .settingModal > .rodal-zoom-enter {
+    width: 400px !important;
+  }
+
+  .creatingRoom > .rodal-zoom-enter {
+    width: 400px !important;
+  }
+
+  .signup0 > .rodal-zoom-enter {
+    width: 25vw !important;
+    background-size: 25vw 90vh !important;
+  }
+
+  .signup1 {
+    width: 15vw !important;
+    height: 10vh !important;
+    margin-left: 2vw;
+    margin-top: 4vh;
+  }
+
+  .signup2 {
+    margin-top: 4vh;
+  }
+
+  .signup2-1 {
+    background-size: 10vw 15vh !important;
+    width: 10vw;
+    height: 15vh;
+  }
+
+  .signup2-2 {
+    background-size: 10vw 15vh !important;
+    width: 10vw;
+    height: 15vh;
+  }
+
+  .signup2-3 {
+    width: 4vw;
+    height: 9vh;
+  }
+
+  .signup2-4 {
+    background-size: contain !important;
+    padding-top: 0.5vw;
+    width: 20vw !important;
+    height: 5vh !important;
+  }
+
+  .signup3-1 {
+    margin-left: 0vw;
+  }
+  .signup3-2 {
+    font-size: 1vw !important;
+  }
+
+  .signup3-3 {
+    margin-left: 1vw;
+    width: 8vw !important;
+    height: 2.5vh !important;
+  }
+
+  .signup3-4 {
+    width: 3vw;
+    font-size: 0.5vw;
+    margin-left: 0.5vw;
+    padding: 0;
+  }
+
+  .signup3-5 {
+    margin-left: 5vw;
+  }
+
+  .signup4 {
+    margin-top: 3vh;
+    margin-left: -1vw;
+    width: 7vw !important;
+    height: 4vh;
+  }
+
+  .loginContent0 > .rodal-zoom-enter {
+    width: 25vw !important;
+    background-size: 25vw 60vh !important;
   }
 
   .loginContent1 {
     margin-top: 25.5vh;
-    font-size: 50px;
+    font-size: 3vw;
   }
 
   .loginContent2 {
     margin-top: 3vh;
-    background-size: 250px 30vh !important;
+    background-size: 18vw 30vh !important;
   }
 
   .loginContent3 {
@@ -56,211 +176,212 @@
   }
 
   .loginContent4 {
-    width: 150px;
+    width: 10vw;
     font-size: 1vw;
   }
 
   .loginContent5 {
     margin-top: 2vh;
-    background-size: 100px 5vh !important;
-    font-size: 20px;
+    background-size: 8vw 5vh !important;
+    font-size: 1vw;
   }
 
   .matchingInfo0 {
-    font-size: 50px;
+    margin-top: 3vh;
+    font-size: 3vw;
   }
 
   .matchingInfo1 {
-    background-size: 400px 85vh !important;
+    background-size: 30vw 85vh !important;
     background-position-y: top !important;
+    width: 40vw;
+    height: 85vh;
     align-items: center;
   }
 
   .matchingInfo2 {
     background-position: center !important;
-    margin-top: 15vh;
-    width: 250px;
+    margin-top: 13vh;
+    width: 18vw;
     height: 6vh;
+    font-size: 1vw;
   }
 
   .matchingInfo3 {
-    margin-left: 20px;
-    width: 150px !important;
-    height: 50px !important;
+    margin-left: 1vw;
+    width: 5vw !important;
+    height: 5vh !important;
   }
 
   .matchingInfo4 {
-    margin-left: -50px;
-    font-size: 30px;
+    margin-left: -1vw;
+    font-size: 2vw;
+  }
+
+  .matchingInfo5-0 {
+    margin-top: 1vh !important;
   }
 
   .matchingInfo5 {
-    margin-left: 0;
+    margin-left: 0vw;
+    font-size: 1.5vw;
+    margin-top: 0vh;
   }
 
-  .matchingInfo6 {
-    align-items: cneter;
+  .matchingInfo5-1 {
+    margin-top: 1vh;
   }
 
   .matchingInfo7 {
-    margin-right: 40px;
-    width: 80px !important;
+    margin-right: 5vw;
+    width: 8vw !important;
   }
 
   .matchingInfo7-1 {
-    margin-left: 0px;
+    margin-left: 2vw;
   }
 
   .matchingInfo8 {
-    width: 50px !important;
-    height: 6vh !important;
-    font-size: 40px;
-    margin-left: 0px;
+    background-size: 6vw 7vh !important;
+    width: 6vw !important;
+    height: 7vh !important;
+    font-size: 2.5vw;
+    margin-left: 0;
   }
 
   .matchingInfo9 {
     background-position: center !important;
-    margin-top: 3vh;
-    width: 250px;
+    margin-top: 1vh;
+    width: 18vw;
     height: 6vh;
   }
 
   .matchingInfo10 {
+    font-size: 1.5vw;
     margin-left: 10px;
   }
 
-  .matchingInfo11 {
-    font-size: 15px;
-    margin-left: 0;
-  }
-
   .gameResult1 {
-    background-size: 250px 7vh !important;
-    width: 250px !important;
-    height: 7vh !important;
+    background-size: 15vw 8vh !important;
+    width: 15vw !important;
+    height: 8vh !important;
     font-size: 3vw;
   }
 
   .gameResult2 {
-    background-size: 400px 55vh !important;
-    width: 400px !important;
-    height: 55vh !important;
-  }
-
-  .gameResult3 {
-    background-size: cover !important;
-    background-position: center;
-    width: 350px !important;
+    background-size: 30vw 50vh !important;
+    width: 30vw !important;
     height: 50vh !important;
   }
 
+  .gameResult3 {
+    background-size: 25vw 25vh !important;
+    background-position: center;
+    width: 25vw !important;
+    height: 25vh !important;
+  }
+
   .gameResult4 {
-    width: 200px !important;
-    height: 5vh !important;
-    font-size: 30px;
+    width: 13vw !important;
+    height: 7vh !important;
+    font-size: 2vw;
   }
 
   .gameResult5 {
     background-size: cover !important;
     background-position: center;
-    width: 350px !important;
-    height: 50vh !important;
+    width: 25vw !important;
+    height: 25vh !important;
   }
 
   .gameResult6 {
-    margin-top: 1.5vh;
-    font-size: 30px;
-    margin-right: 30px;
-  }
-
-  .gameResult7 {
-    margin-top: 2vh;
+    margin-top: -1vh;
+    font-size: 1.5vw;
+    margin-right: 2vw;
   }
 
   .gameResult8 {
     background-size: contain !important;
     background-position: center;
-    width: 40px !important;
+    width: 3vw !important;
     height: 3vh !important;
-    font-size: 15px;
-    margin-left: 5px;
-    padding-left: 6px;
+    font-size: 1vw;
+    margin-left: 1vw;
+    padding-right: 0.5vw;
   }
 
   .gameResult9 {
     background-size: contain !important;
     background-position: center;
-    width: 40px !important;
+    width: 3vw !important;
     height: 3vh !important;
-    margin-left: 15px;
-    font-size: 15px;
-    padding-left: 6px;
+    font-size: 1vw;
+    margin-left: 1.5vw;
+    padding-right: 0.5vw;
   }
 
   .gameResult10 {
     background-size: contain !important;
     background-position: center;
-    width: 40px !important;
+    width: 3vw !important;
     height: 3vh !important;
-    font-size: 15px;
-    margin-left: 25px;
-    padding-left: 6px;
+    font-size: 1vw;
+    margin-left: 2vw;
+    padding-right: 0.5vw;
   }
 
   .gameResult11 {
     background-size: contain !important;
     background-position: center;
-    width: 4vw !important;
+    width: 10vw !important;
     display: flex;
     align-items: center;
-    margin-left: 5px;
+    margin-left: 0;
+    font-size: 15px;
   }
 
   .gameResult12 {
-    font-size: 60px;
-    margin-left: 0;
+    font-size: 2.5vw;
+    margin-left: 0vw;
   }
 
   .gameResult13 {
-    font-size: 30px;
-    margin-left: -40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 200px;
-    margin-top: -20px;
+    font-size: 1.5vw;
+    margin-left: 4vw;
+    margin-top: -1vw;
   }
 
   .gameResult14 {
     align-items: start;
-    margin-left: 50px;
-    margin-top: -20px;
+    margin-top: -2vh;
+    margin-left: -2vw;
   }
 
   .gameResult15 {
-    width: 200px !important;
-    height: 200px !important;
+    width: 15vw !important;
+    height: 20vh !important;
+    margin-top: 2vh;
   }
   .gameResult16 {
-    background-size: contain !important;
+    background-size: 25vw 8vh !important;
     background-position: center;
-    width: 300px !important;
+    width: 25vw 8vh !important;
   }
   .gameResult17 {
-    font-size: 20px;
+    font-size: 1vw !important;
   }
   .gameResult18 {
-    width: 200px;
-    height: 15px;
+    width: 15vw;
+    height: 3vh;
   }
 
   .gameResult19 {
-    width: 80px;
-    height: 40px;
-    margin-top: 20px;
+    width: 10vw;
+    height: 5vh;
+    margin-top: 1vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 20px;
+    font-size: 2vw;
   }
 }
