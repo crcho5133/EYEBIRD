@@ -372,7 +372,7 @@ const GameResult = ({
                     height: "3vh",
                   }}
                 >
-                  {rankings[0].rank}
+                  {rankings ? `${rankings[0].rank}` : ""}
                 </div>
                 <div className="ms-1vw gameResult11">
                   {rankings ? `${rankings[0].nickname} - ${rankings[0].point}점` : ""}
@@ -389,7 +389,7 @@ const GameResult = ({
                     height: "3vh",
                   }}
                 >
-                  {rankings[1].rank}
+                  {rankings ? `${rankings[1].rank}` : ""}
                 </div>
                 <div className="ms-1vw gameResult11">
                   {rankings ? `${rankings[1].nickname} - ${rankings[1].point}점` : ""}
@@ -406,10 +406,10 @@ const GameResult = ({
                     height: "3vh",
                   }}
                 >
-                  {rankings[2].rank}
+                  {rankings ? `${rankings[2]?.rank}` : ""}
                 </div>
                 <div className="ms-1vw gameResult11">
-                  {rankings ? `${rankings[2].nickname} - ${rankings[2].point}점` : ""}
+                  {rankings ? `${rankings[2]?.nickname} - ${rankings[2]?.point}점` : ""}
                 </div>
               </div>
             </div>
