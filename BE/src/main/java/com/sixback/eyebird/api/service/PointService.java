@@ -94,9 +94,14 @@ public class PointService {
         return points.subList(pageidx, pageidx + 10);
     }
 
-    public List<PointDto> getUpDownScore(boolean item, String userEmail) {
+        public List<PointDto> getUpDownScore(boolean item, String userEmail) {
         List<Point> rank = new ArrayList<>();
-        rank = pointRepository.findTop25ByOrderByClassicPtDesc();
+        if (item) {
+            rank = pointRepository.findTop25ByOrderByItemPtDesc();
+        } else {
+            rank = pointRepository.findTop25ByOrderByClassicPtDesc();
+
+        }
 
         if (rank.size() < 1) return null;
 
@@ -109,31 +114,22 @@ public class PointService {
             }
         }
 
+        // -> 본인 포함해서 랭크 전달
+        // 랭크 가장 뒷 부분이면 앞의 두 사람
+        if(userRank == (rank.size()-1)){
+            userRank = userRank-2;
+        }
+        // 랭크 가장 앞이면 뒤의 두 사람
+        else if(userRank > 0) userRank = userRank-1;
 
-        List<PointDto> result = new ArrayList<>();
-        if (item) {
-            rank = pointRepository.findTop25ByOrderByItemPtDesc();
-            if (userRank != 0)
-                result.add(new PointDto((userRank+1) - 1, rank.get(userRank - 1).getUser().getNickname(), rank.get(userRank - 1).getUser().getProfileImage(), rank.get(userRank - 1).getItemPt()));
-            else
-                result.add(new PointDto(0, "", 0, 0));
-            if (userRank < rank.size()-1)
-                result.add(new PointDto((userRank+1) + 1, rank.get(userRank + 1).getUser().getNickname(), rank.get(userRank + 1).getUser().getProfileImage(), rank.get(userRank + 1).getItemPt()));
-            else
-                result.add(new PointDto(0, "", 0, 0));
-        } else {
-            if (userRank != 0)
-                result.add(new PointDto((userRank+1) - 1, rank.get(userRank - 1).getUser().getNickname(), rank.get(userRank - 1).getUser().getProfileImage(), rank.get(userRank - 1).getClassicPt()));
-            else
-                result.add(new PointDto(0, "", 0, 0));
-            if (userRank < rank.size()-1)
-                result.add(new PointDto((userRank+1) + 1, rank.get(userRank + 1).getUser().getNickname(), rank.get(userRank + 1).getUser().getProfileImage(), rank.get(userRank + 1).getClassicPt()));
-            else
-                result.add(new PointDto(0, "", 0, 0));
+            List<PointDto> result = new ArrayList<PointDto>();
+
+        for (int i = 0; i < 3; i++) {
+            if(userRank + i < rank.size())
+                result.add(new PointDto((userRank + 1) +i, rank.get(userRank + i).getUser().getNickname(), rank.get(userRank + i).getUser().getProfileImage(), rank.get(userRank + i).getItemPt()));
         }
 
-
-        // 유저 앞 뒤
+        // 세 사람 출력
         return result;
     }
 
