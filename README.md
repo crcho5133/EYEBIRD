@@ -11,7 +11,7 @@
 - vite
 - react
 - tailwindcss
-- tensorflow
+- mediapipe
 
 #### 🖱Backend
 - springboot
