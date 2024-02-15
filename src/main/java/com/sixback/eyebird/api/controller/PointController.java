@@ -111,7 +111,7 @@ public class PointController {
     }
 
     @GetMapping("/rank/myrank/item")
-    @Operation(summary = "클래식 랭크 받아오기", description = "redis에서 classic rank 받아오기")
+    @Operation(summary = "아이템 랭크 받아오기", description = "redis에서 아이템 rank 받아오기")
     public ResponseEntity<List<PointDto>> getUpDownItemScore(Authentication authentication){
         String curUserEmail = authentication.getName();
 
