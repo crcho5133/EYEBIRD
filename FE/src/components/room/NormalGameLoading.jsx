@@ -43,10 +43,8 @@ const NormalGameLoading = ({ gameType, publisher, subscribers, teamA, teamB }) =
                     ? publisher
                     : subscribers.find((sub) => sub.stream.streamId === streamId);
                 return streamManager ? (
-                  <div className="flex justify-evenly w-80vw">
-                    <div key={idx} className="flex justify-center items-center text-6vw">
-                      {idx + 1}
-                    </div>
+                  <div key={idx} className="flex justify-evenly w-80vw">
+                    <div className="flex justify-center items-center text-6vw">{idx + 1}</div>
                     <img
                       src={JSON.parse(streamManager.stream.connection.data).clientProfile}
                       style={{
@@ -112,10 +110,8 @@ const NormalGameLoading = ({ gameType, publisher, subscribers, teamA, teamB }) =
                     ? publisher
                     : subscribers.find((sub) => sub.stream.streamId === streamId);
                 return streamManager ? (
-                  <div className="flex justify-evenly w-80vw">
-                    <div key={idx} className="flex justify-center items-center text-6vw">
-                      {idx + 1}
-                    </div>
+                  <div key={idx} className="flex justify-evenly w-80vw">
+                    <div className="flex justify-center items-center text-6vw">{idx + 1}</div>
                     <img
                       src={JSON.parse(streamManager.stream.connection.data).clientProfile}
                       style={{

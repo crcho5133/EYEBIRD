@@ -278,7 +278,7 @@ const NormalGamePlay = ({
             <div className="flex flex-col items-center h-full w-full pt-6">
               {/* <div className="h-2/6 w-4/5 border-4 rounded-2xl border-gray-300 bg-gray-200"> */}
               <div
-                className={`h-2/6 w-4/5 border-4 rounded-2xl ${effect === "A" ? "border-green-300 bg-green-200" : effect === "B" ? "border-red-300 bg-red-200" : "border-gray-300 bg-gray-200"}`}
+                className={`h-2/6 w-4/5 border-4 rounded-2xl ${effect === "A" ? "border-green-300 bg-green-500" : effect === "B" ? "border-red-300 bg-red-500" : "border-gray-300 bg-gray-200"}`}
               >
                 <div className="absolute text-2xl">A팀</div>
                 {/* {effect === "A" && <div className="text-xl">승리</div>}
@@ -294,7 +294,7 @@ const NormalGamePlay = ({
               <div className="w-full text-5xl text-center font-bold m-8 text-orange-800">VS</div>
               {/* <div className="h-2/6 w-4/5 border-4 rounded-2xl border-gray-300 bg-gray-200"> */}
               <div
-                className={`h-2/6 w-4/5 border-4 rounded-2xl ${effect === "A" ? "border-red-300 bg-red-200" : effect === "B" ? "border-green-300 bg-green-200" : "border-gray-300 bg-gray-200"}`}
+                className={`h-2/6 w-4/5 border-4 rounded-2xl ${effect === "A" ? "border-red-300 bg-red-500" : effect === "B" ? "border-green-300 bg-green-500" : "border-gray-300 bg-gray-200"}`}
               >
                 <div className="absolute text-2xl">B팀</div>
                 {/* {effect === "A" && <div className="text-xl">패배</div>}

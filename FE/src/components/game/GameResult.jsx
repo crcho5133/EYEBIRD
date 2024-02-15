@@ -414,7 +414,7 @@ const GameResult = ({
               : "animate-fade-out"
           }`}
           src={sessionStorage.getItem("profile")}
-          style={{ width: "20vw", height: "13vh" }}
+          style={{ width: "28vw", height: "13vh" }}
         />
         <div
           style={{
