@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sixback.eyebird.api.dto.*;
 import com.sixback.eyebird.api.service.PointService;
 import com.sixback.eyebird.db.repository.UserRepository;
-import com.sixback.eyebird.uncategorized.OpenViduManager;
+import com.sixback.eyebird.openvidu.OpenViduManager;
 import com.sixback.eyebird.db.entity.User;
 import com.sixback.eyebird.util.EloUtil;
 import io.openvidu.java.client.*;
@@ -16,7 +16,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.sixback.eyebird.api.dto.PointReqDto;
@@ -28,8 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 @RestController

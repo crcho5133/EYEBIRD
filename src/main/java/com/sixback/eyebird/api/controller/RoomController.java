@@ -2,7 +2,7 @@ package com.sixback.eyebird.api.controller;
 
 import com.sixback.eyebird.api.dto.*;
 import com.sixback.eyebird.api.service.RoomService;
-import com.sixback.eyebird.uncategorized.OpenViduManager;
+import com.sixback.eyebird.openvidu.OpenViduManager;
 import com.sixback.eyebird.util.Sha256Convert;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,7 +11,6 @@ import io.openvidu.java.client.*;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;

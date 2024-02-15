@@ -1,4 +1,4 @@
-package com.sixback.eyebird.uncategorized;
+package com.sixback.eyebird.stomp;
 
 import com.sixback.eyebird.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;

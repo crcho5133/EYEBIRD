@@ -1,4 +1,4 @@
-package com.sixback.eyebird.uncategorized;
+package com.sixback.eyebird.openvidu;
 
 import io.openvidu.java.client.OpenVidu;
 import lombok.Getter;

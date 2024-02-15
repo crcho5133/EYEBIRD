@@ -1,8 +1,8 @@
 package com.sixback.eyebird.config;
 
-import com.sixback.eyebird.uncategorized.AuthEntryPointJwt;
-import com.sixback.eyebird.uncategorized.JwtAuthFilter;
-import com.sixback.eyebird.uncategorized.UserDetailsServiceImpl;
+import com.sixback.eyebird.jwt.AuthEntryPointJwt;
+import com.sixback.eyebird.jwt.JwtAuthFilter;
+import com.sixback.eyebird.jwt.UserDetailsServiceImpl;
 import com.sixback.eyebird.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.*;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor // 의존성 주입을 위해 필요

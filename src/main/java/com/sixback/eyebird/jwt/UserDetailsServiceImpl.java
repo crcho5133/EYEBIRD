@@ -1,4 +1,4 @@
-package com.sixback.eyebird.uncategorized;
+package com.sixback.eyebird.jwt;
 
 import com.sixback.eyebird.db.repository.UserRepository;
 import com.sixback.eyebird.db.entity.User;

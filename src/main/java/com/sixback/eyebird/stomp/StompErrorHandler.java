@@ -1,4 +1,4 @@
-package com.sixback.eyebird.uncategorized;
+package com.sixback.eyebird.stomp;
 
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;

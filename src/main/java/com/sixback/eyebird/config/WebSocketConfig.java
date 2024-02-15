@@ -1,7 +1,7 @@
 package com.sixback.eyebird.config;
 
-import com.sixback.eyebird.uncategorized.StompErrorHandler;
-import com.sixback.eyebird.uncategorized.StompHandler;
+import com.sixback.eyebird.stomp.StompErrorHandler;
+import com.sixback.eyebird.stomp.StompHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
