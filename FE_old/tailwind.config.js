@@ -7,6 +7,21 @@ module.exports = {
       fontFamily: {
         "maplestory-bold": ["MaplestoryOTFBold", "sans-serif"],
       },
+      fontSize: (() => {
+        let fontSize = {};
+        for (let i = 1; i <= 100; i++) {
+          fontSize[`${i}vw`] = `${i}vw`;
+        }
+        return fontSize;
+      })(),
+      spacing: (() => {
+        let spacing = {};
+        for (let i = 1; i <= 100; i++) {
+          spacing[`${i}vw`] = `${i}vw`;
+          spacing[`${i}vh`] = `${i}vh`;
+        }
+        return spacing;
+      })(),
     },
   },
   plugins: [require("tailwindcss-animated")],

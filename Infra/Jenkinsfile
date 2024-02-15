@@ -58,18 +58,6 @@ pipeline {
             }
         }
 
-        stage('Build FastAPI') {
-            when {
-                expression { env.BUILD_FastAPI == "true" }
-            }
-            steps {
-                echo 'Building FastAPI'
-                dir('FastAPI') {
-                    sh 'docker build -t fastapi:test .'
-                }
-            }
-        }
-
         stage('Compression FE') {
             when {
                 expression { env.BUILD_FE == "true" }
@@ -126,20 +114,6 @@ pipeline {
                         
                         ssh -t ubuntu@i10e206.p.ssafy.io "cd ${HOME_PATH} && tar -xvf dist.tar && sudo cp -r dist/* /var/www/html/"
                     '''
-                }
-            }
-        }
-
-        stage('Deploy FastAPI') {
-            when {
-                expression { env.BUILD_FastAPI == "true" }
-            }
-            steps {
-                echo 'Deploying FastAPI...'
-                dir('FastAPI') {
-                    sh 'docker stop fastapi-app || true'
-                    sh 'docker rm fastapi-app || true'
-                    sh 'docker run -d -p 8000:8000 --name fastapi-app fastapi:test'
                 }
             }
         }

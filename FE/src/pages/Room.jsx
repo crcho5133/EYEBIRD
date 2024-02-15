@@ -14,7 +14,8 @@ import CameraON from "../assets/img/room/CameraOn.png";
 import CameraOFF from "../assets/img/room/CameraOff.png";
 import Chat from "../assets/img/room/Chat.png";
 import Sound from "../assets/img/room/Sound.png";
-import LoadingSpinner from "../assets/img/loading/loading.gif";
+import background_pirate from "../assets/img/background_pirate.png";
+import HashLoader from "react-spinners/HashLoader";
 
 const APPLICATION_SERVER_URL = "https://i10e206.p.ssafy.io/";
 
@@ -666,10 +667,15 @@ const Room = () => {
   return (
     <>
       {isLoading && (
-        <div className="flex justify-center items-center text-center">
-          <div>
-            로딩중...<img src={LoadingSpinner}></img>
-          </div>
+        <div
+          className="h-screen flex flex-col justify-center items-center text-center"
+          style={{
+            backgroundImage: `url(${background_pirate})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <HashLoader color="#dddddd" size={150} speedMultiplier={2} />
         </div>
       )}
       {!isLoading && gameState === "waitingRoom" && (

@@ -152,7 +152,7 @@ const SignupFormModal = ({ visible, onClose }) => {
                   <button
                     onClick={checkEmailDuplicate}
                     disabled={!email.isValid || !email.value}
-                    className={`signup3-4 ms-3vw ms-3vw text-xs p-1vw border-2 rounded-md flex items-center justify-center ${
+                    className={`signup3-4 ms-3vw text-xs p-1vw border-2 rounded-md flex items-center justify-center ${
                       !email.isValid || !email.value
                         ? "border-orange-700"
                         : "border-amber-700 bg-amber-700 text-white"

@@ -5,7 +5,11 @@ import NavBar from "./NavBar";
 import Rodal from "rodal";
 import axios from "axios";
 import { baseUrl } from "../../api/url/baseUrl";
-
+import room_search from "../../assets/img/room_search.png";
+import old_paper from "../../assets/img/old_paper.png";
+import post_it_4 from "../../assets/img/post_it_4.png";
+import button_pagenation from "../../assets/img/button_pagenation.png";
+import button_pagenation_on from "../../assets/img/button_pagenation_on.png";
 const RoomSearch = () => {
   const [refresh, setRefresh] = useState(false);
   const [roomsClassic, setRoomsClassic] = useState([]);
@@ -45,7 +49,13 @@ const RoomSearch = () => {
       setIsPasswordModalOpen(true);
     } else {
       // 방이 비밀번호로 보호되어 있지 않으면 바로 입장
-      navigate(`/room/${room.roomId}`, { state: { roomName: room.roomName, password } });
+      navigate(`/room/${room.roomId}`, {
+        state: {
+          roomName: room.roomName,
+          password,
+          gameType: tabName === "클래식" ? "classic" : "item",
+        },
+      });
     }
   };
 
@@ -61,7 +71,12 @@ const RoomSearch = () => {
       );
       console.log(response);
       navigate(`/room/${selectedRoom.roomId}`, {
-        state: { roomName, password, hastoken: response.data.connectionToken },
+        state: {
+          roomName,
+          password,
+          hastoken: response.data.connectionToken,
+          gameType: tabName === "클래식" ? "classic" : "item",
+        },
       });
     } catch (error) {
       alert("비밀번호 오류");
@@ -71,7 +86,7 @@ const RoomSearch = () => {
   const indexOfLastRoom = currentPage * roomsPerPage;
   const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
   const currentRooms =
-    tabName === "아이템"
+    tabName === "아이템 ▼"
       ? roomsItem.slice(indexOfFirstRoom, indexOfLastRoom)
       : roomsClassic.slice(indexOfFirstRoom, indexOfLastRoom);
 
@@ -101,81 +116,116 @@ const RoomSearch = () => {
 
   return (
     <>
-      {/* <NavBar /> */}
-      <div className="App">
-        <header className="flex justify-between p-4 bg-blue-500 text-white">
-          <h1>방목록</h1>
-          <div className="relative">
-            <button onClick={handleButtonClick} className="bg-green-500 p-2 rounded">
-              {tabName}
-            </button>
-            {showMenu && (
-              <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                <div
-                  className="py-1"
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="options-menu"
-                >
-                  <button
-                    onClick={() => {
-                      handleItemClick("클래식");
-                      setRefresh(true);
-                    }}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    role="menuitem"
-                  >
-                    클래식전
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleItemClick("아이템");
-                      setRefresh(true);
-                    }}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    role="menuitem"
-                  >
-                    아이템전
-                  </button>
-                </div>
-              </div>
-            )}
+      <div className="h-screen flex flex-col items-center">
+        <div className="flex justify-center items-center" style={{ position: "relative" }}>
+          <div>
+            <img src={room_search} />
           </div>
-        </header>
-        <main className="p-4">
-          {currentRooms.map((room) => (
-            // <Link to={`/room/${room.roomId}`}>
+          <div className="absolute right-0">
             <div
-              key={room.roomName}
-              className="border p-2 mb-2"
-              onClick={() => {
-                setRoomName(room.roomName);
-                handleRoomDoubleClick(room);
+              className="items-center justify-center"
+              style={{
+                backgroundImage: `url(${post_it_4})`,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                width: "100px",
+                height: "100px",
+                display: "flex",
+                alignItems: "end",
+                justifyContent: "center",
               }}
             >
-              <div className="flex justify-between">
-                <p>{room.hasPassword ? "🔒" : ""}</p>
-                <p>{room.roomName}</p>
-                <p>
-                  {room.maxCapacity} vs {room.maxCapacity}
-                </p>
-              </div>
-              <div className="flex justify-between">
-                <p>{room.leader}</p>
-                <p>{`${room.currentCapacity} / ${room.maxCapacity}`}</p>
-              </div>
+              <button className="mb-5" onClick={handleButtonClick}>
+                {tabName}
+              </button>
+              {showMenu && (
+                <div className="absolute right-0 m-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                  <div
+                    className="py-1"
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="options-menu"
+                  >
+                    <button
+                      onClick={() => {
+                        handleItemClick("클래식 ▼");
+                        setRefresh(true);
+                      }}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      role="menuitem"
+                    >
+                      클래식전
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleItemClick("아이템 ▼");
+                        setRefresh(true);
+                      }}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      role="menuitem"
+                    >
+                      아이템전
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
-            // </Link>
-          ))}
+          </div>
+        </div>
+        <div
+          className="p-2 flex flex-col"
+          style={{
+            position: "relative",
+            textShadow: "3px 3px 4px rgba(0,0,0,0.5)", // 텍스트 주위에 테두리 효과 추가
+          }}
+        >
+          <div
+            className="absolute w-4/5 h-3/5 flex flex-col items-center mt-1"
+            style={{ top: "43%", left: "50%", transform: "translate(-50%, -50%)" }}
+          >
+            {currentRooms.map((room) => (
+              <div
+                key={room.roomName}
+                className=" w-64 py-1 px-4 mb-3 text-center "
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(200,100,150,0.1) 0%, rgba(200,120,20,0.5) 100%)", // 피색 배경과 빛처럼 퍼지는 효과 추가
+                  borderRadius: "20px", // 모서리 둥글게
+                  boxShadow: "0 5px 5px rgba(0,0,0,0.5)", // 그림자 추가
+                }} // room을 이미지 위로 이동
+                onClick={() => {
+                  setRoomName(room.roomName);
+                  handleRoomDoubleClick(room);
+                }}
+              >
+                <div className="flex justify-between ">
+                  <p style={{ flexGrow: 1, width: "12rem" }}>{room.hasPassword ? "🔒" : ""}</p>
+                  <p style={{ flexGrow: 3, width: "12rem" }}>{room.roomName}</p>
+                  <p style={{ flexGrow: 2, width: "12rem" }}>
+                    {room.maxCapacity} vs {room.maxCapacity}
+                  </p>
+                </div>
+                <hr style={{ border: "none", height: "2px", backgroundColor: "#A0522D" }} />
+                <div className="flex justify-between ">
+                  <p style={{ flexGrow: 1, width: "12rem" }}>{room.ownerId}</p>
+                  <p
+                    style={{ flexGrow: 1, width: "12rem" }}
+                  >{`${room.currentCapacity} / ${room.maxCapacity}`}</p>
+                </div>
+              </div>
+              // </Link>
+            ))}
+          </div>
           {/* 비밀번호 입력 모달 */}
           <Rodal visible={isPasswordModalOpen} onClose={() => setIsPasswordModalOpen(false)}>
             <p>비밀번호를 입력하세요:</p>
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             <button onClick={handleConfirm}>입장</button>
           </Rodal>
-        </main>
+          <img src={old_paper} />
+        </div>
 
-        <footer className="p-4">
+        <div className="p-4">
           <div className="flex justify-center space-x-2">
             {/* 페이지 번호 버튼을 출력합니다. 여기서는 1~7까지 출력합니다. */}
             {Array.from(
@@ -189,13 +239,19 @@ const RoomSearch = () => {
               <button
                 key={page}
                 onClick={() => handlePageChange(page)}
-                className="bg-blue-500 text-white p-2 rounded"
+                className="text-white p-3 "
+                style={{
+                  fontSize: "20px",
+                  backgroundImage: `url(${currentPage === page ? button_pagenation_on : button_pagenation})`,
+                  backgroundSize: "100% 100%",
+                  backgroundPosition: "center",
+                }}
               >
                 {page}
               </button>
             ))}
           </div>
-        </footer>
+        </div>
       </div>
     </>
   );

@@ -9,41 +9,36 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PrivateRoute from "@/privateRoute/PrivateRoute";
 import { WebSocketProvider } from "@/context/WebSocketContext";
-import { VideoWebSocketProvider } from "./context/VideoWebSocketContext";
 
-function App() {
+export default function App() {
   return (
     <>
       <BrowserRouter>
         <ToastContainer stacked pauseOnFocusLoss={false} />
         <AccessTokenProvider>
           <WebSocketProvider>
-            <VideoWebSocketProvider>
-              <WebMobileLayout>
-                <div className="font-maplestory-bold">
-                  <Routes>
-                    <Route element={<PrivateRoute requireAuth={false} />}>
-                      <Route path="/" element={<Home />} />
-                    </Route>
+            <WebMobileLayout>
+              <div className="font-maplestory-bold">
+                <Routes>
+                  <Route element={<PrivateRoute requireAuth={false} />}>
+                    <Route path="/" element={<Home />} />
+                  </Route>
 
-                    <Route element={<PrivateRoute requireAuth={true} />}>
-                      <Route path="/lobby/*" element={<Lobby />} />
-                    </Route>
-                    <Route element={<PrivateRoute requireAuth={true} />}>
-                      <Route path="/room/:sessionId" element={<Room />} />
-                    </Route>
-                    <Route element={<PrivateRoute requireAuth={true} />}>
-                      <Route path="/game/:sessionId" element={<Game />} />
-                    </Route>
-                  </Routes>
-                </div>
-              </WebMobileLayout>
-            </VideoWebSocketProvider>
+                  <Route element={<PrivateRoute requireAuth={true} />}>
+                    <Route path="/lobby/*" element={<Lobby />} />
+                  </Route>
+                  <Route element={<PrivateRoute requireAuth={true} />}>
+                    <Route path="/room/:sessionId" element={<Room />} />
+                  </Route>
+                  <Route element={<PrivateRoute requireAuth={true} />}>
+                    <Route path="/game/:sessionId" element={<Game />} />
+                  </Route>
+                </Routes>
+              </div>
+            </WebMobileLayout>
           </WebSocketProvider>
         </AccessTokenProvider>
       </BrowserRouter>
     </>
   );
 }
-
-export default App;

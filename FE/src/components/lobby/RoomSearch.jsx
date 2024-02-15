@@ -15,7 +15,7 @@ const RoomSearch = () => {
   const [roomsClassic, setRoomsClassic] = useState([]);
   const [roomsItem, setRoomsItem] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
-  const [tabName, setTapName] = useState("클래식");
+  const [tabName, setTapName] = useState("클래식 ▼");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRoom, setSelectedRoom] = useState(null); // 선택된 방
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 표시 여부
@@ -43,6 +43,10 @@ const RoomSearch = () => {
 
   // 방을 더블 클릭했을 때의 처리
   const handleRoomDoubleClick = (room) => {
+    if (room.currentCapacity === room.maxCapacity) {
+      alert("입장 가능한 자리가 없습니다.");
+      return;
+    }
     setSelectedRoom(room);
     if (room.hasPassword) {
       // 방이 비밀번호로 보호되어 있으면 비밀번호 입력 모달을 표시
@@ -116,7 +120,7 @@ const RoomSearch = () => {
 
   return (
     <>
-      <div className="h-screen flex flex-col items-center">
+      <div className="h-screen flex flex-col items-center animate-fade-left animate-once">
         <div className="flex justify-center items-center" style={{ position: "relative" }}>
           <div>
             <img src={room_search} />
@@ -186,7 +190,7 @@ const RoomSearch = () => {
             {currentRooms.map((room) => (
               <div
                 key={room.roomName}
-                className=" w-64 py-1 px-4 mb-3 text-center "
+                className=" w-64 py-1 px-4 mb-3 text-center animate-jump-in animate-duration-500 animate-once"
                 style={{
                   background:
                     "radial-gradient(circle, rgba(200,100,150,0.1) 0%, rgba(200,120,20,0.5) 100%)", // 피색 배경과 빛처럼 퍼지는 효과 추가
@@ -199,18 +203,18 @@ const RoomSearch = () => {
                 }}
               >
                 <div className="flex justify-between ">
-                  <p style={{ flexGrow: 1, width: "12rem" }}>{room.hasPassword ? "🔒" : ""}</p>
-                  <p style={{ flexGrow: 3, width: "12rem" }}>{room.roomName}</p>
-                  <p style={{ flexGrow: 2, width: "12rem" }}>
+                  <p style={{ flexGrow: 1, width: "2rem" }}>{room.hasPassword ? "🔒" : ""}</p>
+                  <p style={{ flexGrow: 3, width: "14rem" }}>{room.roomName}</p>
+                  <p style={{ flexGrow: 2, width: "8rem" }}>
                     {room.maxCapacity} vs {room.maxCapacity}
                   </p>
                 </div>
                 <hr style={{ border: "none", height: "2px", backgroundColor: "#A0522D" }} />
                 <div className="flex justify-between ">
-                  <p style={{ flexGrow: 1, width: "12rem" }}>{room.ownerId}</p>
-                  <p
-                    style={{ flexGrow: 1, width: "12rem" }}
-                  >{`${room.currentCapacity} / ${room.maxCapacity}`}</p>
+                  <p style={{ flexGrow: 1, width: "12rem" }}>현재인원 / 최대인원</p>
+                  <p style={{ flexGrow: 1, width: "6rem" }}>
+                    {room.currentCapacity} / {room.maxCapacity}
+                  </p>
                 </div>
               </div>
               // </Link>

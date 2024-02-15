@@ -384,4 +384,26 @@
     align-items: center;
     font-size: 2vw;
   }
+
+  .waitingRoom0 {
+    /* background-size: 20vw 10vh !important;
+    /* background-position: center center; */
+    width: 5vw 10vh !important;
+  }
+
+  .waitingRoom1 {
+    font-size: 2vw;
+    margin-top: -1vh;
+  }
+
+  .waitingRoom2 {
+    font-size: 1vw;
+    margin-top: -1.5vh;
+  }
+
+  .waitingRoom3 {
+    background-size: 3vw 10vh !important;
+    background-position: center;
+    width: 3vw 10vh !important;
+  }
 }

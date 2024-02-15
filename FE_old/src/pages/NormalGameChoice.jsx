@@ -10,6 +10,7 @@ import post_it_5 from "../assets/img/post_it_5.png";
 import post_it_6 from "../assets/img/post_it_6.png";
 import post_it_7 from "../assets/img/post_it_7.png";
 import axios from "axios";
+import { SFX, playSFX } from "../utils/audioManager";
 
 const NormalGameChoice = () => {
   const [creatingRoomVisible, setCreatingRoomVisible] = useState(false);
@@ -24,7 +25,11 @@ const NormalGameChoice = () => {
     console.log(response);
     const room = response.data;
 
-    navigate(`/room/${room.roomId}`, { state: { roomName: room.roomName } });
+    if (room) {
+      navigate(`/room/${room.roomId}`, { state: { roomName: room.roomName } });
+    } else {
+      alert("참가 할 수 있는 방이 없습니다.");
+    }
   };
 
   const handleFastItemClick = async () => {
@@ -35,25 +40,31 @@ const NormalGameChoice = () => {
     console.log(response);
     const room = response.data;
 
-    navigate(`/room/${room.roomId}`, { state: { roomName: room.roomName } });
+    if (room) {
+      navigate(`/room/${room.roomId}`, { state: { roomName: room.roomName } });
+    } else {
+      alert("참가 할 수 있는 방이 없습니다.");
+    }
   };
 
   const handleCreatingRoomOpen = () => {
+    playSFX(SFX.POPUP);
     setCreatingRoomVisible(true);
   };
 
   const handleCreatingRoomClose = () => {
+    playSFX(SFX.POPUP);
     setCreatingRoomVisible(false);
   };
 
   const handleRoomSearchClick = () => {
+    playSFX(SFX.CLICK);
     navigate("roomSearch"); // 랭킹전 화면으로 이동
   };
 
   return (
     <>
-      <div className="h-screen flex flex-col items-center space-y-12">
-        <div></div>
+      <div className="h-screen flex flex-col items-center space-y-5 animate-fade-left animate-once">
         <div
           className="flex justify-center items-center"
           style={{
@@ -65,7 +76,6 @@ const NormalGameChoice = () => {
             backgroundPosition: "center",
           }}
         >
-          {/* <img src={subject_board} /> */}
           <div
             className="object-cover absolute h-auto font-bold ];
             text-stone-100 w-full text-center"
@@ -83,19 +93,19 @@ const NormalGameChoice = () => {
           </div>
         </div>
         <div
-          className="flex-col justify-center items-center"
-          style={{ position: "relative", height: "50%", width: "80%" }}
+          className="flex flex-col justify-center items-center"
+          style={{ position: "relative", width: "80%" }}
         >
           <img src={wooden_board} />
           <div
-            className="object-cover absolute z-0 w-4/5 h-4/5"
+            className="flex justify-center object-cover absolute z-0 w-4/5 h-4/5"
             style={{
               transform: "translateX(-50%)",
               left: "50%",
               top: "5%",
             }}
           >
-            <div className="flex  " style={{ position: "relative" }}>
+            <div className="flex justify-center  " style={{ position: "relative" }}>
               <div className="flex flex-col space-y-4">
                 <div className="flex flex-row">
                   <button
@@ -191,8 +201,8 @@ const NormalGameChoice = () => {
             </div>
           </div>
         </div>
-        <CreatingRoomModal visible={creatingRoomVisible} onClose={handleCreatingRoomClose} />
       </div>
+      <CreatingRoomModal visible={creatingRoomVisible} onClose={handleCreatingRoomClose} />
     </>
   );
 };

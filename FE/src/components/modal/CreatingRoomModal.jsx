@@ -34,8 +34,8 @@ const CreatingRoomModal = ({ visible, onClose }) => {
   const handleCreate = async () => {
     if (roomName.length === 0) {
       setErrorMessage("방 제목을 입력해주세요.");
-    } else if (roomName.length > 20) {
-      setErrorMessage("방 제목은 20자를 초과할 수 없습니다.");
+    } else if (roomName.length > 10) {
+      setErrorMessage("방 제목은 10자를 초과할 수 없습니다.");
     } else if (!/^\d*$/.test(password)) {
       setErrorMessage("패스워드에는 숫자만 입력해주세요.");
     } else {

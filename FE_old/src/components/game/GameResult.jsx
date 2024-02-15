@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import TitleBar from "@/assets/img/gameResult/TitleBar.png";
+import MiddleBackground from "@/assets/img/gameResult/MiddleBackground.png";
+import ContinueBackground from "@/assets/img/gameResult/ContinueBackground.png";
+import RankPointBackground from "@/assets/img/gameResult/RankPointBackground.png";
+import NicknameTitle from "@/assets/img/gameResult/NicknameTitle.png";
+import RankingTitle from "@/assets/img/gameResult/RankingTitle.png";
+import proFileImage from "@/assets/img/profile/bird1.png";
+import gameApiCall from "@/api/axios/gameApiCall";
 
 const GameResult = ({
   myLose,
@@ -13,7 +21,7 @@ const GameResult = ({
   rematch,
   gameId,
   gameType,
-  opponentInfo,
+  opponentInfoParsed,
   setGameState,
   setReady,
   setOpponentReady,
@@ -23,9 +31,32 @@ const GameResult = ({
   setRematchRequest,
   setRematchResponse,
   setRematch,
+  prevClassicPoint,
+  prevItemPoint,
 }) => {
   const [resultState, setResultState] = useState("phase1");
-  const [progress, setProgress] = useState(100); // 진행 바 상태
+  const [progress, setProgress] = useState(100);
+  const [rankings, setRankings] = useState("");
+  const useGameApiCall = gameApiCall();
+  const [isFirstEffectCompleted, setIsFirstEffectCompleted] = useState(false);
+  const myClassicPoint = sessionStorage.getItem("classicPt");
+  const myItemPoint = sessionStorage.getItem("itemPt");
+  const expectedWinPt = opponentInfoParsed.expectedWinPt;
+  const expectedLosePt = opponentInfoParsed.expectedLosePt;
+  const [nowPoint, setNowPoint] = useState(0);
+  const [accessPoint, setAccessPoint] = useState(0);
+  const finalPoint = nowPoint + accessPoint;
+  const finalAccessPoint = 0;
+
+  useEffect(() => {
+    const getRanking = async () => {
+      const ranking = await useGameApiCall.getRanking(gameType);
+      setRankings(ranking);
+      console.log(ranking);
+    };
+
+    getRanking();
+  }, []);
 
   useEffect(() => {
     // rematchRequest나 rematchResponse가 변경될 때 phase2로 설정
@@ -54,8 +85,8 @@ const GameResult = ({
     if (resultState === "phase1" || resultState === "phase2") {
       setProgress(100); // phase1 또는 phase2로 진입할 때 진행 바를 다시 채웁니다.
       const interval = setInterval(() => {
-        setProgress((prevProgress) => (prevProgress > 0 ? prevProgress - 100 / (4000 / 10) : 0));
-      }, 10); // 매 10밀리초마다 진행 바 감소
+        setProgress((prevProgress) => (prevProgress > 0 ? prevProgress - 1 : 0));
+      }, 40); // 매 10밀리초마다 진행 바 감소
 
       // 3초 후에 자동으로 phase3로 설정
       const timeout = setTimeout(() => {
@@ -89,16 +120,341 @@ const GameResult = ({
     }
   }, [rematch]);
 
+  //랭크 점수 출력하는 로직
+
+  useEffect(() => {
+    if (gameType === "classic") {
+      if (myWin) {
+        setNowPoint(parseInt(myClassicPoint) - parseInt(expectedWinPt));
+        setAccessPoint(parseInt(expectedWinPt));
+      } else {
+        setNowPoint(parseInt(myClassicPoint) - parseInt(expectedLosePt));
+        setAccessPoint(parseInt(expectedLosePt));
+      }
+    } else {
+      if (myWin) {
+        setNowPoint(parseInt(myItemPoint) - parseInt(expectedWinPt));
+        setAccessPoint(parseInt(expectedWinPt));
+      } else {
+        setNowPoint(parseInt(myItemPoint) - parseInt(expectedLosePt));
+        setAccessPoint(parseInt(expectedLosePt));
+      }
+    }
+    setIsFirstEffectCompleted(true);
+  }, [myClassicPoint, myItemPoint]);
+
+  useEffect(() => {
+    if (isFirstEffectCompleted) {
+      setTimeout(() => {
+        if (nowPoint < finalPoint) {
+          const interval = setInterval(() => {
+            setNowPoint((prevNumber) => (prevNumber < finalPoint ? prevNumber + 1 : prevNumber));
+            setAccessPoint((prevNumber) =>
+              prevNumber > finalAccessPoint ? prevNumber - 1 : prevNumber
+            );
+
+            if (nowPoint >= finalPoint && accessPoint <= finalAccessPoint) {
+              clearInterval(interval);
+            }
+          }, 50);
+
+          return () => clearInterval(interval);
+        } else {
+          const interval = setInterval(() => {
+            setNowPoint((prevNumber) => (prevNumber > finalPoint ? prevNumber - 1 : prevNumber));
+            setAccessPoint((prevNumber) =>
+              prevNumber < finalAccessPoint ? prevNumber + 1 : prevNumber
+            );
+
+            if (nowPoint <= finalPoint && accessPoint >= finalAccessPoint) {
+              clearInterval(interval);
+            }
+          }, 50);
+
+          return () => clearInterval(interval);
+        }
+      }, 1000);
+    }
+  }, [isFirstEffectCompleted]);
+
   return (
-    <>
+    <div
+      className="boxControl flex flex-col items-center animate-fade-left animate-once"
+      style={{ backgroundColor: "#69492E", height: "100vh" }}
+    >
+      {/*Top*/}
+      <div
+        style={{
+          background: `url(${TitleBar}) no-repeat`,
+          backgroundPosition: "center center",
+          backgroundSize: "50vw 15vh",
+          width: "50vw",
+          height: "15vh",
+        }}
+        className={`gameResult1 mt-5vh text-10vw flex justify-center items-center border-amber-900 ${myWin ? "text-white" : "text-white"}`}
+      >
+        {myWin ? "WIN" : "LOSE"}
+      </div>
+      {/*Middle*/}
+      <div
+        style={{
+          background: `url(${MiddleBackground}) no-repeat`,
+          backgroundPosition: "center center",
+          backgroundSize: "80vw 53vh",
+          width: "80vw",
+          height: "53vh",
+        }}
+        className="gameResult2 mt-3vh flex flex-col items-center"
+      >
+        {resultState === "phase1" && myWin && (
+          <div
+            style={{
+              background: `url(${ContinueBackground}) no-repeat`,
+              backgroundPosition: "center center",
+              backgroundSize: "80vw 25vh",
+              width: "80vw",
+              height: "25vh",
+            }}
+            className="gameResult3 flex flex-col justify-center items-center"
+          >
+            <div className="mt-3vh">상대에게 재도전 의사를 묻고 있습니다.</div>
+            <div>잠시만 기다려 주십시오</div>
+            {resultState !== "phase3" && (
+              <div className="mt-1vh flex justify-center">
+                <div className="gameResult18 w-40vw bg-gray-300 h-3vh rounded-full shadow">
+                  <div
+                    className="bg-amber-800 h-full rounded-full transition-all ease-in-out"
+                    style={{
+                      width: `${progress}%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        {resultState === "phase1" && !myWin && (
+          <div
+            style={{
+              background: `url(${ContinueBackground}) no-repeat`,
+              backgroundPosition: "center center",
+              backgroundSize: "80vw 25vh",
+              width: "80vw",
+              height: "25vh",
+            }}
+            className="gameResult3 text-4vw flex flex-col justify-center items-center"
+          >
+            <div className="mt-2vh gameResult17">재도전 하시겠습니까?</div>
+            {resultState !== "phase3" && (
+              <div className="mt-1vh flex justify-center">
+                <div className="gameResult18 w-40vw bg-gray-300 h-3vh rounded-full shadow">
+                  <div
+                    className="bg-amber-800 h-full rounded-full transition-all ease-in-out"
+                    style={{
+                      width: `${progress}%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+            )}
+            <button
+              className="gameResult19 mt-1vh text-4vw w-10vw h-3vh bg-amber-700 text-white font-bold rounded hover:bg-amber-800 focus:outline-none focus:shadow-outline"
+              onClick={() => sendRematch()}
+            >
+              네
+            </button>
+          </div>
+        )}
+        {resultState === "phase2" && myWin && (
+          <div
+            style={{
+              background: `url(${ContinueBackground}) no-repeat`,
+              backgroundPosition: "center center",
+              backgroundSize: "80vw 25vh",
+              width: "80vw",
+              height: "25vh",
+            }}
+            className="gameResult3 flex flex-col justify-center items-center"
+          >
+            <div className="mt-1vh gameResult17">상대방이 재도전을 요청하였습니다</div>
+            <div className="gameResult17">수락하시겠습니까?</div>
+            {resultState !== "phase3" && (
+              <div className="mt-1vh flex justify-center">
+                <div className="gameResult18 w-40vw bg-gray-300 h-3vh rounded-full shadow">
+                  <div
+                    className="bg-amber-800 h-full rounded-full transition-all ease-in-out"
+                    style={{
+                      width: `${progress}%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+            )}
+            <div>
+              <button
+                className="gameResult19 mt-1vh text-4vw w-10vw h-3vh bg-amber-700 text-white font-bold rounded hover:bg-amber-800 focus:outline-none focus:shadow-outline"
+                onClick={() => acceptRematch()}
+              >
+                네
+              </button>
+            </div>
+          </div>
+        )}
+        {resultState === "phase2" && !myWin && (
+          <div
+            style={{
+              background: `url(${ContinueBackground}) no-repeat`,
+              backgroundPosition: "center center",
+              backgroundSize: "80vw 25vh",
+              width: "80vw",
+              height: "25vh",
+            }}
+            className="gameResult3 flex flex-col justify-center items-center"
+          >
+            <div className="gameResult17">상대방의 재도전 수락여부를</div>
+            <div className="gameResult17">기다리고 있습니다</div>
+            {resultState !== "phase3" && (
+              <div className="mt-1vh flex justify-center">
+                <div className="gameResult18 w-40vw bg-gray-300 h-3vh rounded-full shadow">
+                  <div
+                    className="bg-amber-800 h-full rounded-full transition-all ease-in-out"
+                    style={{
+                      width: `${progress}%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        {resultState === "phase3" && (
+          <div
+            style={{
+              background: `url(${ContinueBackground}) no-repeat`,
+              backgroundPosition: "center center",
+              backgroundSize: "80vw 25vh",
+              width: "80vw",
+              height: "25vh",
+            }}
+            className="gameResult3 flex flex-col justify-center items-center "
+          >
+            <Link
+              to="/lobby"
+              className="gameResult4 mt-1vh text-4vw w-35vw h-7vh flex justify-center items-center bg-amber-700 text-white rounded hover:bg-amber-800 focus:outline-none focus:shadow-outline"
+              onClick={() => leaveSession()}
+            >
+              로비로 가기
+            </Link>
+          </div>
+        )}
+        <div
+          style={{
+            background: `url(${RankPointBackground}) no-repeat`,
+            backgroundPosition: "center center",
+            backgroundSize: "75vw 30vh",
+            width: "70vw",
+            height: "25vh",
+          }}
+          className="gameResult5 flex flex-col"
+        >
+          <div className="ms-3vw self-center gameResult6">Rank</div>
+          <div className="flex gameResult7">
+            <div className="flex flex-col items-start ms-2vw space-y-2vh">
+              <div className="flex justify-center items-center mt-2vh">
+                <div
+                  className="ms-1vw flex justify-center items-center gameResult8"
+                  style={{
+                    background: `url(${RankingTitle}) no-repeat`,
+                    backgroundPosition: "0.5vw center",
+                    backgroundSize: "5vw 3vh",
+                    width: "5vw",
+                    height: "3vh",
+                  }}
+                >
+                  1
+                </div>
+                <div className="ms-1vw gameResult11">
+                  {rankings ? `${rankings[0].nickname} - ${rankings[0].point}점` : ""}
+                </div>
+              </div>
+              <div className="flex justify-center items-center">
+                <div
+                  className="ms-2vw flex justify-center items-center gameResult9"
+                  style={{
+                    background: `url(${RankingTitle}) no-repeat`,
+                    backgroundPosition: "0.5vw center",
+                    backgroundSize: "5vw 3vh",
+                    width: "5vw",
+                    height: "3vh",
+                  }}
+                >
+                  2
+                </div>
+                <div className="ms-1vw gameResult11">
+                  {rankings ? `${rankings[1].nickname} - ${rankings[1].point}점` : ""}
+                </div>
+              </div>
+              <div className="flex justify-center items-center">
+                <div
+                  className="ms-3vw flex justify-center items-center gameResult10"
+                  style={{
+                    background: `url(${RankingTitle}) no-repeat`,
+                    backgroundPosition: "0.5vw center",
+                    backgroundSize: "5vw 3vh",
+                    width: "5vw",
+                    height: "3vh",
+                  }}
+                >
+                  3
+                </div>
+                <div className="ms-1vw gameResult11">
+                  {rankings ? `${rankings[1].nickname} - ${rankings[1].point}점` : ""}
+                </div>
+              </div>
+            </div>
+
+            <div className="gameResult14 mt-3vh ms-10vw flex flex-col justify-center items-center">
+              <div className="gameResult12 ms-1vw text-7vw flex flex-wrap justify-center items-center text-red-600">
+                {nowPoint}
+              </div>
+
+              <div className="ms-10vw gameResult13">
+                {" "}
+                {myWin ? `+ ${accessPoint}` : `${accessPoint}`}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/*Bottom*/}
+      <div className="flex flex-col justify-center items-center ">
+        <img
+          className="gameResult15"
+          src={proFileImage}
+          style={{ width: "20vw", height: "13vh" }}
+        />
+        <div
+          style={{
+            background: `url(${NicknameTitle}) no-repeat`,
+            backgroundPosition: "center center",
+            backgroundSize: "50vw 7vh",
+            width: "50vw",
+            height: "7vh",
+          }}
+          className="flex justify-center items-center gameResult16"
+        >
+          {sessionStorage.getItem("nickname")}
+        </div>
+      </div>
+
+      {/* 
       <div className="h-screen flex justify-center items-center text-center text-lg">
         <div className="flex-col">
-          <div>결과 창</div>
-          <div>나</div>
           <div className={`text-2xl ${myWin ? "text-green-600" : "text-red-600"}`}>
             {myWin ? "승리" : "패배"}
           </div>
-          <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
+          {/* <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
           <div>상대</div>
           <div className={`text-2xl ${myWin ? "text-red-600" : "text-green-600"}`}>
             {myWin ? "패배" : "승리"}
@@ -145,7 +501,6 @@ const GameResult = ({
           {resultState === "phase2" && !myWin && (
             <div>상대방의 재도전 수락여부를 기다리고 있습니다</div>
           )}
-
           {resultState === "phase3" && (
             <div className="m-4">
               <Link
@@ -159,7 +514,8 @@ const GameResult = ({
           )}
         </div>
       </div>
-    </>
+    </div> */}
+    </div>
   );
 };
 

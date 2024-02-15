@@ -106,7 +106,12 @@ const Profile = () => {
       <div>
         승률 : {myInfo.winNumItem}승 {myInfo.loseNumItem} 패{" "}
         {myInfo.winNumItem + myInfo.loseNumItem != 0
-          ? Number(((myInfo.winNumItem / (Number(myInfo.winNumItem) + Number(myInfo.loseNumItem))) * 100).toFixed(2))
+          ? Number(
+              (
+                (myInfo.winNumItem / (Number(myInfo.winNumItem) + Number(myInfo.loseNumItem))) *
+                100
+              ).toFixed(2)
+            )
           : 0}
         %
       </div>
@@ -115,9 +120,13 @@ const Profile = () => {
       <div>
         승률 : {myInfo.winNumClassic}승 {myInfo.loseNumClassic} 패{" "}
         {myInfo.winNumClassic + myInfo.loseNumClassic != 0
-          ? Number(((myInfo.winNumClassic /
-              (Number(myInfo.winNumClassic) + Number(myInfo.loseNumClassic))) *
-            100).toFixed(2))
+          ? Number(
+              (
+                (myInfo.winNumClassic /
+                  (Number(myInfo.winNumClassic) + Number(myInfo.loseNumClassic))) *
+                100
+              ).toFixed(2)
+            )
           : 0}
         %
       </div>

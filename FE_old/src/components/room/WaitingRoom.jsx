@@ -5,9 +5,14 @@ import { useNavigate, Link } from "react-router-dom";
 import UserVideoComponent from "./UserVideoComponent";
 import AudioControlModal from "../modal/AudioControlModal";
 import ChatModal from "../modal/ChatModal";
-import InviteModal from "../modal/InviteModal";
+import back_mark from "../../assets/img/back_mark.png";
+import background_pirate from "../../assets/img/background_pirate.png";
+import room_name from "../../assets/img/room_name.png";
+import EachTemplate from "@/assets/img/room/EachTemplate.png";
+// import InviteModal from "../modal/InviteModal";
 const WaitingRoom = ({
   roomName,
+  gameType,
   publisher,
   subscribers,
   mySessionId,
@@ -44,6 +49,7 @@ const WaitingRoom = ({
   sendReady,
   participantsReady,
   setGameState,
+  sendStart,
 }) => {
   const [isChatModalVisible, setIsChatModalVisible] = useState(false);
   const [isAudioModalVisible, setIsAudioModalVisible] = useState(false);
@@ -52,13 +58,13 @@ const WaitingRoom = ({
 
   const navigate = useNavigate();
 
-  const handleInviteOpen = () => {
-    setInviteVisible(true); // 설정 모달 열기
-  };
+  // const handleInviteOpen = () => {
+  //   setInviteVisible(true); // 설정 모달 열기
+  // };
 
-  const handleInviteClose = () => {
-    setInviteVisible(false); // 설정 모달 닫기
-  };
+  // const handleInviteClose = () => {
+  //   setInviteVisible(false); // 설정 모달 닫기
+  // };
 
   const toggleAudio = (Team, turn) => {
     Team.map((streamId) => {
@@ -92,40 +98,65 @@ const WaitingRoom = ({
   }, [teamA, teamB, myTeam, selectedAudioOption]);
 
   return (
-    <div className="waiting-room h-screen flex flex-col">
+    <div
+      className="waiting-room h-screen flex flex-col animate-fade-left animate-once"
+      style={{ backgroundColor: "#69492E", height: "100%vh" }}
+    >
       <div className="h-2/3">
-        <div className="flex justify-between">
+        <div className="h-full text-center flex justify-center items-end relative">
           <Link
             to="/lobby"
-            className="btn btn-large btn-danger bg-red-600"
+            className="btn btn-large btn-danger flex absolute left-5"
             onClick={() => leaveSession()}
           >
-            방 나가기
+            <img src={back_mark} />
           </Link>
-          <button
+          {/* <button
             className="btn btn-large btn-primary bg-green-600"
             id="buttonInviteModal"
             onClick={handleInviteOpen}
           >
             초대하기
-          </button>
-        </div>
-        <div className="text-center">
-          <h2>방제: {roomName}</h2>
+          </button> */}
+          <div
+            className="flex flex-col"
+            style={{
+              background: `url(${room_name})`,
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              width: "50%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <h2 className="text-8vw">{roomName}</h2>
+            <h2 className="text-5vw">{gameType === "classic" ? "클래식전" : "아이템전"}</h2>
+          </div>
         </div>
       </div>
       <div className="flex justify-between h-5/6">
         <div
           id="teamA-container"
-          className="grid grid-rows-[auto_1fr_auto] border-4 border-sky-500 bg-sky-300 m-2 h-full w-2/5"
+          // className="grid grid-rows-[auto_1fr_auto] border-4 border-sky-500 bg-sky-300 m-2 h-full w-2/5"
+          className="grid grid-rows-[auto_1fr_auto] m-2 h-full w-2/5"
         >
-          <div className="text-center text-xs bg-sky-200 p-2">
+          <div className="text-center text-xs bg-amber-700 p-2 mb-1vh">
             A 팀 : {teamA.filter((id) => id !== null).length} / 4 명
           </div>
-          <div className="grid grid-rows-4 gap-1 overflow-hidden">
+          <div className="grid grid-rows-4 overflow-hidden justify-items-center">
             {teamA.map((streamId, idx) => (
-              <div key={idx} className="w-full h-full border-sky-500">
-                {streamId ? (
+              <div
+                key={idx}
+                // className="aspect-w-16 aspect-h-9 border border-sky-500"
+                style={{
+                  background: `url(${EachTemplate}) no-repeat center center`,
+                  backgroundSize: "30vw 15vh",
+                  width: "30vw",
+                  height: "15vh",
+                }}
+                className="flex justify-center items-center"
+              >
+                {streamId && (
                   <UserVideoComponent
                     streamManager={
                       streamId === publisher?.stream.streamId
@@ -137,16 +168,14 @@ const WaitingRoom = ({
                     color="border-sky-500"
                     participantsReady={participantsReady}
                   />
-                ) : (
-                  <div className="flex justify-center items-center bg-gray-200">빈자리</div>
                 )}
               </div>
             ))}
           </div>
-          <div className="text-center bg-sky-200 p-2">
+          <div className="text-center p-2">
             <button
               onClick={() => handleSelectTeam(publisher.stream.streamId, "A")}
-              className={`rounded-md w-full ${isTeamFull(teamA) ? "bg-gray-400" : "bg-sky-300 hover:bg-sky-700"}`}
+              className={`rounded-md w-full ${isTeamFull(teamA) ? "bg-gray-400" : "bg-amber-500 hover:bg-amber-900"}`}
               disabled={isTeamFull(teamA)}
             >
               A팀 선택
@@ -182,7 +211,7 @@ const WaitingRoom = ({
               onClick={() => handleSelectTeam(publisher.stream.streamId, "W")}
               className="rounded-md w-full bg-green-300 hover:bg-green-700"
             >
-              대기열 선택
+              대기열<div>선택</div>
             </button>
           </div>
         </div>
@@ -288,7 +317,7 @@ const WaitingRoom = ({
             <div
               className={`w-[45px] h-[45px] mx-4 flex justify-center items-center border-4 rounded-lg border-indigo-700`}
               onClick={() => {
-                setGameState("gameLoading");
+                sendStart();
               }}
             >
               게임시작
@@ -321,7 +350,7 @@ const WaitingRoom = ({
         </div>
       </div>
       {/* 설정 모달 */}
-      <InviteModal visible={inviteVisible} onClose={handleInviteClose} />
+      {/* <InviteModal visible={inviteVisible} onClose={handleInviteClose} /> */}
     </div>
   );
 };

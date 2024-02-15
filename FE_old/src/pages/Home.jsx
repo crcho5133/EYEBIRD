@@ -8,6 +8,7 @@ import mainbirds from "@/assets/img/mainbirds.png";
 import question_mark from "@/assets/img/question_mark.png";
 import logo from "../assets/img/logo.png";
 import btn_main from "../assets/img/btn_main.png";
+import background_home2 from "../assets/img/background_home2.png";
 
 const Home = () => {
   const isSignupModalVisible = useShowRodal();
@@ -15,13 +16,19 @@ const Home = () => {
   const isDescriptionModalVisible = useShowRodal();
 
   return (
-    <div className="flex flex-col justify-center space-y-12 h-screen items-center">
+    <div
+      className="flex flex-col justify-center h-screen items-center"
+      style={{
+        backgroundImage: `url(${background_home2})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className="space-y-2">
         <img src={logo} />
       </div>
       <img src={mainbirds} />
-      <div className="w-full flex justify-between items-center px-4">
-        <div></div>
+      <div className="w-full flex justify-end items-center px-4">
         <button onClick={isDescriptionModalVisible.showRodal}>
           <img src={question_mark} />
         </button>
@@ -47,7 +54,7 @@ const Home = () => {
           </div>
         </button>
       </div>
-      <div className="flex mt-20">
+      <div className="flex mt-10">
         <button onClick={isSignupModalVisible.showRodal} style={{ position: "relative" }}>
           <img src={btn_main} />
           <div
