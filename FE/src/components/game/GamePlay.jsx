@@ -4,6 +4,7 @@ import OpponentVideoComponent from "./OpponentVideoComponent";
 import background_magma2 from "../../assets/img/background_magma2.gif";
 import game_waiting from "../../assets/img/game_waiting.png";
 import ready_button from "../../assets/img/ready_button.png";
+import { SFX, playSFX } from "../../utils/audioManager";
 
 const GamePlay = ({
   publisher,
@@ -20,6 +21,7 @@ const GamePlay = ({
   useItem,
   streamManager,
   opponentInfoParsed,
+  myWin,
 }) => {
   const [gameState, setGameState] = useState("waiting");
   const [time, setTime] = useState(3);
@@ -42,6 +44,18 @@ const GamePlay = ({
     "animate-jump-out animate-infinite animate-duration-[600ms]",
     "animate-bounce animate-infinite animate-duration-100",
   ];
+
+  useEffect(() => {
+    if (isLoading) {
+      playSFX(SFX.COUNTDOWN);
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (itemVisible) {
+      playSFX(SFX.ITEM);
+    }
+  }, [itemVisible]);
 
   useEffect(() => {
     // 사용 가능한 애니메이션 목록이 비었을 경우, 초기 목록으로 재설정
@@ -215,10 +229,17 @@ const GamePlay = ({
             {!isLoading && gameState === "play" && (
               <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
                 <div className="text-center">
-                  {myLose ? (
+                  {/* {myLose ? (
                     <div className="text-30vw text-red-500 font-bold drop-animation">LOSE</div>
                   ) : opponentLose ? (
                     <div className="text-10vw text-green-500 font-bold drop-animation">WIN</div>
+                  ) : (
+                    ""
+                  )} */}
+                  {myWin === false ? (
+                    <div className="text-30vw text-red-500 font-bold drop-animation">LOSE</div>
+                  ) : myWin === true ? (
+                    <div className="text-30vw text-green-500 font-bold drop-animation">WIN</div>
                   ) : (
                     ""
                   )}

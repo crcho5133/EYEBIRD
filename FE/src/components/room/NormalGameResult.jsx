@@ -5,6 +5,7 @@ import ContinueBackground from "@/assets/img/gameResult/ContinueBackground.png";
 import RankPointBackground from "@/assets/img/gameResult/RankPointBackground.png";
 import NicknameTitle from "@/assets/img/gameResult/NicknameTitle.png";
 import RankingTitle from "@/assets/img/gameResult/RankingTitle.png";
+import { SFX, playSFX } from "../../utils/audioManager";
 
 const NormalGameResult = ({
   winTeam,
@@ -20,6 +21,17 @@ const NormalGameResult = ({
       sendReady();
     }
   }, [winTeam]);
+
+  useEffect(() => {
+    if (winTeam === "D") {
+      playSFX(SFX.DRAW);
+    } else if (winTeam === myTeam) {
+      playSFX(SFX.WIN);
+    } else if (winTeam !== myTeam) {
+      playSFX(SFX.LOSE);
+    }
+  }, [winTeam]);
+
   return (
     // <div
     //   className="boxControl flex flex-col items-center animate-fade-left animate-once"

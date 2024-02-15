@@ -7,6 +7,7 @@ import RankPointBackground from "@/assets/img/gameResult/RankPointBackground.png
 import NicknameTitle from "@/assets/img/gameResult/NicknameTitle.png";
 import RankingTitle from "@/assets/img/gameResult/RankingTitle.png";
 import gameApiCall from "@/api/axios/gameApiCall";
+import { SFX, playSFX } from "../../utils/audioManager";
 
 const GameResult = ({
   myLose,
@@ -57,6 +58,14 @@ const GameResult = ({
 
     getRanking();
   }, []);
+
+  useEffect(() => {
+    if (myWin === true) {
+      playSFX(SFX.WIN);
+    } else if (myWin === false) {
+      playSFX(SFX.LOSE);
+    }
+  }, [myWin]);
 
   useEffect(() => {
     // rematchRequest나 rematchResponse가 변경될 때 phase2로 설정

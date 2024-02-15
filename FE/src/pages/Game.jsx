@@ -448,6 +448,7 @@ const Game = () => {
           subscriber={subscriber}
           {...gameProps}
           opponentInfoParsed={opponentInfoParsed}
+          myWin={myWin}
         />
       )}
       {!isLoading && gameState === "gameResult" && (
