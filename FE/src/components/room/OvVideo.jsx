@@ -11,7 +11,7 @@ const OpenViduVideoComponent = forwardRef(({ streamManager, readyState }, ref) =
     <>
       {readyState && (
         <div className="flex justify-end">
-          <div className="absolute text-sm text-amber-500 bg-amber-200 rounded">준비완료</div>
+          <div className="absolute text-sm text-amber-400 bg-amber-700 rounded">준비완료</div>
         </div>
       )}
       <video className="h-full w-full" autoPlay={true} ref={ref} />

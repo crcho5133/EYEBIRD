@@ -52,6 +52,7 @@ const GameResult = ({
     const getRanking = async () => {
       const ranking = await useGameApiCall.getRanking(gameType);
       setRankings(ranking);
+      console.log(gameType);
       console.log(ranking);
     };
 
@@ -371,7 +372,7 @@ const GameResult = ({
                     height: "3vh",
                   }}
                 >
-                  1
+                  {rankings[0].rank}
                 </div>
                 <div className="ms-1vw gameResult11">
                   {rankings ? `${rankings[0].nickname} - ${rankings[0].point}점` : ""}
@@ -388,7 +389,7 @@ const GameResult = ({
                     height: "3vh",
                   }}
                 >
-                  2
+                  {rankings[1].rank}
                 </div>
                 <div className="ms-1vw gameResult11">
                   {rankings ? `${rankings[1].nickname} - ${rankings[1].point}점` : ""}
@@ -405,10 +406,10 @@ const GameResult = ({
                     height: "3vh",
                   }}
                 >
-                  3
+                  {rankings[2].rank}
                 </div>
                 <div className="ms-1vw gameResult11">
-                  {rankings ? `${rankings[1].nickname} - ${rankings[1].point}점` : ""}
+                  {rankings ? `${rankings[2].nickname} - ${rankings[2].point}점` : ""}
                 </div>
               </div>
             </div>
