@@ -1,11 +1,9 @@
 import lobbyUrl from "@/api/url/lobbyUrl";
 import userUrl from "@/api/url/usersUrl";
-import { useAccessTokenState } from "@/context/AccessTokenContext";
 import useAxiosConfig from "@/hooks/useAxiosConfig";
 import { useWebSocket } from "@/context/VideoWebSocketContext";
 
 const lobbyApiCall = () => {
-  const accessToken = useAccessTokenState();
   const privateAxios = useAxiosConfig().privateAxios;
   const { client } = useWebSocket();
 
