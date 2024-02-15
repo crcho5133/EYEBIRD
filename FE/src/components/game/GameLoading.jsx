@@ -73,7 +73,7 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
           </div>
           <div className="matchingInfo5-0">
             <div className="text-5vw mt-2vh ml-16vw matchingInfo5">
-              {gameType === "classic" ? "1. 점수(Classic) :" : "점수(Item) :"}
+              {gameType === "classic" ? "1. 점수(Classic) :" : "1. 점수(Item) :"}
               <span className="ml-3vw text-gray-300 matchingInfo10">
                 {gameType === "classic" ? myClassicPoint : myItemPoint} 점
               </span>
