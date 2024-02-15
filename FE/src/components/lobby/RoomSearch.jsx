@@ -173,48 +173,49 @@ const RoomSearch = () => {
           </div>
         </div>
         <div
-          className="p-2 flex flex-col "
+          className="p-2 flex flex-col"
           style={{
             position: "relative",
             textShadow: "3px 3px 4px rgba(0,0,0,0.5)", // 텍스트 주위에 테두리 효과 추가
           }}
         >
-          {currentRooms.map((room) => (
-            <div
-              key={room.roomName}
-              className=" w-64 py-2 px-4 mb-2 text-center "
-              style={{
-                position: "absolute",
-                top: "20%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                background:
-                  "radial-gradient(circle, rgba(200,100,150,0.1) 0%, rgba(200,120,20,0.5) 100%)", // 피색 배경과 빛처럼 퍼지는 효과 추가
-                borderRadius: "20px", // 모서리 둥글게
-                boxShadow: "0 5px 5px rgba(0,0,0,0.5)", // 그림자 추가
-              }} // room을 이미지 위로 이동
-              onClick={() => {
-                setRoomName(room.roomName);
-                handleRoomDoubleClick(room);
-              }}
-            >
-              <div className="flex justify-between ">
-                <p style={{ flexGrow: 1, width: "12rem" }}>{room.hasPassword ? "🔒" : ""}</p>
-                <p style={{ flexGrow: 3, width: "12rem" }}>{room.roomName}</p>
-                <p style={{ flexGrow: 2, width: "12rem" }}>
-                  {room.maxCapacity} vs {room.maxCapacity}
-                </p>
+          <div
+            className="absolute w-4/5 h-3/5 flex flex-col items-center mt-1"
+            style={{ top: "43%", left: "50%", transform: "translate(-50%, -50%)" }}
+          >
+            {currentRooms.map((room) => (
+              <div
+                key={room.roomName}
+                className=" w-64 py-1 px-4 mb-3 text-center "
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(200,100,150,0.1) 0%, rgba(200,120,20,0.5) 100%)", // 피색 배경과 빛처럼 퍼지는 효과 추가
+                  borderRadius: "20px", // 모서리 둥글게
+                  boxShadow: "0 5px 5px rgba(0,0,0,0.5)", // 그림자 추가
+                }} // room을 이미지 위로 이동
+                onClick={() => {
+                  setRoomName(room.roomName);
+                  handleRoomDoubleClick(room);
+                }}
+              >
+                <div className="flex justify-between ">
+                  <p style={{ flexGrow: 1, width: "12rem" }}>{room.hasPassword ? "🔒" : ""}</p>
+                  <p style={{ flexGrow: 3, width: "12rem" }}>{room.roomName}</p>
+                  <p style={{ flexGrow: 2, width: "12rem" }}>
+                    {room.maxCapacity} vs {room.maxCapacity}
+                  </p>
+                </div>
+                <hr style={{ border: "none", height: "2px", backgroundColor: "#A0522D" }} />
+                <div className="flex justify-between ">
+                  <p style={{ flexGrow: 1, width: "12rem" }}>{room.ownerId}</p>
+                  <p
+                    style={{ flexGrow: 1, width: "12rem" }}
+                  >{`${room.currentCapacity} / ${room.maxCapacity}`}</p>
+                </div>
               </div>
-              <hr style={{ border: "none", height: "2px", backgroundColor: "#A0522D" }} />
-              <div className="flex justify-between ">
-                <p style={{ flexGrow: 1, width: "12rem" }}>{room.ownerId}</p>
-                <p
-                  style={{ flexGrow: 1, width: "12rem" }}
-                >{`${room.currentCapacity} / ${room.maxCapacity}`}</p>
-              </div>
-            </div>
-            // </Link>
-          ))}
+              // </Link>
+            ))}
+          </div>
           {/* 비밀번호 입력 모달 */}
           <Rodal visible={isPasswordModalOpen} onClose={() => setIsPasswordModalOpen(false)}>
             <p>비밀번호를 입력하세요:</p>

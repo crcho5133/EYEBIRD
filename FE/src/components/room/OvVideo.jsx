@@ -14,7 +14,7 @@ const OpenViduVideoComponent = forwardRef(({ streamManager, readyState }, ref) =
           <div className="absolute text-sm text-amber-500 bg-amber-200 rounded">준비완료</div>
         </div>
       )}
-      <video className="h-10vh w-20vw" autoPlay={true} ref={ref} />
+      <video className="h-full w-full" autoPlay={true} ref={ref} />
     </>
   );
 });

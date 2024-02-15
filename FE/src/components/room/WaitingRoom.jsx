@@ -154,6 +154,7 @@ const WaitingRoom = ({
                   width: "30vw",
                   height: "15vh",
                 }}
+                className="flex justify-center items-center"
               >
                 {streamId && (
                   <UserVideoComponent
