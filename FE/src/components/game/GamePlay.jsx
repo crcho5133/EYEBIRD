@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import UserVideoComponent from "./UserVideoComponent";
 import OpponentVideoComponent from "./OpponentVideoComponent";
 import background_magma2 from "../../assets/img/background_magma2.gif";
@@ -19,6 +19,7 @@ const GamePlay = ({
   itemVisible,
   useItem,
   streamManager,
+  opponentInfoParsed,
 }) => {
   const [gameState, setGameState] = useState("waiting");
   const [time, setTime] = useState(3);
@@ -179,7 +180,7 @@ const GamePlay = ({
                   setReady(true);
                   sendReady();
                 }}
-                className={`m-3 p-3 border-4 rounded-xl text-xl ${ready ? "border-red-600" : "border-transparent"}`}
+                className={`m-3 p-3 border-4 rounded-xl text-xl ${ready ? "border-green-600" : "border-transparent"}`}
                 style={{
                   backgroundImage: `url(${ready_button})`,
                   backgroundSize: "100% 100%",
@@ -193,7 +194,7 @@ const GamePlay = ({
             </div>
             <div className="text-center">
               <span
-                className={`m-3 p-3 border-4 rounded-xl text-xl ${opponentReady ? "border-red-600" : "border-transparent"} `}
+                className={`m-3 p-3 border-4 rounded-xl text-xl ${opponentReady ? "border-green-600" : "border-transparent"} `}
                 style={{
                   backgroundImage: `url(${ready_button})`,
                   backgroundSize: "100% 100%",
@@ -237,7 +238,10 @@ const GamePlay = ({
               </div>
               상대방
               <div className={`${animationClass} ${shake ? "shake" : ""}`}>
-                <OpponentVideoComponent streamManager={subscriber} />
+                <OpponentVideoComponent
+                  streamManager={subscriber}
+                  opponentInfoParsed={opponentInfoParsed}
+                />
               </div>
             </div>
             {gameType === "classic" ? (

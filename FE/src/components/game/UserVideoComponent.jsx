@@ -34,6 +34,7 @@ export default function UserVideoComponent({
   sendLose,
   myLose,
   opponentLose,
+  // faceLandmarker,
 }) {
   const videoRef = useRef(null);
   const myInfo = useAccessTokenState();
@@ -49,7 +50,7 @@ export default function UserVideoComponent({
         faceLandmarker.current = await FaceLandmarker.createFromOptions(filesetResolver, {
           baseOptions: {
             modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`,
-            delegate: "GPU",
+            // delegate: "GPU",
           },
           // outputFaceBlendshapes: true,
           runningMode: "VIDEO",

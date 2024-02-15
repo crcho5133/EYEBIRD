@@ -376,6 +376,7 @@ const WaitingRoom = ({
               onClick={() => {
                 sendReady();
               }}
+              disabled={myTeam === "W"}
             >
               준비
             </button>

@@ -1,5 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-import OpenViduVideoComponent from "./OvVideo";
+import { useAccessTokenState } from "@/context/AccessTokenContext";
+import OpenViduVideoComponent from "./OvVideo2";
+import nickname_plate from "../../assets/img/nickname_plate.png";
+import frame from "../../assets/img/frame.png";
 import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 
 function euclideanDistance(pointA, pointB) {
@@ -27,6 +30,7 @@ function calculateEAR(eyePoints) {
 
 export default function GameUserVideoComponent({ streamManager, gameState, sendLose }) {
   const videoRef = useRef(null);
+  const myInfo = useAccessTokenState();
 
   const faceLandmarker = useRef(undefined);
 
@@ -39,7 +43,7 @@ export default function GameUserVideoComponent({ streamManager, gameState, sendL
         faceLandmarker.current = await FaceLandmarker.createFromOptions(filesetResolver, {
           baseOptions: {
             modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`,
-            delegate: "GPU",
+            // delegate: "GPU",
           },
           // outputFaceBlendshapes: true,
           runningMode: "VIDEO",
@@ -114,11 +118,36 @@ export default function GameUserVideoComponent({ streamManager, gameState, sendL
   };
 
   return (
-    <div>
+    <div className="flex w-full h-full justify-center">
       {streamManager !== undefined ? (
-        <div className="">
+        <div className="flex flex-col items-center justify-center ">
           <OpenViduVideoComponent streamManager={streamManager} ref={videoRef} />
-          <p>{getNicknameTag()}</p>
+          <div className="flex flex-row m-2">
+            {/* <div>
+              <img
+                src={myInfo.profile}
+                style={{
+                  width: "50px",
+                  backgroundImage: `url(${frame})`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "100%",
+                  backgroundPosition: "center",
+                }}
+              />
+            </div> */}
+            <div
+              className="p-3"
+              style={{
+                backgroundImage: `url(${nickname_plate})`,
+                backgroundSize: "100% 100%",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                fontSize: "20px",
+              }}
+            >
+              {getNicknameTag()}
+            </div>
+          </div>
         </div>
       ) : null}
     </div>
