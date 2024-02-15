@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useRef } from "react";
 import OpenViduVideoComponent from "./OvVideo";
 
 export default function UserVideoComponent({
@@ -8,7 +8,8 @@ export default function UserVideoComponent({
   color,
   participantsReady,
 }) {
-  const [isActive, setIsActive] = React.useState(true);
+  const [isActive, setIsActive] = useState(true);
+  const videoRef = useRef(null);
   // const isMutedRef = React.useRef(isMuted);
 
   // React.useEffect(() => {
@@ -36,11 +37,15 @@ export default function UserVideoComponent({
   const readyState = participantsReady[getNicknameTag()];
 
   return (
-    <div className={`h- w-full ${color}`}>
+    <div className={`h-4/6 w-4/6 ${color}`}>
       {streamManager !== undefined ? (
-        <div className="flex-col text-center text-sm justify-center font-bold">
-          <OpenViduVideoComponent streamManager={streamManager} readyState={readyState} />
-          <p className="inline-block">{getNicknameTag()}</p>
+        <div className="flex-col w-full h-4/5 text-center text-sm justify-center font-bold">
+          <OpenViduVideoComponent
+            streamManager={streamManager}
+            readyState={readyState}
+            ref={videoRef}
+          />
+          <p className="w-4/5 h-1/4 inline-block bg-amber-500 rounded">{getNicknameTag()}</p>
           {/* <div className="text-right">
             {clientStreamId !== streamId ? (
               <button onClick={toggleAudio}>{isActive ? "들려요" : "안들려요"}</button>

@@ -12,8 +12,7 @@
     "check-format": "prettier --check ."
   },
   "dependencies": {
-    "@mediapipe/camera_utils": "^0.3.1675466862",
-    "@mediapipe/face_mesh": "^0.4.1633559619",
+    "@mediapipe/tasks-vision": "^0.10.9",
     "@stomp/stompjs": "^7.0.0",
     "@tensorflow/tfjs": "^4.17.0",
     "@tensorflow/tfjs-converter": "^4.17.0",

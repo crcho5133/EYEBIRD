@@ -1,3 +1,4 @@
+import background_wooden_plate from "../../assets/img/background_wooden_plate.png";
 import TitleBar from "@/assets/img/matchingInfo/TitleBar.png";
 import InfoBackground3 from "@/assets/img/matchingInfo/InfoBackground3.png";
 import VSImage from "@/assets/img/matchingInfo/VSImage.png";

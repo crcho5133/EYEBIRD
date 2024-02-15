@@ -1,12 +1,14 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, forwardRef } from "react";
 
-export default function OpenViduVideoComponent({ streamManager }) {
-  const videoRef = useRef();
+const OpenViduVideoComponent = forwardRef(({ streamManager }, ref) => {
   useEffect(() => {
-    if (streamManager && videoRef.current) {
-      streamManager.addVideoElement(videoRef.current);
+    if (streamManager && ref.current) {
+      streamManager.addVideoElement(ref.current);
     }
-  }, [streamManager]);
+  }, [streamManager, ref]);
 
-  return <video style={{ borderRadius: "6rem", maxWidth: "70%" }} autoPlay={true} ref={videoRef} />;
-}
+  return <video style={{ borderRadius: "6rem", maxWidth: "70%" }} ref={ref} autoPlay={true} />;
+});
+
+export default OpenViduVideoComponent;
+

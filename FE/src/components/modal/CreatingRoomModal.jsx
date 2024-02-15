@@ -6,7 +6,8 @@ import Rodal from "rodal"; // Rodal import
 import axios from "axios";
 import "rodal/lib/rodal.css"; // Rodal CSS
 import { RoomUrl } from "@/api/url/RoomUrl";
-
+import background_modal from "@/assets/img/background_modal.png";
+import ready_button from "@/assets/img/ready_button.png";
 const CreatingRoomModal = ({ visible, onClose }) => {
   const token = sessionStorage.getItem("accessToken"); // test용
   const [roomName, setRoomName] = useState("");
@@ -33,8 +34,8 @@ const CreatingRoomModal = ({ visible, onClose }) => {
   const handleCreate = async () => {
     if (roomName.length === 0) {
       setErrorMessage("방 제목을 입력해주세요.");
-    } else if (roomName.length > 20) {
-      setErrorMessage("방 제목은 20자를 초과할 수 없습니다.");
+    } else if (roomName.length > 10) {
+      setErrorMessage("방 제목은 10자를 초과할 수 없습니다.");
     } else if (!/^\d*$/.test(password)) {
       setErrorMessage("패스워드에는 숫자만 입력해주세요.");
     } else {
@@ -86,28 +87,55 @@ const CreatingRoomModal = ({ visible, onClose }) => {
       onClose={onCloseModal}
       closeOnEsc={true}
       closeMaskOnClick={false}
-      height={240}
+      height={320}
       customStyles={{
         overflow: "auto",
         width: "80%",
+        backgroundImage: `url(${background_modal})`,
+        backgroundSize: "100% 100%",
+        backgroundPosition: "center",
+        backgroundColor: "transparent", // 배경색 투명으로 설정
+        borderRadius: "none", // border-radius 제거
+        boxShadow: "none", // box-shadow 제거
       }}
       className="creatingRoom"
     >
-      <div>
+      <div className="flex flex-col items-center p-3">
+        <h3
+          className="mb-6 text-2xl font-bold"
+          style={{
+            textShadow: "3px 3px 4px rgba(0,0,0,0.5)", // 텍스트 주위에 테두리 효과 추가
+          }}
+        >
+          방 만들기
+        </h3>
+
         <div>
           <input
             type="text"
             value={roomName}
             onChange={(e) => setRoomName(e.target.value)}
             placeholder="방 제목"
-            className="border-2 p-2 rounded w-full"
+            className=" p-3 rounded w-full placeholder-black"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(200,100,150,0.1) 80%, rgba(200,120,20,0.5) 100%)", // 피색 배경과 빛처럼 퍼지는 효과 추가
+              borderRadius: "10px", // 모서리 둥글게
+              boxShadow: "0 5px 5px rgba(0,0,0,0.5)", // 그림자 추가
+            }}
           />
         </div>
-        <div className="flex flex-row">
+        <div className="flex flex-row gap-9">
           <select
             value={isItem}
             onChange={(e) => setIsItem(e.target.value === "true")}
-            className="border-2 p-2 rounded mt-2"
+            className=" p-3 rounded mt-2"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(200,100,150,0.1) 80%, rgba(200,120,20,0.5) 100%)", // 피색 배경과 빛처럼 퍼지는 효과 추가
+              borderRadius: "10px", // 모서리 둥글게
+              boxShadow: "0 5px 5px rgba(0,0,0,0.5)", // 그림자 추가
+            }}
           >
             <option value={false}>클래식전</option>
             <option value={true}>아이템전</option>
@@ -116,7 +144,13 @@ const CreatingRoomModal = ({ visible, onClose }) => {
           <select
             value={players}
             onChange={(e) => setPlayers(e.target.value)}
-            className="border-2 p-2 rounded mt-2"
+            className=" p-3 rounded mt-2"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(200,100,150,0.1) 80%, rgba(200,120,20,0.5) 100%)", // 피색 배경과 빛처럼 퍼지는 효과 추가
+              borderRadius: "10px", // 모서리 둥글게
+              boxShadow: "0 5px 5px rgba(0,0,0,0.5)", // 그림자 추가
+            }}
           >
             <option value="1vs1">1vs1</option>
             <option value="2vs2">2vs2</option>
@@ -130,13 +164,25 @@ const CreatingRoomModal = ({ visible, onClose }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="방 비밀번호"
-            className="border-2 p-2 rounded mt-2 w-full"
+            className=" p-3 rounded mt-2 w-full placeholder-black"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(200,100,150,0.1) 80%, rgba(200,120,20,0.5) 100%)", // 피색 배경과 빛처럼 퍼지는 효과 추가
+              borderRadius: "10px", // 모서리 둥글게
+              boxShadow: "0 5px 5px rgba(0,0,0,0.5)", // 그림자 추가
+            }}
           />
         </div>
         <div>
           <button
             onClick={handleCreate}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-2 w-full"
+            className="  text-black font-bold py-2 px-4 rounded-full mt-2 w-full"
+            style={{
+              backgroundImage: `url(${ready_button})`,
+              backgroundSize: "100% 100%",
+              backgroundPosition: "center",
+              textShadow: "3px 3px 3px rgba(0,0,0,0.5)", // 텍스트 주위에 테두리 효과 추가
+            }}
           >
             생성
           </button>

@@ -28,6 +28,7 @@ const GamePlay = ({
   const [canUse, setCanUse] = useState(true);
   const [gameStartTime, setGameStartTime] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [shake, setShake] = useState(false);
 
   useEffect(() => {
     let countdownInterval;
@@ -77,6 +78,14 @@ const GamePlay = ({
       }
     };
   }, [gameState, gameStartTime]);
+
+  useEffect(() => {
+    if (gameState === "play") {
+      setTimeout(() => {
+        setShake(true); // 10초 후에 shake 상태를 true로 설정
+      }, 10000);
+    }
+  }, [gameState]); // gameState가 변경될 때마다 이 효과를 재실행
 
   const gameProps = {
     sendLose,
@@ -172,8 +181,8 @@ const GamePlay = ({
             ) : (
               <div className="text-white">아이템 사용 가능 횟수 : {itemCount}</div>
             )}
-            <div className="invisible absolute">
-              {/* <div className="hidden"> */}
+
+            <div className={`invisible absolute ${shake ? "shake" : ""}`}>
               나
               <UserVideoComponent streamManager={publisher} gameState={gameState} {...gameProps} />
             </div>
@@ -195,7 +204,10 @@ const GamePlay = ({
               </div>
               상대방
               {itemVisible ? <img className="absolute w-full h-full" src={item1} /> : ""}
-              <OpponentVideoComponent streamManager={subscriber} />
+              <OpponentVideoComponent
+                streamManager={subscriber}
+                className={`${shake ? "shake" : ""}`}
+              />{" "}
             </div>
             {gameType === "classic" ? (
               ""
