@@ -97,7 +97,7 @@ const Game = () => {
       setGameState("gameLoading");
       setTimeout(() => {
         setGameState("gamePlay");
-      }, 3000);
+      }, 5000);
     }
   }, [publisher, subscriber]);
 

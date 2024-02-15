@@ -7,7 +7,8 @@ const OpenViduVideoComponent = forwardRef(({ streamManager }, ref) => {
     }
   }, [streamManager, ref]);
 
-  return <video ref={ref} autoPlay={true} />;
+  return <video style={{ borderRadius: "6rem", maxWidth: "70%" }} ref={ref} autoPlay={true} />;
 });
 
 export default OpenViduVideoComponent;
+

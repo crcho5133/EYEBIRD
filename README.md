@@ -1,8 +1,11 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 develop-FE
 .
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> origin/develop-FE-js_jg_02_15
 # 눈 깜빡할 새
 
 ## 🔍프로젝트 소개
@@ -250,4 +253,7 @@ develop-FE
 develop-FE
 .
 >>>>>>> origin/jonggil-realrealfinal
+<<<<<<< HEAD
 >>>>>>> origin/develop-FE-js_02_13
+=======
+>>>>>>> origin/develop-FE-js_jg_02_15

@@ -35,7 +35,7 @@ const LoginFormModal = ({ visible, onClose }) => {
           alignItems: "center",
           padding: "0px",
         }}
-        className="flex flex-col"
+        className="flex flex-col loginContent0"
         onClose={() => {
           clearAllInput();
           onClose();
