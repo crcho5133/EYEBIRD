@@ -1,5 +1,6 @@
 package com.sixback.eyebird.api.service;
 
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers;
 import com.sixback.eyebird.api.dto.PointDto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.Cursor;
@@ -54,7 +55,7 @@ public class PointService {
         log.info(signupUser.getEmail() + "의 기본 점수가 DB에 저장되었습니다");
     }
 
-    List<PointDto> rankList(boolean item){
+    List<PointDto> rankList(boolean item) {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(List.class));
         List<PointDto> points = new ArrayList<>();
         String pattern = "classicRank";
@@ -69,7 +70,7 @@ public class PointService {
         return points;
     }
 
-    public Integer getListSize(boolean item){
+    public Integer getListSize(boolean item) {
         return rankList(item).size();
     }
 
@@ -85,27 +86,77 @@ public class PointService {
         }
         int pageidx = (page - 1) * 10 - 7;
 
-        if(pageidx > points.size()) return new ArrayList<PointDto>();
+        if (pageidx > points.size()) return new ArrayList<PointDto>();
 
         //만약 요구하는 것 보다 현재 랭크 수가 작다면
-        if(pageidx + 10 >= points.size())
-            return  points.subList(pageidx, points.size());
+        if (pageidx + 10 >= points.size())
+            return points.subList(pageidx, points.size());
         return points.subList(pageidx, pageidx + 10);
     }
 
+        public List<PointDto> getUpDownScore(boolean item, String userEmail) {
+        List<Point> rank = new ArrayList<>();
+        if (item) {
+            rank = pointRepository.findTop25ByOrderByItemPtDesc();
+        } else {
+            rank = pointRepository.findTop25ByOrderByClassicPtDesc();
+
+        }
+
+        if (rank.size() < 1) return null;
+
+        // 유저 아이디로 앞 뒤 점수 찾아야함.
+        int userRank = 0;
+        for (int i = 0; i < rank.size(); i++) {
+            if (rank.get(i).getUser().getEmail().equals(userEmail)) {
+                userRank = i;
+                break;
+            }
+        }
+
+        // -> 본인 포함해서 랭크 전달
+        // 랭크 가장 뒷 부분이면 앞의 두 사람
+        if(userRank == (rank.size()-1)){
+            userRank = userRank-2;
+        }
+        // 랭크 가장 앞이면 뒤의 두 사람
+        else if(userRank > 0) userRank = userRank-1;
+
+            List<PointDto> result = new ArrayList<PointDto>();
+
+        for (int i = 0; i < 3; i++) {
+            if(userRank + i < rank.size())
+                result.add(new PointDto((userRank + 1) +i, rank.get(userRank + i).getUser().getNickname(), rank.get(userRank + i).getUser().getProfileImage(), rank.get(userRank + i).getItemPt()));
+        }
+
+        // 세 사람 출력
+        return result;
+    }
+
     // 갱신을 위한 스케쥴 DB -> Redis
-    // 30분마다 업데이트
+    // 3분마다 업데이트 -> 3초마다 업데이트로 일시적 수정
     //@Scheduled(fixedRate = 18000)
-    @Scheduled(fixedRate = 180000)
+    @Scheduled(fixedRate = 3000)
     public void updateRanking() {
-        List<Point> itemRank = pointRepository.findTop25ByOrderByItemPtDesc(PageRequest.of(0, 25));
-        List<Point> classicRank = pointRepository.findTop25ByOrderByClassicPtDesc(PageRequest.of(0, 25));
+        List<Point> itemRank = pointRepository.findTop25ByOrderByItemPtDesc();
+        List<Point> classicRank = pointRepository.findTop25ByOrderByClassicPtDesc();
+
+        int maxsize = 25;
+        if (itemRank.size() < 25)
+            itemRank = itemRank.subList(0, itemRank.size());
+        else
+            itemRank = itemRank.subList(0, maxsize);
+
+        if (classicRank.size() < 25) {
+            classicRank = classicRank.subList(0, classicRank.size());
+        } else
+            classicRank = classicRank.subList(0, maxsize);
 
         // 랭크가 있는 경우 = 유저가 존재하는 경우에 갱신.
         if (itemRank.size() > 0) {
             List<PointDto> itemRankList = new ArrayList<>();
             for (int i = 0; i < itemRank.size(); i++) {
-                PointDto itemPoint = new PointDto(i+1, itemRank.get(i).getUser().getNickname(), itemRank.get(i).getUser().getProfileImage(), itemRank.get(i).getItemPt());
+                PointDto itemPoint = new PointDto(i + 1, itemRank.get(i).getUser().getNickname(), itemRank.get(i).getUser().getProfileImage(), itemRank.get(i).getItemPt());
                 itemRankList.add(itemPoint);
             }
 
@@ -116,7 +167,7 @@ public class PointService {
         if (classicRank.size() > 0) {
             List<PointDto> classicRankList = new ArrayList<>();
             for (int i = 0; i < itemRank.size(); i++) {
-                PointDto classicPoint = new PointDto(i+1, classicRank.get(i).getUser().getNickname(), classicRank.get(i).getUser().getProfileImage(), classicRank.get(i).getClassicPt());
+                PointDto classicPoint = new PointDto(i + 1, classicRank.get(i).getUser().getNickname(), classicRank.get(i).getUser().getProfileImage(), classicRank.get(i).getClassicPt());
                 classicRankList.add(classicPoint);
             }
             redisTemplate.opsForValue().set("classicRank", classicRankList);

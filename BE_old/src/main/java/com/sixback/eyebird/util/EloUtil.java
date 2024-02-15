@@ -9,13 +9,12 @@ public class EloUtil {
     // normalization을 위한 상수
     private final int k = 32;
 
-
     // 첫번째 유저와 두번째 유저의 승리 시 예상 승점을 각각 계산
     public int[] getExpectedWinPts(int firstUserPt, int secondUserPt) {
         int ratingDiff = firstUserPt - secondUserPt;
 
-        int firstExpectedWinPt = (int) Math.floor(k * (1 / (1 + Math.pow(10, ratingDiff / 800))));
-        int secondExpectedWinPt = (int) Math.floor(k * (1 / ( 1 + Math.pow(10, -ratingDiff / 800))));
+        int firstExpectedWinPt = (int) Math.floor(k * (1 / (1 + Math.pow(10, ratingDiff))));
+        int secondExpectedWinPt = (int) Math.floor(k * (1 / ( 1 + Math.pow(10, -ratingDiff))));
 
         int[] ans = new int[2];
         ans[0] = firstExpectedWinPt;
@@ -28,8 +27,8 @@ public class EloUtil {
     public int[] getExpectedLosePts(int firstUserPt, int secondUserPt) {
         int ratingDiff =  secondUserPt - firstUserPt;
 
-        int firstExpectedLosePt = - (int) Math.floor(k * (1 / (1 + Math.pow(10, ratingDiff / 800))));
-        int secondExpectedLosePt = - (int) ((Math.floor(k * (1 / (1 + Math.pow(10, - ratingDiff / 800))))));
+        int firstExpectedLosePt = - (int) Math.floor(k * (1 / (1 + Math.pow(10, ratingDiff))));
+        int secondExpectedLosePt = (int) (k *  (Math.floor( (1 / (1 + Math.pow(10, ratingDiff)))) - 1));
 
         int[] ans = new int[2];
         ans[0] = firstExpectedLosePt;
@@ -44,7 +43,7 @@ public class EloUtil {
 
         int ratingDiff = secondUserPt - firstUserPt;
 
-        double firstExpected = 1 / (1 + Math.pow(10, (ratingDiff / 800)));
+        double firstExpected = 1 / (1 + Math.pow(10, (ratingDiff / 400)));
         double secondExpected = 1 - firstExpected;
 
         int firstUpdatedPoint = (int) Math.floor(k * (result - firstExpected));

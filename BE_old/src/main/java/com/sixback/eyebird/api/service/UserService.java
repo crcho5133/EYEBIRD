@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -140,6 +141,11 @@ public class UserService {
         }
 
         return searchUserResDtoList;
+    }
+
+    // 유저의 이메일로부터 유저 가져오기
+    public User getUserFromEmail(String email) {
+        return userRepository.findUserByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 지닌 유저가 존재하지 않습니다"));
     }
 
     // 유저의 이메일로부터 유저의 닉네임 가져오기

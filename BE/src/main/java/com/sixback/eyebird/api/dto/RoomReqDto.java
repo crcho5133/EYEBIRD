@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class RoomReqDto {
     String roomId;
+    String roomName;
     int password;
 }

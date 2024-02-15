@@ -3,6 +3,7 @@ package com.sixback.eyebird.api.dto;
 import com.sixback.eyebird.db.entity.GameResult;
 import com.sixback.eyebird.db.entity.Point;
 import com.sixback.eyebird.db.entity.User;
+import com.sixback.eyebird.util.EloUtil;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,9 +20,10 @@ public class OpenviduSessionIdResDto {
     private int loseNumItem;
     private int winNumClassic;
     private int loseNumClassic;
-
+    private int expectedWinPt;
+    private int expectedLosePt;
     @Builder
-    public OpenviduSessionIdResDto(User user, String openviduSessionId) {
+    public OpenviduSessionIdResDto(User user, String openviduSessionId, int expectedWinPt, int expectedLosePt) {
         this.openviduSessionId = openviduSessionId;
 
         this.nickname = user.getNickname();
@@ -52,6 +54,7 @@ public class OpenviduSessionIdResDto {
         this.loseNumItem = loseNumItem;
         this.winNumClassic = winNum - winNumItem;
         this.loseNumClassic = loseNum - loseNumItem;
-
+        this.expectedWinPt = expectedWinPt;
+        this.expectedLosePt = expectedLosePt;
     }
 }
