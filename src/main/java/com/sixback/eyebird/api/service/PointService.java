@@ -97,15 +97,15 @@ public class PointService {
     public List<PointDto> getUpDownScore(boolean item, String userEmail) {
         List<Point> rank = new ArrayList<>();
         if (item) {
-            rank = pointRepository.findTop25ByOrderByItemPtDesc();
+            rank = pointRepository.findByOrderByItemPtDesc();
         } else {
-            rank = pointRepository.findTop25ByOrderByClassicPtDesc();
-
+            rank = pointRepository.findByOrderByClassicPtDesc();
         }
 
         if (rank.size() < 1) return null;
 
         // 유저 아이디로 앞 뒤 점수 찾아야함.
+        System.out.println("+sdssssssssssssssssssss"+rank.size());
         int userRank = 0;
         for (int i = 0; i < rank.size(); i++) {
             if (rank.get(i).getUser().getEmail().equals(userEmail)) {
@@ -116,17 +116,21 @@ public class PointService {
 
         // -> 본인 포함해서 랭크 전달
         // 랭크 가장 뒷 부분이면 앞의 두 사람
-        if(userRank == (rank.size()-1)){
-            userRank = userRank-2;
+        if (userRank == (rank.size() - 1)) {
+            userRank = userRank - 2;
         }
         // 랭크 가장 앞이면 뒤의 두 사람
-        else if(userRank > 0) userRank = userRank-1;
+        else if (userRank > 0) userRank = userRank - 1;
 
-            List<PointDto> result = new ArrayList<PointDto>();
+        List<PointDto> result = new ArrayList<PointDto>();
 
         for (int i = 0; i < 3; i++) {
-            if(userRank + i < rank.size())
-                result.add(new PointDto((userRank + 1) +i, rank.get(userRank + i).getUser().getNickname(), rank.get(userRank + i).getUser().getProfileImage(), rank.get(userRank + i).getItemPt()));
+            if (userRank + i < rank.size() && userRank >=0) {
+                if (item)
+                    result.add(new PointDto((userRank + 1) + i, rank.get(userRank + i).getUser().getNickname(), rank.get(userRank + i).getUser().getProfileImage(), rank.get(userRank + i).getItemPt()));
+                else
+                    result.add(new PointDto((userRank + 1) + i, rank.get(userRank + i).getUser().getNickname(), rank.get(userRank + i).getUser().getProfileImage(), rank.get(userRank + i).getClassicPt()));
+            }
         }
 
         // 세 사람 출력
@@ -138,8 +142,8 @@ public class PointService {
     //@Scheduled(fixedRate = 18000)
     @Scheduled(fixedRate = 3000)
     public void updateRanking() {
-        List<Point> itemRank = pointRepository.findTop25ByOrderByItemPtDesc();
-        List<Point> classicRank = pointRepository.findTop25ByOrderByClassicPtDesc();
+        List<Point> itemRank = pointRepository.findByOrderByItemPtDesc();
+        List<Point> classicRank = pointRepository.findByOrderByClassicPtDesc();
 
         int maxsize = 25;
         if (itemRank.size() < 25)

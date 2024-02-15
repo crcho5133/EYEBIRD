@@ -13,7 +13,7 @@ public interface PointRepository extends JpaRepository<Point, Long> {
     Optional<Point> findByUserId(Long userId);
 
     // 상위 n개의 갯수만 가져올 예정
-    List<Point> findTop25ByOrderByItemPtDesc();
-    List<Point> findTop25ByOrderByClassicPtDesc();
+    List<Point> findByOrderByItemPtDesc();
+    List<Point> findByOrderByClassicPtDesc();
 
 }
