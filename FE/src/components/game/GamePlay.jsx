@@ -31,6 +31,8 @@ const GamePlay = ({
   const [shake, setShake] = useState(false);
   const [availableAnimations, setAvailableAnimations] = useState([]);
   const [animationClass, setAnimationClass] = useState("");
+  const [itemUsed, setItemUsed] = useState(false);
+  const [resultMessage, setResultMessage] = useState("");
 
   const initialAnimations = [
     "animate-spin animate-infinite animate-duration-[600ms]",
@@ -210,14 +212,53 @@ const GamePlay = ({
         )}
         {!isLoading && gameState === "play" && (
           <div>
+            {!isLoading && gameState === "play" && (
+              <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                <div className="text-center">
+                  {myLose ? (
+                    <div className="text-30vw text-red-500 font-bold drop-animation">LOSE</div>
+                  ) : opponentLose ? (
+                    <div className="text-10vw text-green-500 font-bold drop-animation">WIN</div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
+            )}
+            <div
+              className="text-5vw text-white bg-black absolute border-4 border-red-500 rounded-full p-5"
+              style={{ top: "10%", left: "50%", transform: "translate(-50%, -50%)" }}
+            >
+              게임 진행 시간
+              <br /> " {minutes}분 {seconds}초 "
+            </div>
             {gameType === "classic" ? (
               ""
             ) : (
-              <div className="text-white">아이템 사용 가능 횟수 : {itemCount}</div>
+              <div className="flex flex-col gap-1">
+                <div
+                  className={`text-white text-5vw ${itemUsed && "animate-ping animate-twice animate-duration-1000"}`}
+                >
+                  아이템 수량 : {itemCount}
+                </div>
+                {gameType === "classic"
+                  ? ""
+                  : canUse && (
+                      <div className="text-xs text-white">영상을 터치하면 아이템이 사용됩니다</div>
+                    )}
+
+                {!canUse && (
+                  <div className="flex flex-col justify-center items-center gap-1">
+                    <div className="rounded-xl bg-gray-400"> 재사용 대기 시간</div>
+                    <div className="bg-gray-200 h-4 rounded-full overflow-hidden gauge-bar-container">
+                      <div className="bg-gray-600 h-full gauge-bar" style={{ width: "50%" }}></div>
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
 
             <div className="invisible absolute">
-              나
               <UserVideoComponent streamManager={publisher} gameState={gameState} {...gameProps} />
             </div>
             <div
@@ -225,18 +266,16 @@ const GamePlay = ({
               onClick={() => {
                 if (gameType === "item" && itemCount > 0 && canUse) {
                   setItemCount(itemCount - 1);
+                  setItemUsed(true);
                   setCanUse(false);
                   useItem();
                   setTimeout(() => {
                     setCanUse(true);
+                    setItemUsed(false);
                   }, 5000);
                 }
               }}
             >
-              <div className="text-xl text-red-500">
-                게임 진행 시간: {minutes}분 {seconds}초
-              </div>
-              상대방
               <div className={`${animationClass} ${shake ? "shake" : ""}`}>
                 <OpponentVideoComponent
                   streamManager={subscriber}
@@ -244,13 +283,6 @@ const GamePlay = ({
                 />
               </div>
             </div>
-            {gameType === "classic" ? (
-              ""
-            ) : (
-              <div className="text-xl text-white">화면을 터치하면 아이템이 사용됩니다</div>
-            )}
-            <div className="text-xl text-red-500">나 {myLose ? "패배" : "대기"}</div>
-            <div className="text-xl text-red-500">상대{opponentLose ? "패배" : "대기"}</div>
           </div>
         )}
       </div>

@@ -7,6 +7,7 @@ module.exports = {
       fontFamily: {
         "maplestory-bold": ["MaplestoryOTFBold", "sans-serif"],
       },
+
       fontSize: (() => {
         let fontSize = {};
         for (let i = 1; i <= 100; i++) {
@@ -14,6 +15,7 @@ module.exports = {
         }
         return fontSize;
       })(),
+
       spacing: (() => {
         let spacing = {};
         for (let i = 1; i <= 100; i++) {
@@ -22,6 +24,16 @@ module.exports = {
         }
         return spacing;
       })(),
+
+      keyframes: {
+        fadeOut: {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
+        },
+      },
+      animation: {
+        "fade-out": "fadeOut 3s ease-in-out infinite",
+      },
     },
   },
   plugins: [require("tailwindcss-animated")],

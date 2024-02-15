@@ -139,9 +139,14 @@ const Room = () => {
       // Get a token from the OpenVidu deployment
       getToken2().then(async (token) => {
         try {
-          await session.connect(token, { clientData: myUserName }).then(() => {
-            requestTeamInfo();
-          });
+          await session
+            .connect(token, {
+              clientData: myUserName,
+              clientProfile: sessionStorage.getItem("profile"),
+            })
+            .then(() => {
+              requestTeamInfo();
+            });
 
           let publisher = await OV.current.initPublisherAsync(undefined, {
             audioSource: undefined,
@@ -410,7 +415,7 @@ const Room = () => {
       setGameState("gameLoading");
       setTimeout(() => {
         setGameState("gamePlay");
-      }, 3000);
+      }, 5000);
     });
 
     mySession.on("signal:ready", (event) => {
@@ -768,6 +773,7 @@ const Room = () => {
           setGameState={setGameState}
           setWinTeam={setWinTeam}
           sendReady={sendReady}
+          myTeam={myTeam}
         />
       )}
     </>

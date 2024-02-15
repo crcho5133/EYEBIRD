@@ -35,6 +35,21 @@
   animation: blink 1s infinite;
 }
 
+@keyframes dropAnimation {
+  0% {
+    transform: translateY(-100vh); /* 시작 위치: 화면 상단 바깥 */
+    opacity: 0; /* 시작할 때 투명 */
+  }
+  100% {
+    transform: translateY(0); /* 최종 위치: 원래 위치 */
+    opacity: 1; /* 최종적으로 불투명 */
+  }
+}
+
+.drop-animation {
+  animation: dropAnimation 0.5s ease-out forwards; /* 애니메이션: 이름, 지속 시간, 타이밍 함수, 끝난 후 유지 */
+}
+
 @keyframes shake {
   0% {
     transform: translate(1px, 1px) rotate(0deg);
@@ -69,6 +84,29 @@
   100% {
     transform: translate(1px, -2px) rotate(-1deg);
   }
+}
+
+@keyframes decreaseWidth {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.gauge-bar-container {
+  width: 50%; /* 게이지 바의 전체 너비 */
+  background-color: bg-gray-200; /* 게이지 바 배경색 */
+  border-radius: 5px; /* 필요에 따라 조정 */
+  overflow: hidden;
+}
+
+.gauge-bar {
+  height: 20px; /* 게이지 바의 높이 */
+  background-color: bg-gray-600; /* 게이지 바 색상 */
+  width: 50%; /* 초기 너비 */
+  animation: decreaseWidth 5s linear forwards; /* 5초 동안 너비 감소 */
 }
 
 .shake {
