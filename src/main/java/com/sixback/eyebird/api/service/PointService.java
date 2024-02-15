@@ -136,7 +136,7 @@ public class PointService {
     // 갱신을 위한 스케쥴 DB -> Redis
     // 3분마다 업데이트 -> 3초마다 업데이트로 일시적 수정
     //@Scheduled(fixedRate = 18000)
-    //@Scheduled(fixedRate = 3000)
+    @Scheduled(fixedRate = 3000)
     public void updateRanking() {
         List<Point> itemRank = pointRepository.findTop25ByOrderByItemPtDesc();
         List<Point> classicRank = pointRepository.findTop25ByOrderByClassicPtDesc();
