@@ -57,7 +57,7 @@ const RoomSearch = () => {
         state: {
           roomName: room.roomName,
           password,
-          gameType: tabName === "클래식" ? "classic" : "item",
+          gameType: tabName === "클래식 ▼" ? "classic" : "item",
         },
       });
     }
@@ -79,7 +79,7 @@ const RoomSearch = () => {
           roomName,
           password,
           hastoken: response.data.connectionToken,
-          gameType: tabName === "클래식" ? "classic" : "item",
+          gameType: tabName === "클래식 ▼" ? "classic" : "item",
         },
       });
     } catch (error) {
@@ -235,7 +235,7 @@ const RoomSearch = () => {
             {Array.from(
               {
                 length: Math.ceil(
-                  (tabName === "아이템" ? roomsItem.length : roomsClassic.length) / roomsPerPage
+                  (tabName === "아이템 ▼" ? roomsItem.length : roomsClassic.length) / roomsPerPage
                 ),
               },
               (_, i) => i + 1

@@ -34,6 +34,7 @@ export default function UserVideoComponent({
   sendLose,
   myLose,
   opponentLose,
+  // faceLandmarker,
 }) {
   const videoRef = useRef(null);
   const myInfo = useAccessTokenState();

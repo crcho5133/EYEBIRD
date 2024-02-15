@@ -30,17 +30,17 @@ const Lobby = () => {
   const myInfo = useAccessTokenState();
   const [bgm, setBgm] = useState(null);
 
-  useEffect(() => {
-    if (!bgm) {
-      setBgm(createBGMInstance(BGM.MAIN));
-    }
-    if (bgm) {
-      return () => {
-        bgm.pause();
-        bgm.src = "";
-      };
-    }
-  }, [bgm]);
+  // useEffect(() => {
+  //   if (!bgm) {
+  //     setBgm(createBGMInstance(BGM.MAIN));
+  //   }
+  //   if (bgm) {
+  //     return () => {
+  //       bgm.pause();
+  //       bgm.src = "";
+  //     };
+  //   }
+  // }, [bgm]);
 
   const logout = (event) => {
     event.preventDefault();

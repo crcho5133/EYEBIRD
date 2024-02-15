@@ -27,7 +27,7 @@ const SettingModal = ({ visible, onClose, bgm }) => {
 
   const handleVolumeChange = (event) => {
     setVolume(event.target.value);
-    bgm.volume = Number(event.target.value) / 100;
+    // bgm.volume = Number(event.target.value) / 100;
   };
 
   const handleMicVolumeChange = (event) => {

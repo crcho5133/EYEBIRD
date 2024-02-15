@@ -73,7 +73,7 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
           </div>
           <div className="matchingInfo5-0">
             <div className="text-5vw mt-2vh ml-16vw matchingInfo5">
-              {gameType === "classic" ? "1. 점수(Classic) :" : "점수(Item) :"}
+              {gameType === "classic" ? "1. 점수(Classic) :" : "1. 점수(Item) :"}
               <span className="ml-3vw text-gray-300 matchingInfo10">
                 {gameType === "classic" ? myClassicPoint : myItemPoint} 점
               </span>
@@ -87,13 +87,13 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
             </div>
             <div className="text-5vw mt-1vh ml-16vw matchingInfo5">
               <div>
-                ㆍ게임 결과(승리) :
+                ㆍ승리시 :
                 <span className="ml-3vw text-6vw text-[#7ce772] matchingInfo10">
                   +{expectedWinPt} 점
                 </span>
               </div>
               <div>
-                ㆍ게임 결과(패배) :
+                ㆍ패배시 :
                 <span className="ml-3vw text-6vw text-[#ebbcbc] matchingInfo10">
                   {expectedLosePt} 점
                 </span>
@@ -132,7 +132,7 @@ const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) =>
           </div>
           <div className="matchingInfo5-1">
             <div className="text-5vw mt-2vh ml-16vw matchingInfo5">
-              {gameType === "classic" ? "1. 점수(Classic) :" : "점수(Item) :"}
+              {gameType === "classic" ? "1. 점수(Classic) :" : "1. 점수(Item) :"}
               <span className="ml-3vw text-amber-500 matchingInfo10">
                 {gameType === "classic" ? opponentClassicPoint : opponentItemPoint} 점
               </span>

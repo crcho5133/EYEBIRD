@@ -18,31 +18,37 @@ const NormalGameChoice = () => {
   const navigate = useNavigate();
 
   const handleFastClassicClick = async () => {
-    // 서버에게 현재 개설된 방 목록을 요청
-    const response = await axios.get(QuickClassicUrl, {
-      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-    });
-    console.log(response);
-    const room = response.data;
+    try {
+      // 서버에게 현재 개설된 방 목록을 요청
+      const response = await axios.get(QuickClassicUrl, {
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+      });
+      console.log(response);
+      const room = response.data;
 
-    if (room) {
-      navigate(`/room/${room.roomId}`, { state: { roomName: room.roomName } });
-    } else {
+      if (room) {
+        navigate(`/room/${room.roomId}`, {
+          state: { roomName: room.roomName, gameType: "classic" },
+        });
+      }
+    } catch (error) {
       alert("참가 할 수 있는 방이 없습니다.");
     }
   };
 
   const handleFastItemClick = async () => {
-    // 서버에게 현재 개설된 방 목록을 요청
-    const response = await axios.get(QuickItemUrl, {
-      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-    });
-    console.log(response);
-    const room = response.data;
+    try {
+      // 서버에게 현재 개설된 방 목록을 요청
+      const response = await axios.get(QuickItemUrl, {
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+      });
+      console.log(response);
+      const room = response.data;
 
-    if (room) {
-      navigate(`/room/${room.roomId}`, { state: { roomName: room.roomName } });
-    } else {
+      if (room) {
+        navigate(`/room/${room.roomId}`, { state: { roomName: room.roomName, gameType: "item" } });
+      }
+    } catch (error) {
       alert("참가 할 수 있는 방이 없습니다.");
     }
   };

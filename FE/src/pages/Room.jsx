@@ -92,6 +92,7 @@ const Room = () => {
   const teamBRef = useRef(teamB);
   const teamWRef = useRef(teamW);
   const participantsReadyRef = useRef(participantsReady);
+  const mySessionIdRef = useRef(mySessionId);
   // OpenVidu 라이브러리 사용
   const OV = useRef(new OpenVidu());
   // 로그 에러만 출력
@@ -106,7 +107,8 @@ const Room = () => {
     teamBRef.current = teamB;
     teamWRef.current = teamW;
     participantsReadyRef.current = participantsReady;
-  }, [myTeam, myStreamId, session, teamA, teamB, teamW, participantsReady]);
+    mySessionIdRef.current = mySessionId;
+  }, [myTeam, myStreamId, session, teamA, teamB, teamW, participantsReady, mySessionId]);
 
   useEffect(() => {
     if (mySessionId && myUserName) {
@@ -119,14 +121,32 @@ const Room = () => {
     }
   }, [mySessionId, myUserName]);
 
+  // useEffect(() => {
+  //   if (winTeam) {
+  //     const response = axios.patch(
+  //       APPLICATION_SERVER_URL + "api/room",
+  //       { roomId: roomId, status: false },
+  //       {
+  //         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+  //       }
+  //     );
+  //     console.log(response);
+  //   }
+  // }, [winTeam]);
+
   useEffect(() => {
     if (session) {
       // Get a token from the OpenVidu deployment
       getToken2().then(async (token) => {
         try {
-          await session.connect(token, { clientData: myUserName }).then(() => {
-            requestTeamInfo();
-          });
+          await session
+            .connect(token, {
+              clientData: myUserName,
+              clientProfile: sessionStorage.getItem("profile"),
+            })
+            .then(() => {
+              requestTeamInfo();
+            });
 
           let publisher = await OV.current.initPublisherAsync(undefined, {
             audioSource: undefined,
@@ -383,11 +403,19 @@ const Room = () => {
       }
     });
 
-    mySession.on("signal:start", async () => {
+    mySession.on("signal:start", () => {
+      // const response = await axios.patch(
+      //   APPLICATION_SERVER_URL + "api/room",
+      //   { roomId: mySessionIdRef.current, status: true },
+      //   {
+      //     headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+      //   }
+      // );
+      // console.log(response);
       setGameState("gameLoading");
       setTimeout(() => {
         setGameState("gamePlay");
-      }, 3000);
+      }, 5000);
     });
 
     mySession.on("signal:ready", (event) => {
@@ -499,7 +527,7 @@ const Room = () => {
         setItemVisible(true);
         setTimeout(() => {
           setItemVisible(false);
-        }, 3000);
+        }, 5000);
       }
     });
 
@@ -745,6 +773,7 @@ const Room = () => {
           setGameState={setGameState}
           setWinTeam={setWinTeam}
           sendReady={sendReady}
+          myTeam={myTeam}
         />
       )}
     </>

@@ -6,8 +6,8 @@ import ContinueBackground from "@/assets/img/gameResult/ContinueBackground.png";
 import RankPointBackground from "@/assets/img/gameResult/RankPointBackground.png";
 import NicknameTitle from "@/assets/img/gameResult/NicknameTitle.png";
 import RankingTitle from "@/assets/img/gameResult/RankingTitle.png";
-import proFileImage from "@/assets/img/profile/bird1.png";
 import gameApiCall from "@/api/axios/gameApiCall";
+import { SFX, playSFX } from "../../utils/audioManager";
 
 const GameResult = ({
   myLose,
@@ -58,6 +58,14 @@ const GameResult = ({
 
     getRanking();
   }, []);
+
+  useEffect(() => {
+    if (myWin === true) {
+      playSFX(SFX.WIN);
+    } else if (myWin === false) {
+      playSFX(SFX.LOSE);
+    }
+  }, [myWin]);
 
   useEffect(() => {
     // rematchRequest나 rematchResponse가 변경될 때 phase2로 설정
@@ -352,77 +360,55 @@ const GameResult = ({
           style={{
             background: `url(${RankPointBackground}) no-repeat`,
             backgroundPosition: "center center",
-            backgroundSize: "75vw 30vh",
+            backgroundSize: "75vw 40vh",
             width: "70vw",
-            height: "25vh",
+            height: "35vh",
           }}
           className="gameResult5 flex flex-col"
         >
           <div className="ms-3vw self-center gameResult6">Rank</div>
-          <div className="flex gameResult7">
-            <div className="flex flex-col items-start ms-2vw space-y-2vh">
-              <div className="flex justify-center items-center mt-2vh">
-                <div
-                  className="ms-1vw flex justify-center items-center gameResult8"
-                  style={{
-                    background: `url(${RankingTitle}) no-repeat`,
-                    backgroundPosition: "0.5vw center",
-                    backgroundSize: "5vw 3vh",
-                    width: "5vw",
-                    height: "3vh",
-                  }}
-                >
-                  {rankings ? `${rankings[0].rank}` : ""}
-                </div>
-                <div className="ms-1vw gameResult11">
-                  {rankings ? `${rankings[0].nickname} - ${rankings[0].point}점` : ""}
-                </div>
-              </div>
-              <div className="flex justify-center items-center">
-                <div
-                  className="ms-2vw flex justify-center items-center gameResult9"
-                  style={{
-                    background: `url(${RankingTitle}) no-repeat`,
-                    backgroundPosition: "0.5vw center",
-                    backgroundSize: "5vw 3vh",
-                    width: "5vw",
-                    height: "3vh",
-                  }}
-                >
-                  {rankings ? `${rankings[1].rank}` : ""}
-                </div>
-                <div className="ms-1vw gameResult11">
-                  {rankings ? `${rankings[1].nickname} - ${rankings[1].point}점` : ""}
-                </div>
-              </div>
-              <div className="flex justify-center items-center">
-                <div
-                  className="ms-3vw flex justify-center items-center gameResult10"
-                  style={{
-                    background: `url(${RankingTitle}) no-repeat`,
-                    backgroundPosition: "0.5vw center",
-                    backgroundSize: "5vw 3vh",
-                    width: "5vw",
-                    height: "3vh",
-                  }}
-                >
-                  {rankings ? `${rankings[2]?.rank}` : ""}
-                </div>
-                <div className="ms-1vw gameResult11">
-                  {rankings ? `${rankings[2]?.nickname} - ${rankings[2]?.point}점` : ""}
-                </div>
-              </div>
-            </div>
+          <div className="flex flex-col items-start ms-2vw space-y-2 w-full">
+            <table className="w-full table-fixed">
+              <thead>
+                <tr>
+                  <th className="w-1/3 text-center py-2">순위</th>
+                  <th className="w-1/3 text-center py-2">닉네임</th>
+                  <th className="w-1/3 text-center py-2">점수</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rankings &&
+                  rankings.slice(0, 3).map((ranking, index) => (
+                    <tr key={index}>
+                      <td
+                        className="text-center"
+                        style={{
+                          background: `url(${RankingTitle}) no-repeat center center`,
+                          backgroundSize: "contain",
+                          height: "3vh",
+                        }}
+                      >
+                        {ranking.rank}
+                      </td>
+                      <td className="text-center py-1">{ranking.nickname}</td>
+                      <td className="text-center py-1">{`${ranking.point}점`}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
 
-            <div className="gameResult14 mt-3vh ms-10vw flex flex-col justify-center items-center">
-              <div className="gameResult12 ms-1vw text-7vw flex flex-wrap justify-center items-center text-red-600">
-                {nowPoint}
-              </div>
-
-              <div className="ms-10vw gameResult13">
+            <div className="gameResult12 h-8vh self-center ms-1vw text-7vw flex flex-wrap justify-center items-center text-red-600">
+              내 점수 : {nowPoint}
+              <span className="ms-1vw text-4vw gameResult13 text-black">
                 {" "}
-                {myWin ? `+ ${accessPoint}` : `${accessPoint}`}
-              </div>
+                {myWin
+                  ? accessPoint == 0
+                    ? ""
+                    : ` + ${accessPoint}`
+                  : accessPoint == 0
+                    ? ""
+                    : `${accessPoint}`}
+              </span>
             </div>
           </div>
         </div>
@@ -431,9 +417,13 @@ const GameResult = ({
       {/*Bottom*/}
       <div className="flex flex-col justify-center items-center ">
         <img
-          className="gameResult15"
-          src={proFileImage}
-          style={{ width: "20vw", height: "13vh" }}
+          className={`gameResult15 ${
+            myWin
+              ? "animate-bounce animate-infinite animate-duration-1000 animate-ease-linear"
+              : "animate-fade-out"
+          }`}
+          src={sessionStorage.getItem("profile")}
+          style={{ width: "28vw", height: "13vh" }}
         />
         <div
           style={{
@@ -448,74 +438,6 @@ const GameResult = ({
           {sessionStorage.getItem("nickname")}
         </div>
       </div>
-
-      {/* 
-      <div className="h-screen flex justify-center items-center text-center text-lg">
-        <div className="flex-col">
-          <div className={`text-2xl ${myWin ? "text-green-600" : "text-red-600"}`}>
-            {myWin ? "승리" : "패배"}
-          </div>
-          {/* <div>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</div>
-          <div>상대</div>
-          <div className={`text-2xl ${myWin ? "text-red-600" : "text-green-600"}`}>
-            {myWin ? "패배" : "승리"}
-          </div>
-          {resultState !== "phase3" && (
-            <div className="flex justify-center m-4">
-              <div className="w-44 bg-gray-200 h-4">
-                <div
-                  className="bg-blue-500 h-full"
-                  style={{
-                    width: `${progress}%`,
-                  }}
-                ></div>
-              </div>
-            </div>
-          )}
-          {resultState === "phase1" && myWin && <div>상대방에게 재도전 의사를 묻고 있습니다</div>}
-          {resultState === "phase1" && !myWin && (
-            <div>
-              재도전하시겠습니까?
-              <div>
-                <button
-                  className="mt-2 bg-green-400 hover:bg-green-600 text-white py-2 px-4 rounded"
-                  onClick={() => sendRematch()}
-                >
-                  네
-                </button>
-              </div>
-            </div>
-          )}
-          {resultState === "phase2" && myWin && (
-            <div>
-              상대방이 재도전을 요청하였습니다<div>수락하시겠습니까?</div>
-              <div>
-                <button
-                  className="mt-2 bg-green-400 hover:bg-green-600 text-white py-2 px-4 rounded"
-                  onClick={() => acceptRematch()}
-                >
-                  네
-                </button>
-              </div>
-            </div>
-          )}
-          {resultState === "phase2" && !myWin && (
-            <div>상대방의 재도전 수락여부를 기다리고 있습니다</div>
-          )}
-          {resultState === "phase3" && (
-            <div className="m-4">
-              <Link
-                to="/lobby"
-                className="bg-red-400 hover:bg-red-600 text-white py-2 px-4 rounded"
-                onClick={() => leaveSession()}
-              >
-                로비로 가기
-              </Link>
-            </div>
-          )}
-        </div>
-      </div>
-    </div> */}
     </div>
   );
 };

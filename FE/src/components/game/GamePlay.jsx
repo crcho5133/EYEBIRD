@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import UserVideoComponent from "./UserVideoComponent";
 import OpponentVideoComponent from "./OpponentVideoComponent";
 import background_magma2 from "../../assets/img/background_magma2.gif";
 import game_waiting from "../../assets/img/game_waiting.png";
 import ready_button from "../../assets/img/ready_button.png";
+import { SFX, playSFX } from "../../utils/audioManager";
 
 const GamePlay = ({
   publisher,
@@ -19,6 +20,8 @@ const GamePlay = ({
   itemVisible,
   useItem,
   streamManager,
+  opponentInfoParsed,
+  myWin,
 }) => {
   const [gameState, setGameState] = useState("waiting");
   const [time, setTime] = useState(3);
@@ -30,6 +33,8 @@ const GamePlay = ({
   const [shake, setShake] = useState(false);
   const [availableAnimations, setAvailableAnimations] = useState([]);
   const [animationClass, setAnimationClass] = useState("");
+  const [itemUsed, setItemUsed] = useState(false);
+  const [resultMessage, setResultMessage] = useState("");
 
   const initialAnimations = [
     "animate-spin animate-infinite animate-duration-[600ms]",
@@ -39,6 +44,18 @@ const GamePlay = ({
     "animate-jump-out animate-infinite animate-duration-[600ms]",
     "animate-bounce animate-infinite animate-duration-100",
   ];
+
+  useEffect(() => {
+    if (isLoading) {
+      playSFX(SFX.COUNTDOWN);
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (itemVisible) {
+      playSFX(SFX.ITEM);
+    }
+  }, [itemVisible]);
 
   useEffect(() => {
     // 사용 가능한 애니메이션 목록이 비었을 경우, 초기 목록으로 재설정
@@ -179,7 +196,7 @@ const GamePlay = ({
                   setReady(true);
                   sendReady();
                 }}
-                className={`m-3 p-3 border-4 rounded-xl text-xl ${ready ? "border-red-600" : "border-transparent"}`}
+                className={`m-3 p-3 border-4 rounded-xl text-xl ${ready ? "border-green-600" : "border-transparent"}`}
                 style={{
                   backgroundImage: `url(${ready_button})`,
                   backgroundSize: "100% 100%",
@@ -193,7 +210,7 @@ const GamePlay = ({
             </div>
             <div className="text-center">
               <span
-                className={`m-3 p-3 border-4 rounded-xl text-xl ${opponentReady ? "border-red-600" : "border-transparent"} `}
+                className={`m-3 p-3 border-4 rounded-xl text-xl ${opponentReady ? "border-green-600" : "border-transparent"} `}
                 style={{
                   backgroundImage: `url(${ready_button})`,
                   backgroundSize: "100% 100%",
@@ -209,14 +226,60 @@ const GamePlay = ({
         )}
         {!isLoading && gameState === "play" && (
           <div>
+            {!isLoading && gameState === "play" && (
+              <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                <div className="text-center">
+                  {/* {myLose ? (
+                    <div className="text-30vw text-red-500 font-bold drop-animation">LOSE</div>
+                  ) : opponentLose ? (
+                    <div className="text-10vw text-green-500 font-bold drop-animation">WIN</div>
+                  ) : (
+                    ""
+                  )} */}
+                  {myWin === false ? (
+                    <div className="text-30vw text-red-500 font-bold drop-animation">LOSE</div>
+                  ) : myWin === true ? (
+                    <div className="text-30vw text-green-500 font-bold drop-animation">WIN</div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
+            )}
+            <div
+              className="text-5vw text-white bg-black absolute border-4 border-red-500 rounded-full p-5"
+              style={{ top: "10%", left: "50%", transform: "translate(-50%, -50%)" }}
+            >
+              게임 진행 시간
+              <br /> " {minutes}분 {seconds}초 "
+            </div>
             {gameType === "classic" ? (
               ""
             ) : (
-              <div className="text-white">아이템 사용 가능 횟수 : {itemCount}</div>
+              <div className="flex flex-col gap-1">
+                <div
+                  className={`text-white text-5vw ${itemUsed && "animate-ping animate-twice animate-duration-1000"}`}
+                >
+                  아이템 수량 : {itemCount}
+                </div>
+                {gameType === "classic"
+                  ? ""
+                  : canUse && (
+                      <div className="text-xs text-white">영상을 터치하면 아이템이 사용됩니다</div>
+                    )}
+
+                {!canUse && (
+                  <div className="flex flex-col justify-center items-center gap-1">
+                    <div className="rounded-xl bg-gray-400"> 재사용 대기 시간</div>
+                    <div className="bg-gray-200 h-4 rounded-full overflow-hidden gauge-bar-container">
+                      <div className="bg-gray-600 h-full gauge-bar" style={{ width: "50%" }}></div>
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
 
             <div className="invisible absolute">
-              나
               <UserVideoComponent streamManager={publisher} gameState={gameState} {...gameProps} />
             </div>
             <div
@@ -224,29 +287,23 @@ const GamePlay = ({
               onClick={() => {
                 if (gameType === "item" && itemCount > 0 && canUse) {
                   setItemCount(itemCount - 1);
+                  setItemUsed(true);
                   setCanUse(false);
                   useItem();
                   setTimeout(() => {
                     setCanUse(true);
+                    setItemUsed(false);
                   }, 5000);
                 }
               }}
             >
-              <div className="text-xl text-red-500">
-                게임 진행 시간: {minutes}분 {seconds}초
-              </div>
-              상대방
               <div className={`${animationClass} ${shake ? "shake" : ""}`}>
-                <OpponentVideoComponent streamManager={subscriber} />
+                <OpponentVideoComponent
+                  streamManager={subscriber}
+                  opponentInfoParsed={opponentInfoParsed}
+                />
               </div>
             </div>
-            {gameType === "classic" ? (
-              ""
-            ) : (
-              <div className="text-xl text-white">화면을 터치하면 아이템이 사용됩니다</div>
-            )}
-            <div className="text-xl text-red-500">나 {myLose ? "패배" : "대기"}</div>
-            <div className="text-xl text-red-500">상대{opponentLose ? "패배" : "대기"}</div>
           </div>
         )}
       </div>

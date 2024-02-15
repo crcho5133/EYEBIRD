@@ -443,7 +443,13 @@ const Game = () => {
         />
       )}
       {!isLoading && gameState === "gamePlay" && (
-        <GamePlay publisher={publisher} subscriber={subscriber} {...gameProps} />
+        <GamePlay
+          publisher={publisher}
+          subscriber={subscriber}
+          {...gameProps}
+          opponentInfoParsed={opponentInfoParsed}
+          myWin={myWin}
+        />
       )}
       {!isLoading && gameState === "gameResult" && (
         <GameResult

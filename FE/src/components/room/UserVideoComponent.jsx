@@ -45,7 +45,7 @@ export default function UserVideoComponent({
             readyState={readyState}
             ref={videoRef}
           />
-          <p className="w-4/5 h-1/4 inline-block bg-amber-500 rounded">{getNicknameTag()}</p>
+          <p className="w-100 h-1/4 inline-block bg-amber-500 rounded">{getNicknameTag()}</p>
           {/* <div className="text-right">
             {clientStreamId !== streamId ? (
               <button onClick={toggleAudio}>{isActive ? "들려요" : "안들려요"}</button>

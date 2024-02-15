@@ -67,7 +67,7 @@ const usersApiCall = () => {
       navigate("/lobby");
     } catch (error) {
       console.log(error);
-      alert(error.response?.data?.errorMessage);
+      alert("이메일 또는 비밀번호가 정확하지 않습니다. 다시 시도해 주세요.");
     }
   };
 

@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import OpenViduVideoComponent from "./OvVideo";
+import OpenViduVideoComponent from "./OvVideo2";
+import nickname_plate from "../../assets/img/nickname_plate.png";
 
 export default function GameVideoComponent({ streamManager }) {
   const videoRef = useRef(null);
@@ -10,11 +11,36 @@ export default function GameVideoComponent({ streamManager }) {
   };
 
   return (
-    <div className="flex items-center justify-center h-full w-full">
+    <div className="flex w-full h-full justify-center">
       {streamManager !== undefined ? (
-        <div className="h-full w-full">
+        <div className="flex flex-col items-center justify-center">
           <OpenViduVideoComponent streamManager={streamManager} ref={videoRef} />
-          <p>{getNicknameTag()}</p>
+          <div className="flex flex-row m-2">
+            {/* <div>
+              <img
+                src={changeProfileImage().profileImagePath(opponentInfoParsed.profileImage)}
+                style={{
+                  width: "50px",
+                  backgroundImage: `url(${frame})`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "100%",
+                  backgroundPosition: "center",
+                }}
+              />
+            </div> */}
+            <div
+              className="p-3"
+              style={{
+                backgroundImage: `url(${nickname_plate})`,
+                backgroundSize: "100% 100%",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                fontSize: "20px",
+              }}
+            >
+              {getNicknameTag()}
+            </div>
+          </div>
         </div>
       ) : null}
     </div>

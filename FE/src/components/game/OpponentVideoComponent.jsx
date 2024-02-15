@@ -1,11 +1,10 @@
 import OpenViduVideoComponent from "./OvVideo";
 import { useRef } from "react";
-import { useAccessTokenState } from "@/context/AccessTokenContext";
 import nickname_plate from "../../assets/img/nickname_plate.png";
 import frame from "../../assets/img/frame.png";
+import changeProfileImage from "@/utils/changeProfileImage";
 
-export default function OpponentVideoComponent({ streamManager }) {
-  const myInfo = useAccessTokenState();
+export default function OpponentVideoComponent({ streamManager, opponentInfoParsed }) {
   const videoRef = useRef(null);
 
   const getNicknameTag = () => {
@@ -21,7 +20,7 @@ export default function OpponentVideoComponent({ streamManager }) {
           <div className="flex flex-row m-2">
             <div>
               <img
-                src={myInfo.profile}
+                src={changeProfileImage().profileImagePath(opponentInfoParsed.profileImage)}
                 style={{
                   width: "50px",
                   backgroundImage: `url(${frame})`,
