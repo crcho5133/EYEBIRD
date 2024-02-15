@@ -137,11 +137,11 @@ const SignupFormModal = ({ visible, onClose }) => {
             <div className="flex flex-col mt-5vh ms-3vw">
               <div className="flex flex-col">
                 <div className="flex ms-6vw signup3-1">
-                  <label htmlFor="email" className="text-4vw font-bold signup3-2">
+                  <label htmlFor="email1" className="text-4vw font-bold signup3-2">
                     이메일 :
                   </label>
                   <input
-                    id="email"
+                    id="email1"
                     type="text"
                     value={email.value}
                     style={{ width: "30vw", height: "3vh" }}
@@ -152,7 +152,7 @@ const SignupFormModal = ({ visible, onClose }) => {
                   <button
                     onClick={checkEmailDuplicate}
                     disabled={!email.isValid || !email.value}
-                    className={`signup3-4 ms-3vw ms-3vw text-xs p-1vw border-2 rounded-md flex items-center justify-center ${
+                    className={`signup3-4 ms-3vw text-xs p-1vw border-2 rounded-md flex items-center justify-center ${
                       !email.isValid || !email.value
                         ? "border-orange-700"
                         : "border-amber-700 bg-amber-700 text-white"
@@ -223,11 +223,11 @@ const SignupFormModal = ({ visible, onClose }) => {
 
               <form className="mt-2vh flex flex-col">
                 <div className="flex ms-6vw signup3-1">
-                  <label htmlFor="password" className="text-4vw font-bold signup3-2">
+                  <label htmlFor="password1" className="text-4vw font-bold signup3-2">
                     비밀번호 :
                   </label>
                   <input
-                    id="password"
+                    id="password1"
                     type="password"
                     value={password.value}
                     style={{ width: "30vw", height: "3vh" }}
