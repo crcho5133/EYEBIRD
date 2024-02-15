@@ -4,7 +4,6 @@ import OpponentVideoComponent from "./OpponentVideoComponent";
 import background_magma2 from "../../assets/img/background_magma2.gif";
 import game_waiting from "../../assets/img/game_waiting.png";
 import ready_button from "../../assets/img/ready_button.png";
-import item1 from "../../assets/img/gameItem/item1.gif";
 
 const GamePlay = ({
   publisher,
@@ -29,6 +28,40 @@ const GamePlay = ({
   const [gameStartTime, setGameStartTime] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [shake, setShake] = useState(false);
+  const [availableAnimations, setAvailableAnimations] = useState([]);
+  const [animationClass, setAnimationClass] = useState("");
+
+  const initialAnimations = [
+    "animate-spin animate-infinite animate-duration-[600ms]",
+    "animate-ping animate-infinite animate-duration-[600ms]",
+    "animate-fade animate-infinite animate-duration-[600ms]",
+    "animate-wiggle-more animate-infinite animate-duration-[50ms]",
+    "animate-jump-out animate-infinite animate-duration-[600ms]",
+    "animate-bounce animate-infinite animate-duration-100",
+  ];
+
+  useEffect(() => {
+    // 사용 가능한 애니메이션 목록이 비었을 경우, 초기 목록으로 재설정
+    if (availableAnimations.length === 0) {
+      setAvailableAnimations([...initialAnimations]);
+    }
+
+    if (itemVisible && availableAnimations.length > 0) {
+      // 사용 가능한 애니메이션 중에서 랜덤으로 하나 선택
+      const randomIndex = Math.floor(Math.random() * availableAnimations.length);
+      const selectedAnimation = availableAnimations[randomIndex];
+      setAnimationClass(selectedAnimation);
+
+      // 선택된 애니메이션을 사용 가능한 목록에서 제거
+      const updatedAvailableAnimations = availableAnimations.filter(
+        (_, index) => index !== randomIndex
+      );
+      setAvailableAnimations(updatedAvailableAnimations);
+    } else {
+      // 아이템이 보이지 않을 경우 애니메이션 클래스 초기화
+      setAnimationClass("");
+    }
+  }, [itemVisible]);
 
   useEffect(() => {
     let countdownInterval;
@@ -80,7 +113,7 @@ const GamePlay = ({
   }, [gameState, gameStartTime]);
 
   useEffect(() => {
-    if (gameState === "play") {
+    if (gameState === "play" && gameType === "classic") {
       setTimeout(() => {
         setShake(true); // 10초 후에 shake 상태를 true로 설정
       }, 10000);
@@ -182,14 +215,14 @@ const GamePlay = ({
               <div className="text-white">아이템 사용 가능 횟수 : {itemCount}</div>
             )}
 
-            <div className={`invisible absolute ${shake ? "shake" : ""}`}>
+            <div className="invisible absolute">
               나
               <UserVideoComponent streamManager={publisher} gameState={gameState} {...gameProps} />
             </div>
             <div
               className="flex flex-col items-center justify-center"
               onClick={() => {
-                if (itemCount > 0 && canUse) {
+                if (gameType === "item" && itemCount > 0 && canUse) {
                   setItemCount(itemCount - 1);
                   setCanUse(false);
                   useItem();
@@ -203,11 +236,9 @@ const GamePlay = ({
                 게임 진행 시간: {minutes}분 {seconds}초
               </div>
               상대방
-              {itemVisible ? <img className="absolute w-full h-full" src={item1} /> : ""}
-              <OpponentVideoComponent
-                streamManager={subscriber}
-                className={`${shake ? "shake" : ""}`}
-              />{" "}
+              <div className={`${animationClass} ${shake ? "shake" : ""}`}>
+                <OpponentVideoComponent streamManager={subscriber} />
+              </div>
             </div>
             {gameType === "classic" ? (
               ""
