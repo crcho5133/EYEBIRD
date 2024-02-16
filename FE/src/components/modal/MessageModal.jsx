@@ -25,9 +25,7 @@ const NotificationModal = ({ visible, onClose }) => {
         destination: "/app/invite/accept",
         body: JSON.stringify({ invitationId: invitations[index].id }),
       });
-      console.log("Invitation accepted via WebSocket");
     } else {
-      console.log("WebSocket connection is not active");
     }
   };
 
@@ -38,9 +36,7 @@ const NotificationModal = ({ visible, onClose }) => {
         destination: "/app/invite/reject",
         body: JSON.stringify({ invitationId: invitations[index].id }),
       });
-      console.log("Invitation rejected via WebSocket");
     } else {
-      console.log("WebSocket connection is not active");
     }
   };
 
@@ -52,9 +48,6 @@ const NotificationModal = ({ visible, onClose }) => {
           headers: { userId: recipient },
           body: messageContent,
         });
-        console.log("Message sent");
-        console.log(response);
-        console.log(messageContent);
         setShowMessageModal(false); // 메시지 전송 후 메시지 보내기 모달 닫기
       } catch (error) {
         if (
@@ -64,7 +57,6 @@ const NotificationModal = ({ visible, onClose }) => {
         ) {
           alert("존재하지 않는 사용자입니다.");
         } else {
-          console.log("WebSocket connection is not active or recipient is not specified");
         }
       }
     }
@@ -74,7 +66,6 @@ const NotificationModal = ({ visible, onClose }) => {
     try {
       const response = await axios.delete(`/api/message/${messageId}`);
       if (response.status === 200) {
-        console.log("Message deleted successfully");
         // TODO: 메세지 목록 새로고침
       }
     } catch (error) {

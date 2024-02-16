@@ -99,8 +99,6 @@ export default function GameUserVideoComponent({ streamManager, gameState, sendL
             const rightEAR = calculateEAR(rightEye);
 
             if (leftEAR < 0.12 || rightEAR < 0.12) {
-              console.log("눈 감음");
-              console.log(`Left Eye EAR: ${leftEAR}, Right Eye EAR: ${rightEAR}`);
               sendLose();
             }
           }

@@ -183,7 +183,6 @@ const Room = () => {
             type: "ready",
           });
         } catch (error) {
-          console.log("There was an error connecting to the session:", error.code, error.message);
         }
       });
     }
@@ -419,7 +418,6 @@ const Room = () => {
     });
 
     mySession.on("signal:ready", (event) => {
-      console.log("준비상태 수신:" + event.data);
       const { userName, ready } = JSON.parse(event.data);
       setParticipantsReady((prev) => ({ ...prev, [userName]: ready }));
     });
@@ -428,8 +426,6 @@ const Room = () => {
       const currentUser = JSON.parse(mySession.connection.data).clientData;
       const newUser = JSON.parse(event.from.data).clientData;
       if (currentUser !== newUser) {
-        console.log("ok");
-        console.log(participantsReadyRef.current);
         sessionRef.current.signal({
           data: JSON.stringify(participantsReadyRef.current),
           type: "ready-info-response",
@@ -438,7 +434,6 @@ const Room = () => {
     });
 
     mySession.on("signal:ready-info-response", (event) => {
-      console.log(event);
       const participantsReady = JSON.parse(event.data);
       setParticipantsReady(participantsReady);
     });
@@ -540,7 +535,6 @@ const Room = () => {
       const response = await axios.delete(APPLICATION_SERVER_URL + `api/room/${roomId}`, {
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
       });
-      console.log(response);
       session.disconnect();
     }
 
@@ -654,10 +648,8 @@ const Room = () => {
           headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         }
       );
-      console.log(response);
       return response.data.connectionToken; // The token
     } catch (error) {
-      console.log(error);
     }
   };
 

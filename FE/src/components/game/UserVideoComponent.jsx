@@ -65,7 +65,6 @@ export default function UserVideoComponent({
             performance.now()
           );
           if (faceLandmarkerResult.faceLandmarks.length > 0) {
-            // console.log(faceLandmarkerResult);
             const faceLandmarks = faceLandmarkerResult.faceLandmarks[0];
             // 왼쪽 눈
             const leftEyeUpperLandmarks = [173, 157, 158, 159, 160, 161, 246].map(
@@ -106,8 +105,6 @@ export default function UserVideoComponent({
             const rightEAR = calculateEAR(rightEye);
 
             if (leftEAR < 0.12 || rightEAR < 0.12) {
-              console.log("눈 감음");
-              console.log(`Left Eye EAR: ${leftEAR}, Right Eye EAR: ${rightEAR}`);
               sendLose();
             }
           }

@@ -25,9 +25,7 @@ const NotificationModal = ({ visible, onClose }) => {
         destination: "/app/invite/accept",
         body: JSON.stringify({ invitationId: invitations[index].id }),
       });
-      console.log("Invitation accepted via WebSocket");
     } else {
-      console.log("WebSocket connection is not active");
     }
   };
 
@@ -38,9 +36,7 @@ const NotificationModal = ({ visible, onClose }) => {
         destination: "/app/invite/reject",
         body: JSON.stringify({ invitationId: invitations[index].id }),
       });
-      console.log("Invitation rejected via WebSocket");
     } else {
-      console.log("WebSocket connection is not active");
     }
   };
 

@@ -23,7 +23,6 @@ const NormalGameChoice = () => {
       const response = await axios.get(QuickClassicUrl, {
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
       });
-      console.log(response);
       const room = response.data;
 
       if (room) {
@@ -42,7 +41,6 @@ const NormalGameChoice = () => {
       const response = await axios.get(QuickItemUrl, {
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
       });
-      console.log(response);
       const room = response.data;
 
       if (room) {

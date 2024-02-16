@@ -176,7 +176,6 @@ const Game = () => {
           setPublisher(publisher);
           setCurrentVideoDevice(currentVideoDevice);
         } catch (error) {
-          console.log("There was an error connecting to the session:", error.code, error.message);
         }
       });
     }
@@ -213,7 +212,6 @@ const Game = () => {
   };
 
   const sendLose = () => {
-    console.log("패배한사람: " + myUserName);
     session.signal({
       data: myUserName,
       type: "lose",
@@ -276,7 +274,6 @@ const Game = () => {
 
     mySession.on("signal:lose", (event) => {
       const username = event.data;
-      console.log(username);
       if (username === myUserName) {
         setMyLose(true);
       } else if (username !== myUserName) {
@@ -350,7 +347,6 @@ const Game = () => {
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
       }
     );
-    console.log(response);
   };
 
   const updateResult = async (isItem, winner, loser) => {
@@ -365,7 +361,6 @@ const Game = () => {
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
       }
     );
-    console.log(response);
   };
 
   const getToken2 = async () => {
@@ -376,7 +371,6 @@ const Game = () => {
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
       }
     );
-    console.log(response);
     return response.data.token; // The token
   };
 

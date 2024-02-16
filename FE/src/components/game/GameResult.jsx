@@ -52,8 +52,6 @@ const GameResult = ({
     const getRanking = async () => {
       const ranking = await useGameApiCall.getRanking(gameType);
       setRankings(ranking);
-      console.log(gameType);
-      console.log(ranking);
     };
 
     getRanking();

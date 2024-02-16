@@ -60,9 +60,7 @@ const RankingGameChoice = () => {
           point: isItem ? itemPoint : classicPoint,
         }),
       });
-      console.log("Invitation sent");
     } else {
-      console.log("WebSocket connection is not active");
     }
   };
 
@@ -78,9 +76,7 @@ const RankingGameChoice = () => {
           point: isItem ? itemPoint : classicPoint,
         }),
       });
-      console.log("cancel message sent");
     } else {
-      console.log("WebSocket connection is not active");
     }
   };
 

@@ -66,7 +66,6 @@ const usersApiCall = () => {
       accessToken.setLoseNumClassic(response.data.loseNumClassic);
       navigate("/lobby");
     } catch (error) {
-      console.log(error);
       alert("이메일 또는 비밀번호가 정확하지 않습니다. 다시 시도해 주세요.");
     }
   };
@@ -87,7 +86,6 @@ const usersApiCall = () => {
       });
       navigate("/");
     } catch (error) {
-      console.log(error);
       alert(error.response?.data?.errorMessage);
     }
   };
@@ -110,7 +108,6 @@ const usersApiCall = () => {
         nickname,
       });
     } catch (error) {
-      console.log(error);
       alert(error.response?.data?.errorMessage);
     }
   };

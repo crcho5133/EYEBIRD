@@ -19,7 +19,6 @@ export const WebSocketProvider = ({ children }) => {
   const token = sessionStorage.getItem("accessToken");
   const refreshTokenAndReconnect = async () => {
     try {
-      console.log("refreshToken", accessToken.accessToken);
       const response = await axios.post(baseUrl + "/api/auth/reissue", {
         grantType: "Bearer",
         accessToken: accessToken.accessToken,
@@ -40,17 +39,14 @@ export const WebSocketProvider = ({ children }) => {
         Authorization: `Bearer ${token}`,
       },
       beforeConnect: () => {
-        console.log("Connecting to WebSocket");
       },
       reconnectDelay: 0,
       onConnect: () => {
-        console.log("Connected to WebSocket");
         setIsConnected(true);
 
         // 랭크 게임 매칭 성공 수신
         newClient.subscribe("/user/match/" + sessionStorage.getItem("email"), (message) => {
           const newMessage = message.body;
-          console.log("Received message:", newMessage);
           const messageObject = JSON.parse(newMessage);
           // console.log(messageObject);
           // 메시지를 받았을 때 처리 (예: 상태 업데이트)
@@ -59,7 +55,6 @@ export const WebSocketProvider = ({ children }) => {
           setGameId(messageObject.openviduSessionId);
         });
         newClient.subscribe("/message/invitations", (message) => {
-          console.log("Received message:", message.body);
           alert("알림: " + message.body);
         });
 
@@ -70,7 +65,6 @@ export const WebSocketProvider = ({ children }) => {
         // 메시지를 받을 대상 토픽 구독
         newClient.subscribe("/user/private-message", (message) => {
           const newMessage = JSON.parse(message.body);
-          console.log("Received message:", newMessage);
           // 메시지를 받았을 때 처리 (예: 상태 업데이트)
           setMessages((prevMessages) => [newMessage, ...prevMessages]); // 최신 메시지가 앞에 오도록
         });
@@ -86,14 +80,12 @@ export const WebSocketProvider = ({ children }) => {
         // 메시지를 받을 대상 토픽 구독
         newClient.subscribe("/message/private-" + sessionStorage.getItem("email"), (message) => {
           const newMessage = JSON.parse(message.body);
-          console.log("Received message:", newMessage);
           // 메시지를 받았을 때 처리 (예: 상태 업데이트)
           setReceivedMessages((prevMessages) => [newMessage, ...prevMessages]); // 최신 메시지가 앞에 오도록
         });
       },
 
       onDisconnect: () => {
-        console.log("Disconnected from WebSocket");
       },
       onWebSocketClose: (closeEvent) => {
         if (accessToken.accessToken) {
@@ -101,7 +93,6 @@ export const WebSocketProvider = ({ children }) => {
         }
       },
       onWebSocketError: (error) => {
-        console.log("WebSocket error: ", error);
       },
 
       heartbeatIncoming: 0,

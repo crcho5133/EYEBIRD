@@ -73,7 +73,6 @@ const RoomSearch = () => {
           headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         }
       );
-      console.log(response);
       navigate(`/room/${selectedRoom.roomId}`, {
         state: {
           roomName,
@@ -103,7 +102,6 @@ const RoomSearch = () => {
           headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         })
         .then((response) => {
-          console.log(response);
           setRoomsClassic(response.data);
         });
       await axios
@@ -111,7 +109,6 @@ const RoomSearch = () => {
           headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         })
         .then((response) => {
-          console.log(response);
           setRoomsItem(response.data);
         });
     }

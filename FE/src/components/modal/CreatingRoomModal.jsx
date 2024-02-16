@@ -53,7 +53,6 @@ const CreatingRoomModal = ({ visible, onClose }) => {
           }
         );
 
-        console.log(response);
         const data = response.data;
 
         if (data === "fail") {
@@ -67,10 +66,7 @@ const CreatingRoomModal = ({ visible, onClose }) => {
           });
         }
       } catch (error) {
-        console.log(error);
         if (error.response) {
-          console.log(error.response);
-          console.log(error.response.data.errorMessage);
           if (error.response.data.errorMessage === "방 생성: 최대 방 갯수 초과") {
             setErrorMessage("최대 방 갯수가 초과 되었습니다.");
           } else if (error.response.data.errorMessage === "방 생성: 방 이름 중복") {

@@ -138,7 +138,6 @@ const NormalGamePlay = ({
     if (!checkRef.current) {
       setCheck(true);
       const loseteam = event.data;
-      console.log(loseteam);
       if (inGameState === "playing" && !effectRef.current) {
         if (loseteam === "A") {
           setEffect("B");

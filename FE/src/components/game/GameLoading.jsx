@@ -7,10 +7,6 @@ import { useState, useEffect } from "react";
 import changeProfileImage from "@/utils/changeProfileImage";
 
 const GameLoading = ({ publisher, subscriber, gameType, opponentInfoParsed }) => {
-  // console.log(publisher);
-  // console.log(subscriber);
-  // const pubnickname = JSON.parse(publisher.stream.connection.data).clientData;
-  // const subnickname = JSON.parse(subscriber.stream.connection.data).clientData;
   const [countdown, setCountdown] = useState(5);
 
   const myNickName = sessionStorage.getItem("nickname");
