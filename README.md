@@ -224,33 +224,33 @@
 # 🔧설계
 
 ### 🔧아키텍처 설계
-![architecture.drawio](/uploads/3f64b61a05077a0f47347510d9faeed4/architecture.drawio.png)
+![아키텍쳐](https://github.com/crcho5133/EYEBIRD/assets/140131170/88adc5c8-c1c4-45ed-a4cc-ad23ce240c12)
 
 ### 🔧DB 설계(ERD)
 ![ERD](https://github.com/crcho5133/EYEBIRD/assets/140131170/eea90eff-748c-4722-8b9e-4a41040b2595)
 # 👀실제 화면
 
 ## 랭킹
-![랭킹](/uploads/7432163771fc091f7aba747d35db1434/랭킹.jpg){: width="30%" height="30%"}
+![랭킹](https://github.com/crcho5133/EYEBIRD/assets/140131170/5a0c2489-4492-4ffa-9b24-cc168c61a739)
 
 ## 로비
-![로비](/uploads/3aeda259d24d80529ea80082b509581c/로비.jpg){: width="30%" height="30%"}
+![로비](https://github.com/crcho5133/EYEBIRD/assets/140131170/1ff86794-8b81-495b-badd-17b35f675210)
 ## 클래식전과 아이템전 중 하나를 선택할 수 있음
-![클래식전과아이템전](/uploads/c52e06e5cf6025e5248742a036643b31/클래식전과아이템전.jpg){: width="30%" height="30%"}
+![클래식전과아이템전](https://github.com/crcho5133/EYEBIRD/assets/140131170/2766042d-ec5d-4370-af2b-b2596195f40e)
 ## 매칭 찾는 중
-![매칭찾는중](/uploads/4dd467fe97c2d7fd17db2144af86146a/매칭찾는중.jpg){: width="30%" height="30%"}
+![매칭찾는중](https://github.com/crcho5133/EYEBIRD/assets/140131170/2d8a0b77-e96d-4d8d-82a5-4e33118e7e52)
 ## 매칭성공
-![매칭성공](/uploads/4d6245d675689ab9d49fbb3c52053296/매칭성공.jpg){: width="30%" height="30%"}
+![매칭성공](https://github.com/crcho5133/EYEBIRD/assets/140131170/53841b10-541e-4604-980d-6117c825526f)
 ## 게임 준비
-![게임준비](/uploads/14b193c5592e79314405ee774a614ec1/게임준비.jpg){: width="30%" height="30%"}
+![게임준비](https://github.com/crcho5133/EYEBIRD/assets/140131170/e572cb16-7fe9-489a-98b2-b04bd8200673)
 ## 예상 승점
-![예상승점](/uploads/3bc7bc6195b81db6cd6f32e9faed7fbf/예상승점.jpg){: width="30%" height="30%"}
+![예상승점](https://github.com/crcho5133/EYEBIRD/assets/140131170/8eb68bdb-108f-4aa1-a856-204190644d9e)
 ## 게임 시작 직전
-![게임시작직전](/uploads/bceb6a07e82005803f3ab7b0a01022b4/게임시작직전.jpg){: width="30%" height="30%"}
+![게임시작직전](https://github.com/crcho5133/EYEBIRD/assets/140131170/e22def2d-945e-4266-8ab7-6aa68af952b2)
 ## 게임 진행 중
-![게임진행중](/uploads/49f9c5db94f8510cfd492b191a25bfb8/게임진행중.jpg){: width="30%" height="30%"}
+![게임진행중](https://github.com/crcho5133/EYEBIRD/assets/140131170/bd79f6de-e55b-4fe3-89e3-e057abf8b5e1)
 ## 게임 승리 후의 화면
-![게임승리후](/uploads/780b318d7d09a2bae3510b92460ea226/게임승리후.jpg){: width="30%" height="30%"}
+![게임승리후](https://github.com/crcho5133/EYEBIRD/assets/140131170/7fcfbfd3-b1ac-4ae8-b3ba-48c639abec62)
 
 
 
