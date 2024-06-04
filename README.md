@@ -227,7 +227,7 @@
 ![architecture.drawio](/uploads/3f64b61a05077a0f47347510d9faeed4/architecture.drawio.png)
 
 ### 🔧DB 설계(ERD)
-![erd](/uploads/fd63705f3ca03287fd7d01faa48c06f8/erd.png)
+![ERD](https://github.com/crcho5133/EYEBIRD/assets/140131170/eea90eff-748c-4722-8b9e-4a41040b2595)
 # 👀실제 화면
 
 ## 랭킹
