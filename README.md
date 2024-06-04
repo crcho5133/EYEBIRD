@@ -231,26 +231,34 @@
 # 👀실제 화면
 
 ## 랭킹
-![랭킹](https://github.com/crcho5133/EYEBIRD/assets/140131170/5a0c2489-4492-4ffa-9b24-cc168c61a739)
+<img src = "https://github.com/crcho5133/EYEBIRD/assets/140131170/5a0c2489-4492-4ffa-9b24-cc168c61a739" width="30%" height="30%"/>
 
 ## 로비
-![로비](https://github.com/crcho5133/EYEBIRD/assets/140131170/1ff86794-8b81-495b-badd-17b35f675210)
+<img src = "https://github.com/crcho5133/EYEBIRD/assets/140131170/1ff86794-8b81-495b-badd-17b35f675210" width="30%" height="30%"/>
+
 ## 클래식전과 아이템전 중 하나를 선택할 수 있음
-![클래식전과아이템전](https://github.com/crcho5133/EYEBIRD/assets/140131170/2766042d-ec5d-4370-af2b-b2596195f40e)
+<img src = "https://github.com/crcho5133/EYEBIRD/assets/140131170/2766042d-ec5d-4370-af2b-b2596195f40e" width="30%" height="30%"/>
+
 ## 매칭 찾는 중
-![매칭찾는중](https://github.com/crcho5133/EYEBIRD/assets/140131170/2d8a0b77-e96d-4d8d-82a5-4e33118e7e52)
+<img src = "https://github.com/crcho5133/EYEBIRD/assets/140131170/2d8a0b77-e96d-4d8d-82a5-4e33118e7e52" width="30%" height="30%"/>
+
 ## 매칭성공
-![매칭성공](https://github.com/crcho5133/EYEBIRD/assets/140131170/53841b10-541e-4604-980d-6117c825526f)
+<img src = "https://github.com/crcho5133/EYEBIRD/assets/140131170/53841b10-541e-4604-980d-6117c825526f" width="30%" height="30%"/>
+
 ## 게임 준비
-![게임준비](https://github.com/crcho5133/EYEBIRD/assets/140131170/e572cb16-7fe9-489a-98b2-b04bd8200673)
+<img src = "https://github.com/crcho5133/EYEBIRD/assets/140131170/e572cb16-7fe9-489a-98b2-b04bd8200673" width="30%" height="30%"/>
+
 ## 예상 승점
-![예상승점](https://github.com/crcho5133/EYEBIRD/assets/140131170/8eb68bdb-108f-4aa1-a856-204190644d9e)
+<img src = "https://github.com/crcho5133/EYEBIRD/assets/140131170/8eb68bdb-108f-4aa1-a856-204190644d9e" width="30%" height="30%"/>
+
 ## 게임 시작 직전
-![게임시작직전](https://github.com/crcho5133/EYEBIRD/assets/140131170/e22def2d-945e-4266-8ab7-6aa68af952b2)
+<img src = "https://github.com/crcho5133/EYEBIRD/assets/140131170/e22def2d-945e-4266-8ab7-6aa68af952b2" width="30%" height="30%"/>
+
 ## 게임 진행 중
-![게임진행중](https://github.com/crcho5133/EYEBIRD/assets/140131170/bd79f6de-e55b-4fe3-89e3-e057abf8b5e1)
+<img src = "https://github.com/crcho5133/EYEBIRD/assets/140131170/bd79f6de-e55b-4fe3-89e3-e057abf8b5e1" width="30%" height="30%"/>
+
 ## 게임 승리 후의 화면
-![게임승리후](https://github.com/crcho5133/EYEBIRD/assets/140131170/7fcfbfd3-b1ac-4ae8-b3ba-48c639abec62)
+<img src = "https://github.com/crcho5133/EYEBIRD/assets/140131170/7fcfbfd3-b1ac-4ae8-b3ba-48c639abec62" width="30%" height="30%"/>
 
 
 
